@@ -1,0 +1,115 @@
+
+# Dependencies
+node_modules/
+*/node_modules/
+__pycache__/
+*.pyc
+*.pyo
+target/
+*.class
+vendor/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# IDE files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Build outputs
+dist/
+build/
+*.war
+*.jar
+*.exe
+
+# Security
+*.key
+*.pem
+*.crt
+certificates/
+secrets/
+
+# Database
+*.sqlite
+*.db
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Testing
+coverage/
+.nyc_output/
+.pytest_cache/
+
+# Hardware specific
+*.hex
+*.bin
+*.elf
+
+# Create main README.md
+cat > README.md << 'EOF'
+# AfriPay Universal
+
+Cross-generational payment system designed for Kenya and Africa expansion.
+
+## Features
+
+- 🔐 Biometric authentication (fingerprint, face, voice)
+- 📱 Multi-channel access (USSD, Mobile App, Agent Network)
+- 🌍 SIM-card independent operation
+- 🏪 Agent terminal hardware & software
+- 🔒 Advanced fraud detection
+- 💳 Cross-border payment capabilities
+
+## Architecture
+
+- **Microservices**: Node.js, Python, Java, Go
+- **Databases**: PostgreSQL, Redis, MongoDB
+- **Mobile**: React Native
+- **Hardware**: Raspberry Pi-based terminals
+- **Infrastructure**: Docker, Kubernetes, AWS/Azure
+
+## Quick Start
+
+```bash
+# Clone repository
+git clone https://github.com/YOUR_USERNAME/afripay-universal.git
+cd afripay-universal
+
+# Start development environment
+./scripts/setup/dev-setup.sh
+
+# Run all services
+docker-compose up -d
+
+# Open terminal
+docker-compose exec --user root jupyter-lab
+
+# Open terminal
+docker-compose exec --user root bash
