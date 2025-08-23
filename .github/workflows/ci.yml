@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-identity-service:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: afripay_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: services/identity-service/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd services/identity-service
+        npm ci
+    
+    - name: Run tests
+      run: |
+        cd services/identity-service
+        npm run test
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: afripay_test
+        DB_USER: postgres
+        DB_PASS: test_password
+
+    - name: Build application
+      run: |
+        cd services/identity-service
+        npm run build
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run security audit
+      run: |
+        cd services/identity-service
+        npm audit --audit-level moderate
+
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        cd services/identity-service
+        npm ci
+    
+    - name: Run linting
+      run: |
+        cd services/identity-service
+        npm run lint
+    
+    - name: Check formatting
+      run: |
+        cd services/identity-service
+        npm run format -- --check
