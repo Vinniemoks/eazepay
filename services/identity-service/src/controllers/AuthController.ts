@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { AppDataSource } from '../config/database';   // ✅ import your DataSource
 import { User, KYCStatus } from '../entities/User';
 import { BiometricService } from '../services/BiometricService';
 import { JWTService } from '../services/JWTService';
 import { logger } from '../utils/logger';
 
 export class AuthController {
-  private userRepository = getRepository(User);
+  private userRepository = AppDataSource.getRepository(User);  // ✅ fixed
   private biometricService = new BiometricService();
   private jwtService = new JWTService();
 
@@ -14,8 +14,8 @@ export class AuthController {
     try {
       const { phoneNumber, nationalId, firstName, lastName, biometricData, biometricType } = req.body;
 
-      // Check if user already exists
-      const existingUser = await this.userRepository.findOne({ phoneNumber });
+      // ⚠️ In TypeORM v0.3+, `findOne` must specify options
+      const existingUser = await this.userRepository.findOne({ where: { phoneNumber } });
       if (existingUser) {
         return res.status(409).json({
           success: false,
@@ -29,8 +29,8 @@ export class AuthController {
       user.nationalId = nationalId;
       user.firstName = firstName;
       user.lastName = lastName;
-      user.kycStatus = nationalId ? KYCStatus.PENDING : KYCStatus.PENDING;
-      
+      user.kycStatus = KYCStatus.PENDING;
+
       const savedUser = await this.userRepository.save(user);
 
       // Process biometric data if provided
@@ -43,7 +43,6 @@ export class AuthController {
         );
         
         if (biometricResult.success) {
-          // Update auth level
           savedUser.authLevel = 2; // Biometric enrolled
           await this.userRepository.save(savedUser);
         }
@@ -81,8 +80,7 @@ export class AuthController {
     try {
       const { phoneNumber, biometricData, biometricType } = req.body;
 
-      // Find user
-      const user = await this.userRepository.findOne({ phoneNumber });
+      const user = await this.userRepository.findOne({ where: { phoneNumber } });
       if (!user || !user.isActive) {
         return res.status(401).json({
           success: false,
@@ -90,7 +88,6 @@ export class AuthController {
         });
       }
 
-      // Verify biometric
       const verificationResult = await this.biometricService.verifyBiometric(
         user.userId,
         biometricData,
@@ -104,11 +101,9 @@ export class AuthController {
         });
       }
 
-      // Update auth level and last activity
       user.authLevel = Math.max(user.authLevel, 2);
       await this.userRepository.save(user);
 
-      // Generate JWT token
       const token = this.jwtService.generateToken({
         userId: user.userId,
         phoneNumber: user.phoneNumber,
@@ -139,7 +134,7 @@ export class AuthController {
     try {
       const { phoneNumber } = req.params;
 
-      const user = await this.userRepository.findOne({ phoneNumber });
+      const user = await this.userRepository.findOne({ where: { phoneNumber } });
       if (!user) {
         return res.status(404).json({
           success: false,
