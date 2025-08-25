@@ -1,23 +1,23 @@
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libopencv-dev \
-    python3-opencv \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    libgomp1 \
-    && rm -rf /var/lib/apt/lists/*
+# Install system dependencies for OpenCV
+RUN apk update && apk add --no-cache \
+    opencv \
+    opencv-dev \
+    libstdc++ \
+    libgcc \
+    musl
 
 WORKDIR /app
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 
+# Remove opencv-python from requirements since we're using system OpenCV
+RUN grep -v "opencv-python" requirements.txt > requirements_no_opencv.txt
+
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements_no_opencv.txt
 
 # Copy application code
 COPY . .

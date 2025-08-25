@@ -1,0 +1,45 @@
+# AfriPay Universal - Grafana Dashboard Configuration
+# This file configures dashboard provisioning for Grafana
+
+apiVersion: 1
+
+providers:
+  # System and infrastructure dashboards
+  - name: 'system'
+    orgId: 1
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/system
+
+  # Application dashboards
+  - name: 'application'
+    orgId: 1
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/application
+
+  # Business metrics dashboards
+  - name: 'business'
+    orgId: 1
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/business
+
+  # Security dashboards
+  - name: 'security'
+    orgId: 1
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/security

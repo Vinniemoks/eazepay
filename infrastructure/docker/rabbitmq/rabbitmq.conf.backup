@@ -1,0 +1,70 @@
+# AfriPay Universal - RabbitMQ Configuration
+# Configuration for message queue broker
+
+## Cluster configuration
+cluster_name = afripay-cluster
+
+## Network configuration
+listeners.tcp.default = 5672
+management.tcp.port = 15672
+
+## Memory and disk settings
+vm_memory_high_watermark.relative = 0.6
+disk_free_limit.relative = 1.0
+
+## Authentication and authorization
+# default_user = admin
+# default_pass = rabbitmq_password_2024!
+# default_vhost = afripay
+# default_permissions.configure = .*
+# default_permissions.read = .*
+# default_permissions.write = .*
+  
+
+## Logging
+log.console = true
+log.console.level = info
+log.file = /var/log/rabbitmq/rabbit.log
+log.file.level = info
+log.file.rotation.date = $D0
+log.file.rotation.size = 10485760
+
+## Management plugin
+management.load_definitions = /etc/rabbitmq/definitions.json
+management.rates_mode = basic
+
+## Queue settings
+queue_master_locator = min-masters
+
+## High availability
+# ha-mode = all
+# ha-sync-mode = automatic  
+
+## Performance tuning
+channel_max = 2048
+# connection_backlog = 128  
+heartbeat = 60
+frame_max = 131072
+
+## SSL/TLS (for production)
+# ssl_listeners.default = 5671
+# ssl_options.cacertfile = /etc/rabbitmq/ssl/ca-certificate.pem
+# ssl_options.certfile = /etc/rabbitmq/ssl/server-certificate.pem
+# ssl_options.keyfile = /etc/rabbitmq/ssl/server-key.pem
+# ssl_options.verify = verify_peer
+# ssl_options.fail_if_no_peer_cert = true
+
+## Prometheus metrics
+prometheus.tcp.port = 15692
+prometheus.tcp.ip = 0.0.0.0
+
+## Federation (for multi-region deployment)
+# federation_upstream.upstream1.uri = amqp://user:password@remote-server
+# federation_upstream_set.all.upstream1 = upstream1
+
+## Shovel (for data replication)
+# shovel.source.uri = amqp://
+# shovel.destination.uri = amqp://destination
+
+## Resource limits
+total_memory_available_override_value = 1GB

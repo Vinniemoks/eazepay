@@ -1,17 +1,18 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
 export class JWTService {
-  private secret: string;
+    private static readonly JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+    private static readonly JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 
-  constructor() {
-    this.secret = process.env.JWT_SECRET || 'default_jwt_secret_change_in_production';
-  }
+    static generateToken(payload: object): string {
+        const options: SignOptions = {
+            expiresIn: this.JWT_EXPIRES_IN as any // Cast to any to bypass type checking
+        };
+        
+        return jwt.sign(payload, this.JWT_SECRET, options);
+    }
 
-  generateToken(payload: any, expiresIn: string = '24h'): string {
-    return jwt.sign(payload, this.secret, { expiresIn });
-  }
-
-  verifyToken(token: string): any {
-    return jwt.verify(token, this.secret);
-  }
+    static verifyToken(token: string): any {
+        return jwt.verify(token, this.JWT_SECRET);
+    }
 }

@@ -1,0 +1,116 @@
+# AfriPay Universal - Grafana Datasource Configuration
+# This file configures data sources for Grafana dashboards
+
+apiVersion: 1
+
+datasources:
+  # Prometheus data source for metrics
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      httpMethod: POST
+      manageAlerts: true
+      prometheusType: Prometheus
+      prometheusVersion: 2.45.0
+      cacheLevel: 'High'
+      disableRecordingRules: false
+      incrementalQueryOverlapWindow: 10m
+      exemplarTraceIdDestinations:
+        - name: trace_id
+          url: http://jaeger:16686/trace/$${__value.raw}
+
+  # PostgreSQL data source for application data
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: postgresql:5432
+    database: afripay_dev
+    user: developer
+    secureJsonData:
+      password: dev_password_2024!
+    jsonData:
+      sslmode: disable
+      maxOpenConns: 100
+      maxIdleConns: 100
+      maxIdleConnsAuto: true
+      connMaxLifetime: 14400
+      postgresVersion: 1500
+      timescaledb: false
+
+  # MongoDB data source for analytics
+  - name: MongoDB
+    type: grafana-mongodb-datasource
+    access: proxy
+    url: mongodb://admin:mongo_password_2024!@mongodb:27017/afripay_analytics?authSource=admin
+    database: afripay_analytics
+    jsonData:
+      authType: credentials
+      tlsAuth: false
+      tlsAuthWithCACert: false
+
+  # Elasticsearch for logs
+  - name: Elasticsearch
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    database: logstash-*
+    jsonData:
+      interval: Daily
+      timeField: "@timestamp"
+      esVersion: "8.11.0"
+      maxConcurrentShardRequests: 5
+      logMessageField: message
+      logLevelField: level
+      includeFrozen: false
+
+  # Redis for real-time metrics (if using RedisTimeSeries)
+  - name: Redis
+    type: redis-datasource
+    access: proxy
+    url: redis://redis:6379
+    jsonData:
+      client: standalone
+      poolSize: 5
+      timeout: 10
+      pingInterval: 0
+      pipelineWindow: 0
+    secureJsonData:
+      password: redis_password_2024!
+
+  # InfluxDB (if used for time-series data)
+  # - name: InfluxDB
+  #   type: influxdb
+  #   access: proxy
+  #   url: http://influxdb:8086
+  #   database: afripay_metrics
+  #   user: admin
+  #   secureJsonData:
+  #     password: influx_password_2024!
+  #   jsonData:
+  #     version: 1.8
+  #     timeInterval: 10s
+  #     httpMode: GET
+
+  # Jaeger for distributed tracing (if implemented)
+  # - name: Jaeger
+  #   type: jaeger
+  #   access: proxy
+  #   url: http://jaeger:16686
+  #   jsonData:
+  #     tracesToLogs:
+  #       datasourceUid: elasticsearch
+  #       tags:
+  #         - key: service.name
+  #           value: service
+  #       filterByTraceID: true
+  #       filterBySpanID: false
+  #       lokiSearch: false
+
+# Delete datasources that are not defined above
+deleteDatasources:
+  - name: TestData DB
+    orgId: 1
