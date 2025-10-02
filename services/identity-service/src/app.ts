@@ -7,7 +7,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { authRoutes } from './routes/authRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { logger } from './utils/logger';
-import { Request, Response, NextFunction } from 'express'; // Add these imports
+import { Request, Response, NextFunction } from 'express';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -46,6 +46,8 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     ...(process.env.NODE_ENV === 'development' && { error: error.message })
   });
 });
+// Error handling
+app.use(errorHandler);
 
 // Database connection and server start
 AppDataSource.initialize()
