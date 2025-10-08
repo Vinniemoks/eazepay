@@ -1,8 +1,11 @@
 package main
 
-type Wallet struct {
-	ID      string  `json:"id"`
-	Owner   string  `json:"owner"`
-	Balance float64 `json:"balance"`
-	Currency string `json:"currency"`
+import (
+	"fmt"
+	"net/http"
+)
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, `{"status":"healthy"}`)
 }

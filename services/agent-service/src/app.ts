@@ -35,16 +35,20 @@ app.use('/api/terminals', terminalRoutes);
 
 app.use(errorHandler);
 
-AgentDataSource.initialize()
-  .then(() => {
-    logger.info('Agent service connected to database');
-    app.listen(PORT, () => {
-      logger.info(`Agent Service listening on port ${PORT}`);
+// ...existing code...
+
+if (process.env.NODE_ENV !== 'test') {
+  AgentDataSource.initialize()
+    .then(() => {
+      logger.info('Agent service connected to database');
+      app.listen(PORT, () => {
+        logger.info(`Agent Service listening on port ${PORT}`);
+      });
+    })
+    .catch((error) => {
+      logger.error('Failed to initialise data source', error);
+      process.exit(1);
     });
-  })
-  .catch((error) => {
-    logger.error('Failed to initialise data source', error);
-    process.exit(1);
-  });
+}
 
 export default app;

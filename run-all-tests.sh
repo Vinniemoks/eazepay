@@ -28,7 +28,7 @@ function run_python_tests() {
   echo -e "${YELLOW}Running Python tests in $dir...${NC}"
   cd "$dir"
   if [ -f "test_main.py" ]; then
-    if python3 -m unittest test_main.py; then
+    if python -m unittest test_main.py; then
       echo -e "${GREEN}✅ Python tests passed in $dir${NC}"
     else
       echo -e "${RED}❌ Python tests failed in $dir${NC}"
