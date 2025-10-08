@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AfriPay Experience</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__content">
+        <span class="badge">Unified Digital Payments</span>
+        <h1>Experience Seamless Finance with AfriPay</h1>
+        <p>
+          Secure identity, effortless onboarding, instant wallet settlements and real-time analytics in one modern platform.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#features">Explore Platform</a>
+          <a class="button button--outline" href="#contact">Talk to Us</a>
+        </div>
+      </div>
+      <div class="hero__visual" role="presentation">
+        <div class="card card--balance">
+          <span class="label">Wallet Balance</span>
+          <strong>$12,450.00</strong>
+          <small>Updated just now</small>
+        </div>
+        <div class="card card--analytics">
+          <span class="label">Transactions Today</span>
+          <strong>1,248</strong>
+          <small>+8.4% vs yesterday</small>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="features" class="section section--features">
+        <h2>Built for growth across Africa</h2>
+        <div class="grid">
+          <article class="feature">
+            <h3>Identity &amp; Compliance</h3>
+            <p>Verify customers in seconds with biometric checks, sanctions screening and adaptive MFA.</p>
+          </article>
+          <article class="feature">
+            <h3>Agent Network Toolkit</h3>
+            <p>Empower last-mile agents with device management, agent wallets and instant commissions.</p>
+          </article>
+          <article class="feature">
+            <h3>Transaction Intelligence</h3>
+            <p>Spot fraud trends early using enriched transaction streams and predictive scoring.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--cta" id="contact">
+        <div class="cta">
+          <div class="cta__content">
+            <h2>Launch faster with our sandbox stack</h2>
+            <p>
+              The AfriPay infrastructure comes wired with secure defaults, observability and a polished front-end shell so teams can start building immediately.
+            </p>
+          </div>
+          <a class="button button--inverse" href="mailto:team@afripay.local">Request Access</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> AfriPay Universal. All rights reserved.</p>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

@@ -51,6 +51,9 @@ build/
 *.key
 *.pem
 *.crt
+!infrastructure/docker/nginx/ssl/
+!infrastructure/docker/nginx/ssl/private.key
+!infrastructure/docker/nginx/ssl/certificate.crt
 certificates/
 secrets/
 

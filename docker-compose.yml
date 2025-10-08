@@ -363,6 +363,24 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  web-portal:
+    build:
+      context: ./services/web-portal
+      dockerfile: Dockerfile
+    container_name: afripay-frontend
+    ports:
+      - "8080:80"
+    networks:
+      - afripay-network
+    volumes:
+      - web_portal_logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
   # ================================
   # API GATEWAY & LOAD BALANCER
   # ================================
@@ -385,6 +403,7 @@ services:
       - wallet-service
       - ussd-gateway
       - agent-service
+      - web-portal
     networks:
       - afripay-network
     healthcheck:
@@ -519,6 +538,8 @@ volumes:
   ussd_logs:
     driver: local
   agent_logs:
+    driver: local
+  web_portal_logs:
     driver: local
   nginx_logs:
     driver: local
