@@ -17,5 +17,12 @@ configuration assets that the stack expects so you can boot it locally without v
 - Exchange, queue, and permission bootstrapping remains managed by `infrastructure/docker/rabbitmq/definitions.json`. You can
   customise this file to provision additional messaging topology.
 
+## Web Portal (Front-end shell)
+- The `web-portal` service bundles a static application shell in `services/web-portal/public` that reflects the AfriPay brand
+  palette (blue and gold) and provides an instant UI scaffold for integration testing.
+- Its Docker image (`services/web-portal/Dockerfile`) bakes the assets into an NGINX container with a `/health` endpoint, and
+  the API gateway reverse proxies requests hitting `app.afripay.local` to this service.
+- Log output is persisted to the `web_portal_logs` volume so you can inspect HTTP traffic while developing against the UI.
+
 Use the provided files as sane defaults for local development, and adjust the values as needed for staging or production
 deployments.
