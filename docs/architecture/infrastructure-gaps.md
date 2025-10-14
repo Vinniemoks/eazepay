@@ -16,7 +16,7 @@ configuration assets that the stack expects so you can boot it locally without v
   host, logging, Prometheus metrics listener, and basic resource limits expected by the docker-compose stack.
 - Exchange, queue, and permission bootstrapping remains managed by `infrastructure/docker/rabbitmq/definitions.json`. You can
   customise this file to provision additional messaging topology.
-
+  
 ## Web Portal (Front-end shell)
 - The `web-portal` service bundles a static application shell in `services/web-portal/public` that reflects the AfriPay brand
   palette (blue and gold) and provides an instant UI scaffold for integration testing.
@@ -24,5 +24,4 @@ configuration assets that the stack expects so you can boot it locally without v
   the API gateway reverse proxies requests hitting `app.afripay.local` to this service.
 - Log output is persisted to the `web_portal_logs` volume so you can inspect HTTP traffic while developing against the UI.
 
-Use the provided files as sane defaults for local development, and adjust the values as needed for staging or production
-deployments.
+
