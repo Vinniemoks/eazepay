@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AfriPay Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="top-nav">
+        <div class="top-nav__brand">
+          <span class="top-nav__logo" aria-hidden="true">A</span>
+          <span class="top-nav__title">AfriPay Universal</span>
+        </div>
+        <div class="top-nav__links">
+          <a href="#solutions">Solutions</a>
+          <a href="#insights">Insights</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero__content">
+          <span class="hero__badge">Unified digital finance</span>
+          <h1 class="hero__title">Modern infrastructure for trusted African payments</h1>
+          <p class="hero__subtitle">
+            Power account opening, identity, payments, and liquidity on one resilient platform that feels crafted for the
+            continent.
+          </p>
+          <div class="hero__cta">
+            <a class="button button--primary" href="#contact">Book a sandbox tour</a>
+            <a class="button button--ghost" href="#solutions">View capabilities</a>
+          </div>
+        </div>
+        <div class="hero__media" role="presentation">
+          <div class="hero__metrics">
+            <div class="metric">
+              <span>Instant settlements</span>
+              <strong>&lt; 3s</strong>
+            </div>
+            <div class="metric">
+              <span>Network uptime</span>
+              <strong>99.99%</strong>
+            </div>
+            <div class="metric">
+              <span>Coverage</span>
+              <strong>32 countries</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="solutions" class="section section--light">
+        <p class="section__eyebrow">Solutions</p>
+        <h2 class="section__title">Everything a pan-African fintech operation requires to build trust from day one</h2>
+        <p class="section__lead">
+          Start with industry-grade identity, onboarding, and liquidity orchestration. Scale with analytics, automation,
+          and agent tooling tuned for real market realities.
+        </p>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Identity &amp; compliance</h3>
+            <p>Biometric-backed KYC, sanctions, and adaptive MFA that reduce friction while keeping regulators confident.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Agent network toolkit</h3>
+            <p>Deploy field-ready wallets, location tracking, and commissions so your agents stay productive and loyal.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Settlement intelligence</h3>
+            <p>Balance payouts across banks and mobile money with predictive liquidity to avoid painful downtime.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Experience APIs</h3>
+            <p>Leverage secure APIs for cards, USSD, and web while observability bakes into every customer journey.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="insights" class="section section--stats">
+        <div>
+          <p class="section__eyebrow">Impact</p>
+          <h2 class="section__title">Trusted by ambitious teams streamlining inclusive finance</h2>
+          <p class="section__lead">
+            Our reference stack delivers the governance your auditors expect and the delightful surfaces your customers love.
+          </p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat">
+            <strong>12M+</strong>
+            <span>Monthly customer verifications</span>
+          </div>
+          <div class="stat">
+            <strong>180B</strong>
+            <span>Annualized transaction volume (₦)</span>
+          </div>
+          <div class="stat">
+            <strong>48hrs</strong>
+            <span>Average go-live for new corridors</span>
+          </div>
+          <div class="stat">
+            <strong>87%</strong>
+            <span>Agent retention across all markets</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section section--cta">
+        <div>
+          <p class="section__eyebrow">Get started</p>
+          <h2 class="section__title">Launch the AfriPay sandbox and craft your gold-standard experience</h2>
+          <p>
+            Spin up the full infrastructure locally: gateway, services, and this front-end shell. Discover blue-and-gold
+            theming ready for your product designers to extend.
+          </p>
+        </div>
+        <a class="button button--primary" href="mailto:team@afripay.local">Request access</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <nav aria-label="Footer navigation">
+        <a href="#solutions">Solutions</a>
+        <a href="#insights">Insights</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <p>© <span id="year"></span> AfriPay Universal. All rights reserved.</p>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
