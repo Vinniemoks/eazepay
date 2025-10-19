@@ -1,4 +1,5 @@
 // src/index.ts
+import dotenv from "dotenv";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -8,6 +9,8 @@ import { errorHandler } from "./middleware/errorHandler";
 import { authRoutes } from "./routes/authRoutes";
 import { userRoutes } from "./routes/userRoutes";
 import { logger } from "./utils/logger";
+
+dotenv.config();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "8000", 10);

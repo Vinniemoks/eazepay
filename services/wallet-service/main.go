@@ -1,7 +1,11 @@
 package main
 
 import (
+	"bufio"
+	"log"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +17,55 @@ type Wallet struct {
 
 var wallets = make(map[string]Wallet)
 
+func loadEnv(filename string) {
+	f, err := os.Open(filename)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("wallet-service: unable to read %s: %v", filename, err)
+		}
+		return
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+
+		if key == "" || value == "" {
+			continue
+		}
+
+		if _, exists := os.LookupEnv(key); !exists {
+			if err := os.Setenv(key, value); err != nil {
+				log.Printf("wallet-service: unable to set env %s: %v", key, err)
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Printf("wallet-service: error scanning %s: %v", filename, err)
+	}
+}
+
 func main() {
+	loadEnv(".env")
+
+	port := strings.TrimSpace(os.Getenv("PORT"))
+	if port == "" {
+		port = "8003"
+	}
+
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "healthy", "service": "wallet-service"})
@@ -39,5 +91,7 @@ func main() {
 		c.JSON(http.StatusOK, wallet)
 	})
 
-	r.Run(":8003")
+	if err := r.Run(":" + port); err != nil {
+		log.Fatalf("wallet-service: failed to start server: %v", err)
+	}
 }
