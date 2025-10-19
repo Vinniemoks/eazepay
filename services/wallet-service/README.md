@@ -10,10 +10,8 @@ A Go microservice for digital wallet management in AfriPay.
 ## Usage
 
 ```bash
-# Install dependencies
- go mod tidy
-# Run service
- go run main.go
+# Run the HTTP API (loads configuration from .env if present)
+go run .
 ```
 
 ## Docker
