@@ -102,6 +102,9 @@ async def enroll_fingerprint(
             message="Fingerprint enrolled successfully"
         )
         
+    except RuntimeError as exc:
+        logger.error(f"Fingerprint enrollment unavailable: {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Exception as e:
         logger.error(f"Fingerprint enrollment error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -142,6 +145,9 @@ async def enroll_face(
             message="Face enrolled successfully"
         )
         
+    except RuntimeError as exc:
+        logger.error(f"Face enrollment unavailable: {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Exception as e:
         logger.error(f"Face enrollment error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -184,6 +190,9 @@ async def verify_fingerprint(
             "quality": candidate_result['quality']
         }
         
+    except RuntimeError as exc:
+        logger.error(f"Fingerprint verification unavailable: {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Exception as e:
         logger.error(f"Fingerprint verification error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -226,6 +235,9 @@ async def verify_face(
             "quality": candidate_result['quality']
         }
         
+    except RuntimeError as exc:
+        logger.error(f"Face verification unavailable: {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Exception as e:
         logger.error(f"Face verification error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
