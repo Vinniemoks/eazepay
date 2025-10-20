@@ -53,8 +53,9 @@ export NVD_API_KEY="<your-nvd-api-key>"
 ./mvnw dependency-check:check
 ```
 
-Without a key the plugin will emit warnings, but the build will continue so that local
-development workflows are not blocked.
+When no API key is present the plugin is skipped automatically so the rest of the build can
+run uninterrupted. To force a scan in environments where the key cannot be exported, invoke
+Maven with `-Ddependency-check.skip=false` after supplying the key via `~/.m2/settings.xml`.
 
 ## Notes
 
