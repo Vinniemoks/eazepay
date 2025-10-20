@@ -43,6 +43,20 @@ The health endpoint is exposed at `http://localhost:8002/actuator/health`.
 ./mvnw test
 ```
 
+### Security Scans
+
+The build runs the OWASP Dependency Check plugin. To avoid update failures caused by the
+recent NVD API key requirement, export an API key before invoking Maven:
+
+```bash
+export NVD_API_KEY="<your-nvd-api-key>"
+./mvnw dependency-check:check
+```
+
+When no API key is present the plugin is skipped automatically so the rest of the build can
+run uninterrupted. To force a scan in environments where the key cannot be exported, invoke
+Maven with `-Ddependency-check.skip=false` after supplying the key via `~/.m2/settings.xml`.
+
 ## Notes
 
 - Update the datasource URL if you run PostgreSQL in Docker.
