@@ -53,6 +53,16 @@ docker-compose up -d postgresql redis mongodb rabbitmq
 docker-compose up -d
 ```
 
+If you run into transient TLS handshake timeouts while pulling images (for example, `net/http: TLS handshake timeout`), you can
+use the helper script below to retry `docker compose up` automatically until it succeeds:
+
+```bash
+chmod +x scripts/docker-compose-up-retry.sh
+./scripts/docker-compose-up-retry.sh
+```
+
+Set the `MAX_RETRIES` and `RETRY_DELAY` environment variables to customise the retry behaviour if needed.
+
 ## 📚 Documentation
 
 - [API Documentation](docs/api/README.md)
