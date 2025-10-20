@@ -2,26 +2,21 @@ package main
 
 import (
 	"bufio"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 	"errors"
->>>>>>> 9d089b185e0f047271379cf2058e997b0a5d318c
-=======
+9d089b185e0f047271379cf2058e997b0a5d318c
 	"errors"
->>>>>>> codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-9rdxlj
+	"errors"
+codex/identify-missing-files-vv2oil
 	"log"
 	"net/http"
 	"os"
 	"strings"
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 	"github.com/gin-gonic/gin"
-=======
->>>>>>> 9d089b185e0f047271379cf2058e997b0a5d318c
-=======
->>>>>>> codex/identify-missing-files-9rdxlj
+9d089b185e0f047271379cf2058e997b0a5d318c
+codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-vv2oil
 )
 
 func loadEnv(filename string) {
@@ -33,8 +28,6 @@ func loadEnv(filename string) {
 		return
 	}
 	defer f.Close()
-<<<<<<< HEAD
-
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -76,9 +69,8 @@ func loadEnv(filename string) {
 	}
 	defer f.Close()
 
-=======
-
->>>>>>> codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-vv2oil
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -118,14 +110,11 @@ func main() {
 		port = "8003"
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "healthy", "service": "wallet-service"})
-=======
-=======
->>>>>>> codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-vv2oil
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -134,14 +123,19 @@ func main() {
 			return
 		}
 
+HEAD
 		writeJSON(w, http.StatusOK, map[string]any{
 			"status":  "healthy",
 			"service": "wallet-service",
 		})
-<<<<<<< HEAD
->>>>>>> 9d089b185e0f047271379cf2058e997b0a5d318c
-=======
->>>>>>> codex/identify-missing-files-9rdxlj
+HEAD
+9d089b185e0f047271379cf2058e997b0a5d318c
+codex/identify-missing-files-9rdxlj
+		writeJSON(w, http.StatusOK, map[string]interface{}{
+			"status":  "healthy",
+			"service": "wallet-service",
+		})
+codex/identify-missing-files-vv2oil
 	})
 
 	mux.HandleFunc("/api/wallets", func(w http.ResponseWriter, r *http.Request) {
@@ -192,12 +186,9 @@ func main() {
 		writeJSON(w, http.StatusOK, wallet)
 	})
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	if err := r.Run(":" + port); err != nil {
-=======
-=======
->>>>>>> codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-vv2oil
 	server := &http.Server{
 		Addr:    ":" + port,
 		Handler: mux,
@@ -206,10 +197,9 @@ func main() {
 	log.Printf("wallet-service: listening on port %s", port)
 
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-<<<<<<< HEAD
->>>>>>> 9d089b185e0f047271379cf2058e997b0a5d318c
-=======
->>>>>>> codex/identify-missing-files-9rdxlj
+9d089b185e0f047271379cf2058e997b0a5d318c
+codex/identify-missing-files-9rdxlj
+codex/identify-missing-files-vv2oil
 		log.Fatalf("wallet-service: failed to start server: %v", err)
 	}
 }
