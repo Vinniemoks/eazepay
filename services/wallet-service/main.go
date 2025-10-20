@@ -2,21 +2,24 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"errors"
-9d089b185e0f047271379cf2058e997b0a5d318c
-	"errors"
-codex/identify-missing-files-9rdxlj
-	"errors"
-codex/identify-missing-files-vv2oil
 	"log"
 	"net/http"
 	"os"
 	"strings"
+	"sync"
+)
 
-	"github.com/gin-gonic/gin"
-9d089b185e0f047271379cf2058e997b0a5d318c
-codex/identify-missing-files-9rdxlj
-codex/identify-missing-files-vv2oil
+type Wallet struct {
+	ID      string  `json:"id"`
+	Balance float64 `json:"balance"`
+	UserID  string  `json:"user_id"`
+}
+
+var (
+	wallets   = make(map[string]Wallet)
+	walletsMu sync.RWMutex
 )
 
 func loadEnv(filename string) {
@@ -28,6 +31,7 @@ func loadEnv(filename string) {
 		return
 	}
 	defer f.Close()
+
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -59,47 +63,18 @@ func loadEnv(filename string) {
 	}
 }
 
-func loadEnv(filename string) {
-	f, err := os.Open(filename)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			log.Printf("wallet-service: unable to read %s: %v", filename, err)
-		}
-		return
-	}
-	defer f.Close()
+func writeJSON(w http.ResponseWriter, status int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(data)
+}
 
-codex/identify-missing-files-9rdxlj
-codex/identify-missing-files-vv2oil
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
+func writeError(w http.ResponseWriter, status int, message string) {
+	writeJSON(w, status, map[string]string{"error": message})
+}
 
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) != 2 {
-			continue
-		}
-
-		key := strings.TrimSpace(parts[0])
-		value := strings.TrimSpace(parts[1])
-
-		if key == "" || value == "" {
-			continue
-		}
-
-		if _, exists := os.LookupEnv(key); !exists {
-			if err := os.Setenv(key, value); err != nil {
-				log.Printf("wallet-service: unable to set env %s: %v", key, err)
-			}
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Printf("wallet-service: error scanning %s: %v", filename, err)
-	}
+func readJSON(r *http.Request, v interface{}) error {
+	return json.NewDecoder(r.Body).Decode(v)
 }
 
 func main() {
@@ -110,11 +85,6 @@ func main() {
 		port = "8003"
 	}
 
-	r := gin.Default()
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "healthy", "service": "wallet-service"})
-codex/identify-missing-files-9rdxlj
-codex/identify-missing-files-vv2oil
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -123,19 +93,10 @@ codex/identify-missing-files-vv2oil
 			return
 		}
 
-HEAD
-		writeJSON(w, http.StatusOK, map[string]any{
-			"status":  "healthy",
-			"service": "wallet-service",
-		})
-HEAD
-9d089b185e0f047271379cf2058e997b0a5d318c
-codex/identify-missing-files-9rdxlj
 		writeJSON(w, http.StatusOK, map[string]interface{}{
 			"status":  "healthy",
 			"service": "wallet-service",
 		})
-codex/identify-missing-files-vv2oil
 	})
 
 	mux.HandleFunc("/api/wallets", func(w http.ResponseWriter, r *http.Request) {
@@ -186,9 +147,6 @@ codex/identify-missing-files-vv2oil
 		writeJSON(w, http.StatusOK, wallet)
 	})
 
-	if err := r.Run(":" + port); err != nil {
-codex/identify-missing-files-9rdxlj
-codex/identify-missing-files-vv2oil
 	server := &http.Server{
 		Addr:    ":" + port,
 		Handler: mux,
@@ -197,9 +155,6 @@ codex/identify-missing-files-vv2oil
 	log.Printf("wallet-service: listening on port %s", port)
 
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-9d089b185e0f047271379cf2058e997b0a5d318c
-codex/identify-missing-files-9rdxlj
-codex/identify-missing-files-vv2oil
 		log.Fatalf("wallet-service: failed to start server: %v", err)
 	}
 }
