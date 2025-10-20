@@ -1,19 +1,66 @@
-import cv2
-import numpy as np
+"""Biometric processing helpers with optional OpenCV integration."""
+
 import base64
-from typing import Dict, Any
-import asyncio
+from typing import Any, Dict, Optional
+
+import numpy as np
+
 from ..utils.logger import logger
+
+try:  # pragma: no cover - platform dependent import
+    import cv2  # type: ignore
+
+    _CV2_IMPORT_ERROR: Optional[Exception] = None
+    _CV2_AVAILABLE = True
+except Exception as exc:  # pragma: no cover - executed when OpenCV is missing
+    cv2 = None  # type: ignore
+    _CV2_IMPORT_ERROR = exc
+    _CV2_AVAILABLE = False
 
 class BiometricProcessor:
     def __init__(self):
-        # Initialize OpenCV components
-        self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        self.face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+        self._opencv_available = _CV2_AVAILABLE
+        self._opencv_error = _CV2_IMPORT_ERROR
+        self.face_cascade = None
+        self.face_recognizer = None
+
+        if not self._opencv_available:
+            logger.warning(
+                "OpenCV is not available; biometric processing endpoints will be disabled (%s)",
+                self._opencv_error,
+            )
+            return
+
+        try:
+            cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+            self.face_cascade = cv2.CascadeClassifier(cascade_path)
+        except Exception as exc:  # pragma: no cover - depends on local OpenCV data
+            self.face_cascade = None
+            logger.error("Failed to load OpenCV face cascade: %s", exc)
+
+        try:
+            face_module = getattr(cv2, "face", None)
+            if face_module is not None:
+                self.face_recognizer = face_module.LBPHFaceRecognizer_create()
+        except Exception as exc:  # pragma: no cover - optional component
+            self.face_recognizer = None
+            logger.warning("Failed to initialize LBPH face recognizer: %s", exc)
+
+    def _require_opencv(self, operation: str) -> None:
+        if not self._opencv_available or cv2 is None:
+            message = (
+                f"{operation} requires OpenCV. Install 'opencv-python-headless' and a NumPy version "
+                "compatible with your platform (for NumPy 2.x support rebuild native extensions)."
+            )
+            if self._opencv_error:
+                message += f" Original import error: {self._opencv_error}."
+            raise RuntimeError(message)
         
     async def process_fingerprint(self, image_data: bytes) -> Dict[str, Any]:
         """Process fingerprint image and extract features"""
         try:
+            self._require_opencv("Fingerprint processing")
+
             # Convert bytes to numpy array
             nparr = np.frombuffer(image_data, np.uint8)
             image = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
@@ -46,6 +93,8 @@ class BiometricProcessor:
     async def process_face(self, image_data: bytes) -> Dict[str, Any]:
         """Process face image and extract features"""
         try:
+            self._require_opencv("Face processing")
+
             # Convert bytes to numpy array
             nparr = np.frombuffer(image_data, np.uint8)
             image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -56,6 +105,9 @@ class BiometricProcessor:
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             
             # Detect faces
+            if not self.face_cascade:
+                raise RuntimeError("OpenCV face cascade is not available.")
+
             faces = self.face_cascade.detectMultiScale(
                 gray, 
                 scaleFactor=1.3, 

@@ -15,6 +15,7 @@ vendor/
 .env.production
 .env.staging
 *.env
+!services/**/.env
 
 # IDE files
 .vscode/settings.json

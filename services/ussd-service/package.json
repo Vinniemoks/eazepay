@@ -4,7 +4,7 @@
   "description": "USSD Gateway microservice for AfriPay",
   "main": "index.js",
   "scripts": {
-  "start": "node server.js",
+    "start": "node server.js",
     "test": "jest",
     "dev": "nodemon index.js"
   },

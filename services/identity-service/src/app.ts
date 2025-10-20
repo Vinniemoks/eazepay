@@ -1,4 +1,5 @@
 // src/index.ts
+import dotenv from "dotenv";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -8,6 +9,8 @@ import { errorHandler } from "./middleware/errorHandler";
 import { authRoutes } from "./routes/authRoutes";
 import { userRoutes } from "./routes/userRoutes";
 import { logger } from "./utils/logger";
+
+dotenv.config();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "8000", 10);
@@ -49,17 +52,28 @@ app.use(errorHandler);
 
 // ---------- DB init + server start (skipped in tests) ----------
 if (process.env.NODE_ENV !== "test") {
-  AppDataSource.initialize()
-    .then(() => {
-      logger.info("✅ Database connected successfully");
-      app.listen(PORT, () => {
-        logger.info(`🚀 Identity Service running on port ${PORT}`);
-      });
-    })
-    .catch((err) => {
-      logger.error("❌ Database connection failed:", err);
-      process.exit(1);
+  const shouldSkipDbInit = process.env.SKIP_DB_INIT === "true";
+
+  const startServer = () => {
+    app.listen(PORT, () => {
+      logger.info(`🚀 Identity Service running on port ${PORT}`);
     });
+  };
+
+  if (shouldSkipDbInit) {
+    logger.warn("⚠️ Skipping database initialization because SKIP_DB_INIT=true");
+    startServer();
+  } else {
+    AppDataSource.initialize()
+      .then(() => {
+        logger.info("✅ Database connected successfully");
+        startServer();
+      })
+      .catch((err) => {
+        logger.error("❌ Database connection failed:", err);
+        process.exit(1);
+      });
+  }
 }
 
 export default app;
