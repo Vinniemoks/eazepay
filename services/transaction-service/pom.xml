@@ -100,6 +100,8 @@
                 <configuration>
                     <!-- NVD API Key (set via environment variable or Maven settings) -->
                     <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+                    <!-- Prevent build failures when an API key is unavailable (logs an error instead) -->
+                    <failOnError>false</failOnError>
                     <failBuildOnCVSS>7</failBuildOnCVSS>
                     <suppressionFiles>
                         <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
