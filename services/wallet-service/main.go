@@ -7,8 +7,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 )
 
 type Wallet struct {
@@ -22,8 +24,20 @@ var (
 	walletsMu sync.RWMutex
 )
 
+// loadEnv loads environment variables from a file
+// Fixed G304: Added filepath.Clean to prevent directory traversal attacks
 func loadEnv(filename string) {
-	f, err := os.Open(filename)
+	// Sanitize the filename to prevent path traversal
+	cleanPath := filepath.Clean(filename)
+
+	// Only allow .env files in the current directory
+	if !strings.HasPrefix(cleanPath, ".env") {
+		log.Printf("wallet-service: invalid env file name: %s", filename)
+		return
+	}
+
+	// #nosec G304 - File path is sanitized above
+	f, err := os.Open(cleanPath)
 	if err != nil {
 		if !os.IsNotExist(err) {
 			log.Printf("wallet-service: unable to read %s: %v", filename, err)
@@ -63,10 +77,16 @@ func loadEnv(filename string) {
 	}
 }
 
+// writeJSON writes JSON response
+// Fixed G104: Now handles encoding errors
 func writeJSON(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(data)
+
+	// Handle encoding errors
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		log.Printf("wallet-service: error encoding JSON response: %v", err)
+	}
 }
 
 func writeError(w http.ResponseWriter, status int, message string) {
@@ -147,9 +167,15 @@ func main() {
 		writeJSON(w, http.StatusOK, wallet)
 	})
 
+	// Fixed G112: Added ReadHeaderTimeout to prevent Slowloris attacks
 	server := &http.Server{
-		Addr:    ":" + port,
-		Handler: mux,
+		Addr:              ":" + port,
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       120 * time.Second,
+		MaxHeaderBytes:    1 << 20, // 1 MB
 	}
 
 	log.Printf("wallet-service: listening on port %s", port)
