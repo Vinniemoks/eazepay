@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM golang:1.19-alpine AS builder
+FROM public.ecr.aws/docker/library/golang:1.19-alpine AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o wallet-service .
 
 # Stage 2: Runtime
-FROM alpine:3.19
+FROM public.ecr.aws/docker/library/alpine:3.19
 
 # Install ca-certificates for HTTPS
 RUN apk --no-cache add ca-certificates
