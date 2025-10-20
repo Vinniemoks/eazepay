@@ -15,6 +15,12 @@ COPY . .
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o wallet-service .
 
+# Collect optional environment files for the runtime image
+RUN mkdir -p /tmp/envfiles \
+    && for file in .env .env.local; do \
+        if [ -f "$file" ]; then cp "$file" /tmp/envfiles/; fi; \
+    done
+
 # Stage 2: Runtime
 FROM public.ecr.aws/docker/library/alpine:3.19
 
@@ -30,8 +36,8 @@ WORKDIR /app
 # Copy binary from builder
 COPY --from=builder --chown=appuser:appuser /app/wallet-service .
 
-# Copy .env file if exists (optional)
-COPY --chown=appuser:appuser .env* ./ || true
+# Copy optional environment files from the builder stage
+COPY --from=builder --chown=appuser:appuser /tmp/envfiles/ ./
 
 # Switch to non-root user
 USER appuser
