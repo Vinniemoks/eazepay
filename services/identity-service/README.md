@@ -27,6 +27,7 @@ The service reads configuration from `.env`:
 | `IDENTITY_DB_PASS` | Identity-specific DB password | `dev_password_2024!` |
 | `JWT_SECRET` | Secret key for signing JWTs | `super_secret_jwt_key_change_me` |
 | `JWT_EXPIRES_IN` | JWT expiration window | `1h` |
+| `SKIP_DB_INIT` | Set to `true` to start the API without connecting to PostgreSQL (useful for local smoke tests) | `false` |
 | `BIOMETRIC_SERVICE_URL` | URL of the Biometric Service | `http://localhost:8001` |
 | `TRANSACTION_SERVICE_URL` | URL of the Transaction Service | `http://localhost:8002` |
 | `WALLET_SERVICE_URL` | URL of the Wallet Service | `http://localhost:8003` |
@@ -44,6 +45,8 @@ For development with hot reload:
 ```bash
 npm run dev
 ```
+
+> **Tip:** When you want to run the service without a local PostgreSQL instance (for example, to quickly verify the HTTP layer), export `SKIP_DB_INIT=true` before starting the server. The service will skip database initialization but still honour port settings from `.env`.
 
 ## Database Migrations
 

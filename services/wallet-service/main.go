@@ -2,11 +2,15 @@ package main
 
 import (
 	"bufio"
+<<<<<<< HEAD
 	"encoding/json"
+=======
+>>>>>>> codex/identify-missing-files-tghd01
 	"errors"
 	"log"
 	"net/http"
 	"os"
+<<<<<<< HEAD
 	"path/filepath"
 	"strings"
 	"sync"
@@ -46,6 +50,21 @@ func loadEnv(filename string) {
 	}
 	defer f.Close()
 
+=======
+	"strings"
+)
+
+func loadEnv(filename string) {
+	f, err := os.Open(filename)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("wallet-service: unable to read %s: %v", filename, err)
+		}
+		return
+	}
+	defer f.Close()
+
+>>>>>>> codex/identify-missing-files-tghd01
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -76,6 +95,7 @@ func loadEnv(filename string) {
 		log.Printf("wallet-service: error scanning %s: %v", filename, err)
 	}
 }
+<<<<<<< HEAD
 
 // writeJSON writes JSON response
 // Fixed G104: Now handles encoding errors
@@ -96,6 +116,8 @@ func writeError(w http.ResponseWriter, status int, message string) {
 func readJSON(r *http.Request, v interface{}) error {
 	return json.NewDecoder(r.Body).Decode(v)
 }
+=======
+>>>>>>> codex/identify-missing-files-tghd01
 
 func main() {
 	loadEnv(".env")
@@ -167,6 +189,7 @@ func main() {
 		writeJSON(w, http.StatusOK, wallet)
 	})
 
+<<<<<<< HEAD
 	// Fixed G112: Added ReadHeaderTimeout to prevent Slowloris attacks
 	server := &http.Server{
 		Addr:              ":" + port,
@@ -176,6 +199,11 @@ func main() {
 		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       120 * time.Second,
 		MaxHeaderBytes:    1 << 20, // 1 MB
+=======
+	server := &http.Server{
+		Addr:    ":" + port,
+		Handler: mux,
+>>>>>>> codex/identify-missing-files-tghd01
 	}
 
 	log.Printf("wallet-service: listening on port %s", port)

@@ -46,4 +46,3 @@ pytest
 - Update `ENCRYPTION_KEY` with a secure secret in production.
 - The service maintains its own PostgreSQL schema via the async `DatabaseService` class.
 - Install `opencv-python-headless` (or a compatible OpenCV build) alongside a NumPy version your platform supports to enable the biometric processing endpoints. When OpenCV is unavailable the API responds with `503 Service Unavailable` and logs the import failure so the rest of the application can keep starting.
-- Install `opencv-python-headless` (or a compatible OpenCV build) alongside a NumPy version your platform supports to enable the biometric processing endpoints. When OpenCV is unavailable the API responds with `503 Service Unavailable` and logs the import failure so the rest of the application can keep starting.
