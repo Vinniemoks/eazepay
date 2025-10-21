@@ -363,22 +363,49 @@ services:
       start_period: 60s
     restart: unless-stopped
 
-  web-portal:
+  admin-portal:
     build:
-      context: ./services/web-portal
+      context: ./services/admin-portal
       dockerfile: Dockerfile
     container_name: afripay-admin-portal
     ports:
       - "8080:80"
+    environment:
+      - VITE_API_GATEWAY_URL=http://api-gateway
+      - VITE_IDENTITY_SERVICE_URL=http://identity-service:8000
     networks:
       - afripay-network
     volumes:
-      - web_portal_logs:/var/log/nginx
+      - admin_portal_logs:/var/log/nginx
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost/health"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  superuser-portal:
+    build:
+      context: ./services/admin-portal
+      dockerfile: Dockerfile
+    container_name: afripay-superuser-portal
+    ports:
+      - "8090:80"
+    environment:
+      - VITE_API_GATEWAY_URL=http://api-gateway
+      - VITE_IDENTITY_SERVICE_URL=http://identity-service:8000
+      - VITE_PORTAL_TYPE=superuser
+    networks:
+      - afripay-network
+    volumes:
+      - superuser_portal_logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     restart: unless-stopped
 
   customer-portal:
@@ -445,7 +472,8 @@ services:
       - wallet-service
       - ussd-service
       - agent-service
-      - web-portal
+      - admin-portal
+      - superuser-portal
       - customer-portal
       - agent-portal
     networks:
@@ -583,7 +611,9 @@ volumes:
     driver: local
   agent_logs:
     driver: local
-  web_portal_logs:
+  admin_portal_logs:
+    driver: local
+  superuser_portal_logs:
     driver: local
   customer_portal_logs:
     driver: local

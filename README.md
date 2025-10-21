@@ -1,116 +1,295 @@
-# AfriPay Universal
+# Eazepay - Universal Payment Platform
 
-A comprehensive fintech platform providing seamless payment solutions across Africa with support for mobile money, biometric authentication, and agent networks.
-
-## 🎯 Production Ready
-
-AfriPay is now **cloud-ready** with complete customer-facing interfaces for AWS and Google Cloud Platform deployment.
-
-## 🏗️ Architecture
-
-### Customer-Facing Applications
-- **Customer Portal** (Port 3001) - React - User wallet and transactions
-- **Agent Portal** (Port 3002) - React - Agent operations and analytics
-- **Admin Portal** (Port 8080) - Static - System administration
-
-### Backend Microservices
-- **Identity Service** (Port 8000) - Node.js/TypeScript - Authentication & Authorization
-- **Biometric Service** (Port 8001) - Python/FastAPI - Biometric Authentication
-- **Transaction Service** (Port 8002) - Java/Spring Boot - Payment Processing  
-- **Wallet Service** (Port 8003) - Go - Digital Wallet Management
-- **USSD Gateway** (Port 8004) - Node.js - USSD Integration
-- **Agent Service** (Port 8005) - Node.js - Agent Network Management
-
-### Infrastructure
-- **PostgreSQL** - Primary database
-- **Redis** - Caching & sessions
-- **MongoDB** - Document storage
-- **RabbitMQ** - Message queue
-- **Nginx** - API Gateway & Load Balancer
+> A distributed microservices payment platform for mobile money, biometric payments, and agent banking.
 
 ## 🚀 Quick Start
 
 ### Local Development
-
 ```bash
-# Quick deploy all services locally
-chmod +x scripts/deploy-local.sh
-./scripts/deploy-local.sh
+# Clone repository
+git clone https://github.com/yourusername/eazepay.git
+cd eazepay
+
+# Copy environment file
+cp .env.example .env
+
+# Start all services
+docker-compose up -d
+
+# Access portals
+# Admin: http://localhost:8080
+# Superuser: http://localhost:8090
+# Customer: http://localhost:3001
+# Agent: http://localhost:3002
 ```
 
-Access your applications:
-- **Customer Portal**: http://localhost:3001
-- **Agent Portal**: http://localhost:3002
-- **Admin Portal**: http://localhost:8080
-- **API Gateway**: http://localhost:80
-
-### Cloud Deployment
-
-#### Deploy to AWS
+### Check Service Status
 ```bash
-export AWS_REGION=us-east-1
-chmod +x scripts/deploy-aws.sh
-./scripts/deploy-aws.sh
+# View running services
+docker-compose ps
+
+# View logs
+docker-compose logs -f identity-service
+
+# Test admin portal
+curl http://localhost:8080/health
 ```
 
-#### Deploy to GCP
-```bash
-export GCP_PROJECT_ID=your-project-id
-chmod +x scripts/deploy-gcp.sh
-./scripts/deploy-gcp.sh
-```
+## 📋 What's Working
 
-See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions.
+✅ **Admin Portal** - http://localhost:8080
+✅ **Superuser Portal** - http://localhost:8090
+✅ **Customer Portal** - http://localhost:3001
+✅ **Agent Portal** - http://localhost:3002
+✅ **Superuser API Routes** - Created and configured
+✅ **Docker Configuration** - Fixed and updated
+
+⚠️ **Identity Service** - Needs TypeScript errors fixed (see `ADMIN_SUPERUSER_STATUS.md`)
+
+## 🏗️ Architecture
+
+Eazepay is built as a microservices architecture that can be deployed:
+- **Monolithic**: All services on one server (current docker-compose)
+- **Distributed**: Services across multiple servers/clouds
+- **Hybrid**: Critical services on-premise, others in cloud
+- **Multi-platform**: Web, mobile apps, desktop apps
+
+### Services
+
+| Service | Port | Description | Status |
+|---------|------|-------------|--------|
+| Identity Service | 8000 | Authentication & user management | ⚠️ Needs fixes |
+| Biometric Service | 8001 | Biometric verification | ✅ Running |
+| Transaction Service | 8002 | Payment processing | ✅ Running |
+| Wallet Service | 8003 | Wallet management | ✅ Running |
+| USSD Service | 8004 | USSD integration | ✅ Running |
+| Agent Service | 8005 | Agent management | ✅ Running |
+| Admin Portal | 8080 | Admin interface | ✅ Running |
+| Superuser Portal | 8090 | Superuser interface | ✅ Running |
+| Customer Portal | 3001 | Customer interface | ✅ Running |
+| Agent Portal | 3002 | Agent interface | ✅ Running |
 
 ## 📚 Documentation
 
-- [Cloud Deployment Overview](docs/CLOUD_DEPLOYMENT_OVERVIEW.md)
-- [AWS Deployment Guide](docs/deployment/AWS_DEPLOYMENT.md)
-- [GCP Deployment Guide](docs/deployment/GCP_DEPLOYMENT.md)
-- [API Documentation](docs/api/README.md)
-- [Architecture Overview](docs/architecture/README.md)
+### Getting Started
+- **[Deployment Guide](EAZEPAY_DEPLOYMENT_GUIDE.md)** - Complete deployment instructions
+- **[Architecture](DEPLOYMENT_ARCHITECTURE.md)** - System architecture and design
+- **[Mobile App Guide](MOBILE_APP_GUIDE.md)** - Build iOS/Android apps
+- **[Admin/Superuser Status](ADMIN_SUPERUSER_STATUS.md)** - Current status and fixes
 
-## 🛠️ Development
+### Configuration
+- **[Environment Variables](.env.example)** - All configuration options
+- **[Service Config](services/identity-service/.env.example)** - Service-specific config
 
-### Frontend Applications
-- Customer Portal: http://localhost:3001
-- Agent Portal: http://localhost:3002
-- Admin Portal: http://localhost:8080
+## 🎯 Deployment Scenarios
 
-### Backend Services
-- Identity Service: http://localhost:8000
-- Biometric Service: http://localhost:8001
-- Transaction Service: http://localhost:8002
-- Wallet Service: http://localhost:8003
-- USSD Gateway: http://localhost:8004
-- Agent Service: http://localhost:8005
+### 1. All-in-One (Current)
+Perfect for development and testing.
+```bash
+docker-compose up -d
+```
+
+### 2. Distributed Services
+Deploy services on separate servers:
+```env
+IDENTITY_SERVICE_URL=https://identity.eazepay.com
+TRANSACTION_SERVICE_URL=https://transactions.eazepay.com
+WALLET_SERVICE_URL=https://wallet.eazepay.com
+```
+
+### 3. Hybrid (Recommended)
+Sensitive services on-premise, scalable services in cloud:
+- **On-Premise**: Identity, Biometric, Admin portals
+- **Cloud**: Transaction, Wallet, USSD, Customer/Agent portals
+
+See [Deployment Guide](EAZEPAY_DEPLOYMENT_GUIDE.md) for detailed instructions.
+
+## 📱 Mobile App
+
+Build native iOS and Android apps using React Native:
+
+```bash
+# Initialize project
+npx react-native init EazepayMobile --template react-native-template-typescript
+
+# Configure API
+echo "API_URL=https://api.eazepay.com" > .env
+
+# Run on iOS
+npx react-native run-ios
+
+# Run on Android
+npx react-native run-android
+```
+
+See [Mobile App Guide](MOBILE_APP_GUIDE.md) for complete instructions.
+
+## 🔐 Security Features
+
+- **JWT Authentication** - Secure token-based auth
+- **2FA Support** - SMS, Biometric, or both
+- **Role-Based Access** - Superuser, Admin, Manager, Employee
+- **Permission System** - Granular permissions per user
+- **Audit Logging** - All actions logged
+- **Biometric Encryption** - Biometric data encrypted at rest
+- **Rate Limiting** - API rate limiting per user/IP
+- **Session Management** - Secure session handling
+
+## 🛠️ Technology Stack
+
+### Backend
+- **Node.js/TypeScript** - Identity, USSD, Agent services
+- **Python/FastAPI** - Biometric service
+- **Java/Spring Boot** - Transaction service
+- **Go** - Wallet service
+
+### Frontend
+- **React 18** - All web portals
+- **TypeScript** - Type safety
+- **Vite** - Fast build tool
+- **Zustand** - State management
+- **Recharts** - Data visualization
 
 ### Infrastructure
-- PostgreSQL: `localhost:5433` (user: developer)
-- Redis: `localhost:6379`
-- MongoDB: `localhost:27017`
-- RabbitMQ: http://localhost:15673
-- Grafana: http://localhost:3000
-- Prometheus: http://localhost:9090
+- **PostgreSQL** - Primary database
+- **Redis** - Caching and sessions
+- **MongoDB** - Analytics data
+- **RabbitMQ** - Message queue
+- **Docker** - Containerization
+- **Nginx** - Reverse proxy
 
-## 🔒 Security
+### Monitoring
+- **Prometheus** - Metrics collection
+- **Grafana** - Dashboards
+- **Elasticsearch** - Log aggregation
+- **Kibana** - Log visualization
 
-⚠️ **Important Security Notes:**
-- Never commit `.env` files to version control
-- Change default passwords in production
-- Use proper SSL/TLS certificates in production
-- Follow security best practices for each service
+## 🧪 Testing
+
+### Run Tests
+```bash
+# Identity service tests
+cd services/identity-service
+npm test
+
+# Transaction service tests
+cd services/transaction-service
+./gradlew test
+
+# Biometric service tests
+cd services/biometric-service
+pytest
+```
+
+### Test Portals
+```bash
+# Run test script
+bash test-admin-superuser-ports.sh
+
+# Or manually
+curl http://localhost:8080/health
+curl http://localhost:8090/health
+```
+
+## 📊 Monitoring
+
+### Access Monitoring Tools
+- **Grafana**: http://localhost:3000 (admin/grafana_admin_2024!)
+- **Prometheus**: http://localhost:9090
+- **Kibana**: http://localhost:5601
+- **RabbitMQ**: http://localhost:15673 (admin/rabbitmq_password_2024!)
+
+### Health Checks
+```bash
+# Check all services
+docker-compose ps
+
+# Check specific service
+curl http://localhost:8000/health
+```
+
+## 🔄 CI/CD
+
+### GitHub Actions
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy services
+        run: ./deploy.sh
+```
 
 ## 🤝 Contributing
 
-This is a private project. For access and contribution guidelines, contact the development team.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 License
+## 📝 License
 
-Proprietary - All rights reserved
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+### Documentation
+- [Deployment Guide](EAZEPAY_DEPLOYMENT_GUIDE.md)
+- [Architecture](DEPLOYMENT_ARCHITECTURE.md)
+- [Mobile App Guide](MOBILE_APP_GUIDE.md)
+
+### Troubleshooting
+See [Deployment Guide - Troubleshooting](EAZEPAY_DEPLOYMENT_GUIDE.md#-troubleshooting)
+
+### Contact
+- Email: support@eazepay.com
+- Website: https://eazepay.com
+- Documentation: https://docs.eazepay.com
+
+## 🗺️ Roadmap
+
+### Phase 1: Core Services ✅
+- [x] Identity & Authentication
+- [x] Transaction Processing
+- [x] Wallet Management
+- [x] Biometric Verification
+- [x] Admin & Superuser Portals
+
+### Phase 2: Enhanced Features (In Progress)
+- [ ] Fix TypeScript compilation errors
+- [ ] Mobile App Development
+- [ ] USSD Integration
+- [ ] Agent Network
+- [ ] Government Verification
+
+### Phase 3: Scale & Optimize
+- [ ] Distributed Deployment
+- [ ] Load Balancing
+- [ ] Auto-scaling
+- [ ] Advanced Analytics
+- [ ] Machine Learning Fraud Detection
+
+### Phase 4: Expansion
+- [ ] International Payments
+- [ ] Cryptocurrency Support
+- [ ] Merchant Integration
+- [ ] API Marketplace
+- [ ] White-label Solutions
+
+## 🎉 Acknowledgments
+
+- Built with modern microservices architecture
+- Designed for distributed deployment
+- Ready for mobile app integration
+- Scalable and secure by design
 
 ---
 
-**Status:** ✅ Production Ready - Cloud Deployment Available
-
-See [GETTING_STARTED.md](./GETTING_STARTED.md) for deployment instructions.
+**Eazepay** - Making payments easy, everywhere.

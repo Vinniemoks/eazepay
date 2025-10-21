@@ -1,7 +1,7 @@
 {
-  "name": "afripay-identity-service",
+  "name": "eazepay-identity-service",
   "version": "2.0.0",
-  "description": "Identity and authentication service for AfriPay with enterprise features",
+  "description": "Identity and authentication service for Eazepay with enterprise features",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",

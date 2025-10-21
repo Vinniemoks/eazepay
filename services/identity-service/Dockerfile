@@ -2,6 +2,9 @@ FROM public.ecr.aws/docker/library/node:20-alpine
 
 WORKDIR /app
 
+# Install build dependencies for native modules (bcrypt)
+RUN apk add --no-cache python3 make g++
+
 # Copy package files
 COPY package*.json ./
 
@@ -9,7 +12,7 @@ COPY package*.json ./
 RUN npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set fetch-retry-maxtimeout 120000 \
-    && npm ci
+    && npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .

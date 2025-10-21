@@ -49,19 +49,29 @@ app.use(apiRateLimit);
 
 // Routes
 import adminRoutes from './routes/admin.routes';
+import superuserRoutes from './routes/superuser.routes';
 import accessRequestRoutes from './routes/accessRequest.routes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/superuser', superuserRoutes);
 app.use('/api/access-requests', accessRequestRoutes);
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    service: 'AfriPay Identity Service',
+    service: 'Eazepay Identity Service',
     version: '2.0.0',
     status: 'running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    mode: process.env.SERVICE_MODE || 'integrated',
+    endpoints: {
+      auth: '/api/auth',
+      admin: '/api/admin',
+      superuser: '/api/superuser',
+      accessRequests: '/api/access-requests',
+      health: '/health'
+    }
   });
 });
 
@@ -111,7 +121,7 @@ async function startServer() {
       console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
-║   🚀 AfriPay Identity Service                        ║
+║   🚀 Eazepay Identity Service                        ║
 ║                                                       ║
 ║   Version: 2.0.0                                     ║
 ║   Port: ${PORT}                                        ║
@@ -123,6 +133,10 @@ async function startServer() {
 ║   - POST /api/auth/register                          ║
 ║   - POST /api/auth/login                             ║
 ║   - POST /api/auth/verify-2fa                        ║
+║   Superuser:                                         ║
+║   - POST /api/superuser/create                       ║
+║   - GET  /api/superuser/list                         ║
+║   - DELETE /api/superuser/:userId/revoke             ║
 ║   Admin:                                             ║
 ║   - POST /api/admin/users                            ║
 ║   - GET  /api/admin/organization/hierarchy           ║
