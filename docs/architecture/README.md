@@ -39,3 +39,9 @@ Horizontal Scaling: Auto-scaling pods in Kubernetes
 Database Sharding: User-based partitioning
 Caching Strategy: Multi-layer (L1: Memory, L2: Redis, L3: CDN)
 Load Balancing: Round-robin with health checks
+
+Experience Visuals
+------------------
+Refer to [Service Experience and System Visuals](service-visuals.md) for user-facing and backend diagrams, including the superuser governance model.
+
+For an interactive POS-terminal rendering of those experiences, open the [AfriPay POS Service Visuals](pos-terminal/index.html) prototype in a browser. The companion [stylesheet](pos-terminal/styles.css) can be reused within POS deployments that require the same look and feel.

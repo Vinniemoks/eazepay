@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AfriPay POS Service Visuals</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="terminal">
+      <div class="terminal-bezel">
+        <header class="terminal-header">
+          <div class="brand">
+            <span class="brand-mark"></span>
+            <span class="brand-name">AfriPay POS Control</span>
+          </div>
+          <div class="status-pill status-pill--superuser">Superuser Logged In</div>
+        </header>
+        <div class="terminal-tabs">
+          <input type="radio" name="service" id="tab-web" checked />
+          <label for="tab-web">Web Portal</label>
+
+          <input type="radio" name="service" id="tab-identity" />
+          <label for="tab-identity">Identity</label>
+
+          <input type="radio" name="service" id="tab-agent" />
+          <label for="tab-agent">Agent</label>
+
+          <input type="radio" name="service" id="tab-transaction" />
+          <label for="tab-transaction">Transaction</label>
+
+          <input type="radio" name="service" id="tab-wallet" />
+          <label for="tab-wallet">Wallet</label>
+
+          <input type="radio" name="service" id="tab-biometric" />
+          <label for="tab-biometric">Biometric</label>
+
+          <input type="radio" name="service" id="tab-ussd" />
+          <label for="tab-ussd">USSD</label>
+
+          <span class="tab-indicator" aria-hidden="true"></span>
+        </div>
+        <main class="terminal-screen">
+          <section class="panel" data-tab="tab-web">
+            <header>
+              <h1>Web Portal Experience</h1>
+              <p class="panel-subtitle">
+                Centralized dashboards surfaced according to the AfriPay role hierarchy.
+              </p>
+            </header>
+            <div class="panel-body">
+              <div class="panel-column">
+                <h2 class="column-title">Front of House</h2>
+                <div class="card-grid">
+                  <article class="persona-card persona-card--superuser">
+                    <h3>Superuser Control Center</h3>
+                    <p>Sees every dashboard tile with override shortcuts.</p>
+                    <ul>
+                      <li>Global Policy Editor</li>
+                      <li>Unified Audit Explorer</li>
+                      <li>Delegation Requests</li>
+                    </ul>
+                  </article>
+                  <article class="persona-card persona-card--administrator">
+                    <h3>Ops Administration</h3>
+                    <p>Scoped to risk, onboarding, and compliance workflows.</p>
+                    <ul>
+                      <li>Customer Onboarding</li>
+                      <li>Risk &amp; Compliance</li>
+                      <li>Reporting Widgets</li>
+                    </ul>
+                  </article>
+                  <article class="persona-card persona-card--agent">
+                    <h3>Agent Workspace</h3>
+                    <p>Guided task lists for cash operations and support.</p>
+                    <ul>
+                      <li>Cash In / Cash Out</li>
+                      <li>Float Requests</li>
+                      <li>Support Tickets</li>
+                    </ul>
+                  </article>
+                </div>
+              </div>
+              <div class="panel-column">
+                <h2 class="column-title">Back of House</h2>
+                <div class="backstage-grid">
+                  <article class="service-card">
+                    <h3>Static Edge</h3>
+                    <p>Nginx delivers the compiled portal bundle to the terminal.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>API Gateway</h3>
+                    <p>Propagates RBAC claims to downstream services.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Service Mesh</h3>
+                    <p>Identity · Wallet · Transaction · Agent · Reporting</p>
+                  </article>
+                  <article class="service-card service-card--superuser">
+                    <h3>Superuser Overrides</h3>
+                    <p>Full-scope tokens unlock every administrative route.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-tab="tab-identity">
+            <header>
+              <h1>Identity Service</h1>
+              <p class="panel-subtitle">
+                Credential flows and delegation governance for all personas.
+              </p>
+            </header>
+            <div class="panel-body">
+              <div class="panel-column">
+                <h2 class="column-title">Front of House</h2>
+                <div class="card-grid">
+                  <article class="persona-card persona-card--shared">
+                    <h3>Credential Login</h3>
+                    <p>Email, PIN, or biometric prompt depending on role.</p>
+                  </article>
+                  <article class="persona-card persona-card--superuser">
+                    <h3>Delegation Console</h3>
+                    <p>Approves administrator territory and privilege requests.</p>
+                  </article>
+                  <article class="persona-card persona-card--administrator">
+                    <h3>Access Requests</h3>
+                    <p>Submits scoped elevation tickets to the superuser.</p>
+                  </article>
+                  <article class="persona-card persona-card--agent">
+                    <h3>KYC Profile View</h3>
+                    <p>Reads-only personal and branch verification status.</p>
+                  </article>
+                </div>
+              </div>
+              <div class="panel-column">
+                <h2 class="column-title">Back of House</h2>
+                <div class="backstage-grid">
+                  <article class="service-card">
+                    <h3>Auth API</h3>
+                    <p>Issues tokens with persona-specific scopes.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>RBAC Registry</h3>
+                    <p>Stores tenancy, policy, and expiration windows.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Biometric Gateway</h3>
+                    <p>Routes liveness checks to the biometric service.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Audit Queue</h3>
+                    <p>Streams privileged events for compliance review.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-tab="tab-agent">
+            <header>
+              <h1>Agent Service</h1>
+              <p class="panel-subtitle">
+                Field tools for branch agents operating within superuser-defined territories.
+              </p>
+            </header>
+            <div class="panel-body">
+              <div class="panel-column">
+                <h2 class="column-title">Front of House</h2>
+                <div class="card-grid">
+                  <article class="persona-card persona-card--agent">
+                    <h3>Customer Queue</h3>
+                    <p>Next best action steps with embedded compliance cues.</p>
+                  </article>
+                  <article class="persona-card persona-card--agent">
+                    <h3>Cash Operations</h3>
+                    <p>Guided cash-in and cash-out wizards with float limits.</p>
+                  </article>
+                  <article class="persona-card persona-card--agent">
+                    <h3>Issue Escalation</h3>
+                    <p>Escalate to administrators with audit-ready notes.</p>
+                  </article>
+                </div>
+              </div>
+              <div class="panel-column">
+                <h2 class="column-title">Back of House</h2>
+                <div class="backstage-grid">
+                  <article class="service-card">
+                    <h3>Agent API</h3>
+                    <p>Validates agent territories and float balances.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Identity Proxy</h3>
+                    <p>Refreshes agent tokens when superuser rules change.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Wallet Service</h3>
+                    <p>Posts customer balance and float adjustments.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Support Queue</h3>
+                    <p>Creates tickets for administrator follow-up.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-tab="tab-transaction">
+            <header>
+              <h1>Transaction Service</h1>
+              <p class="panel-subtitle">
+                Reconciliation tools with superuser overrides for fraud and disputes.
+              </p>
+            </header>
+            <div class="panel-body">
+              <div class="panel-column">
+                <h2 class="column-title">Front of House</h2>
+                <div class="card-grid">
+                  <article class="persona-card persona-card--administrator">
+                    <h3>Settlement Dashboard</h3>
+                    <p>Ledger explorer for reconciliation analysts.</p>
+                  </article>
+                  <article class="persona-card persona-card--administrator">
+                    <h3>Dispute Resolution</h3>
+                    <p>Workflow to resolve merchant and agent disputes.</p>
+                  </article>
+                  <article class="persona-card persona-card--superuser">
+                    <h3>Rules Override</h3>
+                    <p>Force-capture or release transactions in emergencies.</p>
+                  </article>
+                </div>
+              </div>
+              <div class="panel-column">
+                <h2 class="column-title">Back of House</h2>
+                <div class="backstage-grid">
+                  <article class="service-card">
+                    <h3>Transaction API</h3>
+                    <p>Persists settlements and calculates fees.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Ledger Database</h3>
+                    <p>Immutable event store for every transaction.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Fraud Engine</h3>
+                    <p>Applies rules tuned by the superuser.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Notification Bus</h3>
+                    <p>Fan-out alerts to wallets and external partners.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-tab="tab-wallet">
+            <header>
+              <h1>Wallet Service</h1>
+              <p class="panel-subtitle">
+                Balance visibility and limit management governed by the superuser.
+              </p>
+            </header>
+            <div class="panel-body">
+              <div class="panel-column">
+                <h2 class="column-title">Front of House</h2>
+                <div class="card-grid">
+                  <article class="persona-card persona-card--administrator">
+                    <h3>Limit Management</h3>
+                    <p>Adjusts customer and branch thresholds.</p>
+                  </article>
+                  <article class="persona-card persona-card--superuser">
+                    <h3>Global Limit Policy</h3>
+                    <p>Overrides emergency limits and freeze rules.</p>
+                  </article>
+                  <article class="persona-card persona-card--agent">
+                    <h3>Balance Overview</h3>
+                    <p>Views wallet balances and recent statements.</p>
+                  </article>
+                </div>
+              </div>
+              <div class="panel-column">
+                <h2 class="column-title">Back of House</h2>
+                <div class="backstage-grid">
+                  <article class="service-card">
+                    <h3>Wallet API</h3>
+                    <p>Processes debits, credits, and holds.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Ledger Store</h3>
+                    <p>Maintains balances per customer and branch.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Policy Store</h3>
+                    <p>Applies superuser-defined global limits.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-tab="tab-biometric">
+            <header>
+              <h1>Biometric Service</h1>
+              <p class="panel-subtitle">
+                Capture, liveness, and retention management with clear persona limits.
+              </p>
+            </header>
+            <div class="panel-body">
+              <div class="panel-column">
+                <h2 class="column-title">Front of House</h2>
+                <div class="card-grid">
+                  <article class="persona-card persona-card--shared">
+                    <h3>Biometric Capture</h3>
+                    <p>Guided prompts sized for the terminal camera.</p>
+                  </article>
+                  <article class="persona-card persona-card--agent">
+                    <h3>Live Liveness Check</h3>
+                    <p>One-tap capture with automatic retry prompts.</p>
+                  </article>
+                  <article class="persona-card persona-card--administrator">
+                    <h3>Status Review</h3>
+                    <p>Read audit logs and sample captures for QA.</p>
+                  </article>
+                  <article class="persona-card persona-card--superuser">
+                    <h3>Retention Policies</h3>
+                    <p>Configure purge windows and consent overrides.</p>
+                  </article>
+                </div>
+              </div>
+              <div class="panel-column">
+                <h2 class="column-title">Back of House</h2>
+                <div class="backstage-grid">
+                  <article class="service-card">
+                    <h3>Biometric API</h3>
+                    <p>Validates captures and writes secure templates.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Template Vault</h3>
+                    <p>Encrypted storage with hardware security modules.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Liveness Engine</h3>
+                    <p>ML-based detection tuned by compliance feedback.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Identity Bridge</h3>
+                    <p>Syncs verification outcomes back to Identity.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-tab="tab-ussd">
+            <header>
+              <h1>USSD Service</h1>
+              <p class="panel-subtitle">
+                Lightweight menu journeys mirrored by backend orchestration.
+              </p>
+            </header>
+            <div class="panel-body">
+              <div class="panel-column">
+                <h2 class="column-title">Front of House</h2>
+                <div class="card-grid">
+                  <article class="persona-card persona-card--agent">
+                    <h3>Float Request</h3>
+                    <p>Request float top-ups from the terminal keypad.</p>
+                  </article>
+                  <article class="persona-card persona-card--administrator">
+                    <h3>Network Alerts</h3>
+                    <p>Review outages and push instructions to agents.</p>
+                  </article>
+                  <article class="persona-card persona-card--shared">
+                    <h3>Mini Statement</h3>
+                    <p>Simple balance snapshot for customers in queue.</p>
+                  </article>
+                </div>
+              </div>
+              <div class="panel-column">
+                <h2 class="column-title">Back of House</h2>
+                <div class="backstage-grid">
+                  <article class="service-card">
+                    <h3>USSD Gateway</h3>
+                    <p>Manages telco sessions and menu navigation.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Menu Orchestrator</h3>
+                    <p>Applies persona branching defined by the superuser.</p>
+                  </article>
+                  <article class="service-card">
+                    <h3>Service Connectors</h3>
+                    <p>Identity · Wallet · Agent integrations.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+        <footer class="terminal-footer">
+          <div class="legend">
+            <span class="legend-swatch legend-swatch--superuser">Superuser</span>
+            <span class="legend-swatch legend-swatch--administrator">Administrator</span>
+            <span class="legend-swatch legend-swatch--agent">Agent</span>
+            <span class="legend-swatch legend-swatch--shared">Shared</span>
+          </div>
+          <div class="footer-note">Superuser privileges gate all downstream access.</div>
+        </footer>
+      </div>
+      <div class="terminal-chassis">
+        <div class="speaker-grill" aria-hidden="true"></div>
+        <div class="keypad" aria-hidden="true">
+          <div class="key-row">
+            <span>7</span><span>8</span><span>9</span>
+          </div>
+          <div class="key-row">
+            <span>4</span><span>5</span><span>6</span>
+          </div>
+          <div class="key-row">
+            <span>1</span><span>2</span><span>3</span>
+          </div>
+          <div class="key-row">
+            <span class="key-wide">0</span>
+            <span class="key-action">↵</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
