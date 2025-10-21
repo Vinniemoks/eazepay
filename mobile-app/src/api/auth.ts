@@ -1,19 +1,61 @@
-import { apiClient } from '../config/api';
+import { apiClient } from './client';
 
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
+export interface LoginResponse {
+  success: boolean;
+  token: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: string;
+  };
+  requires2FA?: boolean;
+  sessionToken?: string;
+}
+
 export interface RegisterRequest {
+  fullName: string;
   email: string;
   phone: string;
   password: string;
-  fullName: string;
-  role: 'CUSTOMER' | 'AGENT';
-  verificationType: 'PASSPORT' | 'NATIONAL_ID' | 'HUDUMA';
-  verificationNumber: string;
-  businessDetails?: any;
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  userId: string;
+  message: string;
+}
+
+export interface VerifyOTPRequest {
+  userId: string;
+  phone: string;
+  otp: string;
+}
+
+export interface VerifyOTPResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ResendOTPRequest {
+  userId: string;
+  phone: string;
+}
+
+export interface KYCUploadRequest {
+  userId: string;
+  documentType: 'PASSPORT' | 'NATIONAL_ID' | 'HUDUMA';
+  documentNumber: string;
+  documentFront: string; // base64 or file path
+  documentBack?: string;
+  selfie: string;
 }
 
 export interface Verify2FARequest {
@@ -22,36 +64,57 @@ export interface Verify2FARequest {
   biometricData?: any;
 }
 
-export const authAPI = {
-  login: async (data: LoginRequest) => {
-    const response = await apiClient.post('/api/auth/login', data);
-    return response.data;
-  },
+class AuthApi {
+  async register(data: RegisterRequest): Promise<RegisterResponse> {
+    return apiClient.post('/auth/register', data);
+  }
 
-  register: async (data: RegisterRequest) => {
-    const response = await apiClient.post('/api/auth/register', data);
-    return response.data;
-  },
+  async verifyOTP(data: VerifyOTPRequest): Promise<VerifyOTPResponse> {
+    return apiClient.post('/auth/verify-otp', data);
+  }
 
-  verify2FA: async (data: Verify2FARequest) => {
-    const response = await apiClient.post('/api/auth/verify-2fa', data);
-    return response.data;
-  },
+  async resendOTP(data: ResendOTPRequest): Promise<{ success: boolean }> {
+    return apiClient.post('/auth/resend-otp', data);
+  }
 
-  refreshToken: async (refreshToken: string) => {
-    const response = await apiClient.post('/api/auth/session/refresh', {
-      refreshToken,
-    });
-    return response.data;
-  },
+  async uploadKYC(data: KYCUploadRequest): Promise<{ success: boolean }> {
+    return apiClient.post('/auth/kyc/upload', data);
+  }
 
-  getSessions: async () => {
-    const response = await apiClient.get('/api/auth/sessions');
-    return response.data;
-  },
+  async login(data: LoginRequest): Promise<LoginResponse> {
+    return apiClient.post('/auth/login', data);
+  }
 
-  revokeSession: async (sessionId: string) => {
-    const response = await apiClient.delete(`/api/auth/sessions/${sessionId}`);
-    return response.data;
-  },
-};
+  async verify2FA(data: Verify2FARequest): Promise<LoginResponse> {
+    return apiClient.post('/auth/verify-2fa', data);
+  }
+
+  async refreshToken(refreshToken: string): Promise<{ token: string; refreshToken: string }> {
+    return apiClient.post('/auth/refresh', { refreshToken });
+  }
+
+  async logout(): Promise<{ success: boolean }> {
+    return apiClient.post('/auth/logout');
+  }
+
+  async getSessions() {
+    return apiClient.get('/auth/sessions');
+  }
+
+  async revokeSession(sessionId: string) {
+    return apiClient.delete(`/auth/sessions/${sessionId}`);
+  }
+
+  async forgotPassword(email: string): Promise<{ success: boolean }> {
+    return apiClient.post('/auth/forgot-password', { email });
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<{ success: boolean }> {
+    return apiClient.post('/auth/reset-password', { token, newPassword });
+  }
+}
+
+export const authApi = new AuthApi();
+
+// Legacy export for backward compatibility
+export const authAPI = authApi;

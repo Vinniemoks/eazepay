@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 import { biometricService } from '../services/biometric';
+import { authApi } from '../api/auth';
 
 export const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -19,10 +20,18 @@ export const LoginScreen = ({ navigation }: any) => {
   const handleLogin = async () => {
     clearError();
     try {
-      await login(email, password);
-      // Navigation handled by auth state change
-    } catch (err) {
-      Alert.alert('Login Failed', error || 'Please try again');
+      const response = await authApi.login({ email, password });
+      
+      if (response.requires2FA) {
+        // Navigate to 2FA screen
+        navigation.navigate('Verify2FA', { sessionToken: response.sessionToken });
+      } else {
+        // Login successful, update auth store
+        await login(email, password);
+        // Navigation handled by auth state change
+      }
+    } catch (err: any) {
+      Alert.alert('Login Failed', err.message || 'Please try again');
     }
   };
 

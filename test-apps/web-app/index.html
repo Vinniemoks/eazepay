@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eazepay - Web App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            padding: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.error {
+            background: #fee;
+            color: #c33;
+            display: block;
+        }
+
+        .message.success {
+            background: #efe;
+            color: #3c3;
+            display: block;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .balance-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .balance-card .amount {
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            padding: 15px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .transactions {
+            margin-top: 20px;
+        }
+
+        .transactions h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .transaction-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-type {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .transaction-amount.positive {
+            color: #10b981;
+        }
+
+        .transaction-amount.negative {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <div class="logo">
+                <h1>Eazepay</h1>
+                <p>Secure Mobile Payments</p>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="btn" id="loginBtn">Login</button>
+            </form>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="logo">
+                <h1>Eazepay</h1>
+                <p id="userName">Welcome back!</p>
+            </div>
+
+            <div class="balance-card">
+                <h3>Available Balance</h3>
+                <div class="amount">KES <span id="balance">0.00</span></div>
+            </div>
+
+            <div class="actions">
+                <button class="action-btn" onclick="showSendMoney()">Send Money</button>
+                <button class="action-btn" onclick="showRequestMoney()">Request Money</button>
+                <button class="action-btn" onclick="showAddMoney()">Add Money</button>
+                <button class="action-btn" onclick="showTransactions()">Transactions</button>
+            </div>
+
+            <div class="transactions">
+                <h3>Recent Transactions</h3>
+                <div id="transactionsList">
+                    <p style="text-align: center; color: #999;">No transactions yet</p>
+                </div>
+            </div>
+
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let accessToken = localStorage.getItem('access_token');
+        let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+
+        // Check if already logged in
+        if (accessToken && currentUser) {
+            showDashboard();
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const message = document.getElementById('message');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            message.className = 'message';
+            message.textContent = '';
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                if (data.requires2FA) {
+                    message.className = 'message error';
+                    message.textContent = '2FA required - Please use mobile app';
+                    return;
+                }
+
+                // Save tokens
+                accessToken = data.accessToken;
+                currentUser = data.user;
+                localStorage.setItem('access_token', accessToken);
+                localStorage.setItem('refresh_token', data.refreshToken);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+
+                showDashboard();
+            } catch (error) {
+                message.className = 'message error';
+                message.textContent = error.message;
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+            }
+        }
+
+        async function showDashboard() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            document.getElementById('userName').textContent = `Welcome, ${currentUser.fullName}!`;
+
+            // Load balance
+            await loadBalance();
+            await loadTransactions();
+        }
+
+        async function loadBalance() {
+            try {
+                const response = await fetch(`${API_URL}/api/wallet/balance`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('balance').textContent = data.balance.toFixed(2);
+                }
+            } catch (error) {
+                console.error('Failed to load balance:', error);
+            }
+        }
+
+        async function loadTransactions() {
+            try {
+                const response = await fetch(`${API_URL}/api/wallet/transactions`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayTransactions(data.transactions || []);
+                }
+            } catch (error) {
+                console.error('Failed to load transactions:', error);
+            }
+        }
+
+        function displayTransactions(transactions) {
+            const list = document.getElementById('transactionsList');
+            
+            if (transactions.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #999;">No transactions yet</p>';
+                return;
+            }
+
+            list.innerHTML = transactions.slice(0, 5).map(tx => `
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-type">${tx.type}</div>
+                        <div class="transaction-date">${new Date(tx.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="transaction-amount ${tx.type === 'RECEIVE' ? 'positive' : 'negative'}">
+                        ${tx.type === 'RECEIVE' ? '+' : '-'}KES ${tx.amount.toFixed(2)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleLogout() {
+            localStorage.clear();
+            accessToken = null;
+            currentUser = null;
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function showSendMoney() {
+            alert('Send Money feature - Coming soon!\nThis will open a form to send money to another user.');
+        }
+
+        function showRequestMoney() {
+            alert('Request Money feature - Coming soon!\nThis will allow you to request money from another user.');
+        }
+
+        function showAddMoney() {
+            alert('Add Money feature - Coming soon!\nThis will allow you to add money to your wallet via M-Pesa or bank transfer.');
+        }
+
+        function showTransactions() {
+            alert('Full transaction history - Coming soon!\nThis will show all your transactions with filters and search.');
+        }
+    </script>
+</body>
+</html>

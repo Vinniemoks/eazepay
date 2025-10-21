@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useWalletStore } from '../store/walletStore';
 import { biometricService } from '../services/biometric';
+import { walletApi } from '../api/wallet';
 
 export const SendMoneyScreen = ({ navigation }: any) => {
   const [recipientPhone, setRecipientPhone] = useState('');
@@ -18,7 +19,22 @@ export const SendMoneyScreen = ({ navigation }: any) => {
   const [pin, setPin] = useState('');
   const [useBiometric, setUseBiometric] = useState(false);
 
-  const { sendMoney, isLoading, balance } = useWalletStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [balance, setBalance] = useState(0);
+
+  // Load balance on mount
+  React.useEffect(() => {
+    loadBalance();
+  }, []);
+
+  const loadBalance = async () => {
+    try {
+      const balanceData = await walletApi.getBalance();
+      setBalance(balanceData.balance);
+    } catch (error) {
+      console.error('Failed to load balance:', error);
+    }
+  };
 
   const handleSend = async () => {
     if (!recipientPhone || !amount) {
@@ -47,7 +63,33 @@ export const SendMoneyScreen = ({ navigation }: any) => {
       return;
     }
 
+    setIsLoading(true);
     try {
+      const response = await walletApi.sendMoney({
+        recipientPhone,
+        amount: amountNum,
+        description,
+        pin: useBiometric ? undefined : pin,
+      });
+
+      if (response.success) {
+        Alert.alert(
+          'Success',
+          `Money sent successfully!\nReference: ${response.reference}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => navigation.goBack(),
+            },
+          ]
+        );
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to send money. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
       await sendMoney(recipientPhone, amountNum, description, pin);
       Alert.alert('Success', 'Money sent successfully', [
         { text: 'OK', onPress: () => navigation.goBack() },

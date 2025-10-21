@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,20 +6,42 @@ import {
   FlatList,
   StyleSheet,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { useWalletStore } from '../store/walletStore';
+import { walletApi } from '../api/wallet';
 import { format } from 'date-fns';
 
 export const WalletScreen = ({ navigation }: any) => {
-  const { balance, transactions, isLoading, fetchBalance, fetchTransactions } =
-    useWalletStore();
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
-    await Promise.all([fetchBalance(), fetchTransactions()]);
+    setIsLoading(true);
+    try {
+      const [balanceData, transactionsData] = await Promise.all([
+        walletApi.getBalance(),
+        walletApi.getTransactions(1, 20),
+      ]);
+      setBalance(balanceData.balance);
+      setTransactions(transactionsData.data);
+    } catch (error) {
+      console.error('Failed to load wallet data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadData();
+    setRefreshing(false);
   };
 
   const renderTransaction = ({ item }: any) => (
