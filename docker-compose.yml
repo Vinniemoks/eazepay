@@ -367,7 +367,7 @@ services:
     build:
       context: ./services/web-portal
       dockerfile: Dockerfile
-    container_name: afripay-frontend
+    container_name: afripay-admin-portal
     ports:
       - "8080:80"
     networks:
@@ -379,6 +379,48 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+    restart: unless-stopped
+
+  customer-portal:
+    build:
+      context: ./services/customer-portal
+      dockerfile: Dockerfile
+    container_name: afripay-customer-portal
+    ports:
+      - "3001:80"
+    environment:
+      - VITE_API_GATEWAY_URL=http://api-gateway
+    networks:
+      - afripay-network
+    volumes:
+      - customer_portal_logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  agent-portal:
+    build:
+      context: ./services/agent-portal
+      dockerfile: Dockerfile
+    container_name: afripay-agent-portal
+    ports:
+      - "3002:80"
+    environment:
+      - VITE_API_GATEWAY_URL=http://api-gateway
+    networks:
+      - afripay-network
+    volumes:
+      - agent_portal_logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     restart: unless-stopped
 
   # ================================
@@ -404,6 +446,8 @@ services:
       - ussd-service
       - agent-service
       - web-portal
+      - customer-portal
+      - agent-portal
     networks:
       - afripay-network
     healthcheck:
@@ -540,6 +584,10 @@ volumes:
   agent_logs:
     driver: local
   web_portal_logs:
+    driver: local
+  customer_portal_logs:
+    driver: local
+  agent_portal_logs:
     driver: local
   nginx_logs:
     driver: local

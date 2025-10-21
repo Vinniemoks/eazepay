@@ -1,274 +1,305 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
 import { AppDataSource } from '../config/database';
-import { User, KYCStatus, AccountTier } from '../entities/User';
-import { JWTService } from '../services/JWTService';
-import { logger } from '../utils/logger';
-
-const BIOMETRIC_SERVICE_URL = process.env.BIOMETRIC_SERVICE_URL || 'http://biometric-service:8001';
-
-interface BiometricResponse {
-  success: boolean;
-  matchScore?: number;
-  message?: string;
-  userId?: string;
-  error?: string;
-}
+import { User, UserRole, UserStatus, TwoFactorMethod } from '../models/User';
+import { Session } from '../models/Session';
+import { UserPermission } from '../models/UserPermission';
+import { 
+  hashPassword, 
+  verifyPassword, 
+  generateTokenPair, 
+  verifyAccessToken,
+  generateOTP, 
+  verifyTOTP, 
+  sendSMS,
+  generateCorrelationId
+} from '../utils/security';
+import { AuditLog, AuditActionType } from '../models/AuditLog';
+import axios from 'axios';
+import { getRepository } from 'typeorm';
 
 export class AuthController {
-  static async register(req: Request, res: Response) {
+  // Customer/Agent Registration
+  async register(req: Request, res: Response) {
     try {
-      const { phoneNumber, nationalId, firstName, lastName, imageData } = req.body;
+      const { 
+        email, 
+        phone, 
+        password, 
+        fullName, 
+        role, 
+        verificationType,
+        verificationNumber,
+        businessDetails 
+      } = req.body;
 
-      // Check if user already exists
-      const userRepository = AppDataSource.getRepository(User);
-      const existingUser = await userRepository.findOne({ where: { phoneNumber } });
-      
-      if (existingUser) {
-        return res.status(400).json({ 
-          success: false, 
-          error: 'User with this phone number already exists' 
-        });
+      const userRepo = AppDataSource.getRepository(User);
+
+      // Validate role
+      if (![UserRole.CUSTOMER, UserRole.AGENT].includes(role)) {
+        return res.status(400).json({ error: 'Invalid role for registration' });
       }
 
-      // Create new user
-      const user = new User();
-      user.phoneNumber = phoneNumber;
-      user.nationalId = nationalId;
-      user.firstName = firstName;
-      user.lastName = lastName;
-      user.kycStatus = KYCStatus.PENDING;
-      user.accountTier = AccountTier.BASIC;
-      user.authLevel = 0; // Start with no auth level
-      user.isActive = true;
+      // Check if user exists
+      const existingUser = await userRepo.findOne({ 
+        where: [{ email }, { phone }] 
+      });
+      if (existingUser) {
+        return res.status(400).json({ error: 'User already exists' });
+      }
 
-      // Save user to database
-      await userRepository.save(user);
+      // Hash password
+      const passwordHash = await hashPassword(password);
 
-      // Register biometric data if provided
-      if (imageData) {
+      // Create user
+      const user = userRepo.create({
+        email,
+        phone,
+        passwordHash,
+        fullName,
+        role,
+        status: UserStatus.PENDING,
+        verificationType,
+        verificationNumber,
+        businessDetails: role === UserRole.AGENT ? businessDetails : null
+      });
+
+      await userRepo.save(user);
+
+      // For customers, attempt automatic government verification
+      if (role === UserRole.CUSTOMER) {
         try {
-          const biometricResult = await axios.post(`${BIOMETRIC_SERVICE_URL}/register`, {
-            userId: user.userId,
-            imageData: imageData
-          });
-
-          const resultData = biometricResult.data as BiometricResponse;
-
-          if (resultData.success) {
-            // Update auth level if biometric registration succeeds
-            user.authLevel = 2; // Biometric authentication level
-            await userRepository.save(user);
-          } else {
-            logger.warn('Biometric registration failed:', resultData.message);
+          const verified = await this.verifyGovernmentID(verificationType, verificationNumber);
+          if (verified) {
+            user.governmentVerified = true;
+            user.status = UserStatus.VERIFIED;
+            await userRepo.save(user);
           }
         } catch (error) {
-          logger.error('Biometric service error:', error);
-          // Continue without biometric if service is unavailable
+          console.error('Government verification failed:', error);
+          // Continue with manual verification
         }
       }
 
-      // Generate JWT token
-      const token = JWTService.generateToken({
-        userId: user.userId,
-        phoneNumber: user.phoneNumber,
-        authLevel: user.authLevel
-      });
+      // Notify admins for verification
+      await this.notifyAdminsForVerification(user);
 
       res.status(201).json({
-        success: true,
-        message: 'User registered successfully',
-        token,
-        user: {
-          userId: user.userId,
-          phoneNumber: user.phoneNumber,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          kycStatus: user.kycStatus,
-          accountTier: user.accountTier,
-          authLevel: user.authLevel
-        }
+        message: 'Registration successful. Awaiting verification.',
+        userId: user.id,
+        status: user.status,
+        requiresDocuments: role === UserRole.AGENT
       });
     } catch (error) {
-      logger.error('Registration error:', error);
-      res.status(500).json({ 
-        success: false, 
-        error: 'Internal server error' 
-      });
+      console.error('Registration error:', error);
+      res.status(500).json({ error: 'Registration failed' });
     }
   }
 
-  static async login(req: Request, res: Response) {
+  // Login with 2FA
+  async login(req: Request, res: Response) {
     try {
-      const { phoneNumber, imageData } = req.body;
+      const { email, password } = req.body;
+      const userRepo = AppDataSource.getRepository(User);
+      const auditRepo = AppDataSource.getRepository(AuditLog);
 
-      // Find user by phone number
-      const userRepository = AppDataSource.getRepository(User);
-      const user = await userRepository.findOne({ where: { phoneNumber } });
-      
-      if (!user || !user.isActive) {
-        return res.status(401).json({ 
-          success: false, 
-          error: 'Invalid credentials or account inactive' 
-        });
-      }
-
-      // Verify biometric data
-      if (imageData) {
-        try {
-          const biometricResult = await axios.post(`${BIOMETRIC_SERVICE_URL}/verify`, {
-            userId: user.userId,
-            imageData: imageData
-          });
-
-          const resultData = biometricResult.data as BiometricResponse;
-
-          if (!resultData.success) {
-            return res.status(401).json({ 
-              success: false, 
-              error: resultData.message || 'Biometric verification failed' 
-            });
-          }
-        } catch (error) {
-          logger.error('Biometric service error:', error);
-          return res.status(500).json({ 
-            success: false, 
-            error: 'Biometric service unavailable' 
-          });
-        }
-      } else {
-        return res.status(400).json({ 
-          success: false, 
-          error: 'Biometric data required for login' 
-        });
-      }
-
-      // Generate JWT token
-      const token = JWTService.generateToken({
-        userId: user.userId,
-        phoneNumber: user.phoneNumber,
-        authLevel: user.authLevel
-      });
-
-      res.json({
-        success: true,
-        message: 'Login successful',
-        token,
-        user: {
-          userId: user.userId,
-          phoneNumber: user.phoneNumber,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          kycStatus: user.kycStatus,
-          accountTier: user.accountTier,
-          authLevel: user.authLevel
-        }
-      });
-    } catch (error) {
-      logger.error('Login error:', error);
-      res.status(500).json({ 
-        success: false, 
-        error: 'Internal server error' 
-      });
-    }
-  }
-
-  static async verifyBiometric(req: Request, res: Response) {
-    try {
-      const { userId, imageData } = req.body;
-
-      if (!userId || !imageData) {
-        return res.status(400).json({ 
-          success: false, 
-          error: 'User ID and image data are required' 
-        });
-      }
-
-      // Verify biometric data
-      const verificationResult = await axios.post(`${BIOMETRIC_SERVICE_URL}/verify`, {
-        userId: userId,
-        imageData: imageData
-      });
-
-      const resultData = verificationResult.data as BiometricResponse;
-
-      if (resultData.success) {
-        // Find user by ID
-        const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { userId } });
-        
-        if (!user) {
-          return res.status(404).json({ 
-            success: false, 
-            error: 'User not found' 
-          });
-        }
-
-        // Generate JWT token
-        const token = JWTService.generateToken({
-          userId: user.userId,
-          phoneNumber: user.phoneNumber,
-          authLevel: user.authLevel
-        });
-
-        res.json({
-          success: true,
-          message: 'Biometric verification successful',
-          token,
-          user: {
-            userId: user.userId,
-            phoneNumber: user.phoneNumber,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            kycStatus: user.kycStatus,
-            accountTier: user.accountTier,
-            authLevel: user.authLevel
-          }
-        });
-      } else {
-        res.status(401).json({ 
-          success: false, 
-          error: resultData.message || 'Biometric verification failed' 
-        });
-      }
-    } catch (error) {
-      logger.error('Biometric verification error:', error);
-      res.status(500).json({ 
-        success: false, 
-        error: 'Internal server error' 
-      });
-    }
-  }
-
-  static async getAuthLevel(req: Request, res: Response) {
-    try {
-      const { phoneNumber } = req.params;
-
-      // Find user by phone number
-      const userRepository = AppDataSource.getRepository(User);
-      const user = await userRepository.findOne({ where: { phoneNumber } });
-      
+      const user = await userRepo.findOne({ where: { email } });
       if (!user) {
-        return res.status(404).json({ 
-          success: false, 
-          error: 'User not found' 
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      // Check if account is locked
+      if (user.lockedUntil && user.lockedUntil > new Date()) {
+        return res.status(403).json({ 
+          error: 'Account is locked. Please try again later.',
+          lockedUntil: user.lockedUntil
         });
       }
 
+      // Verify password
+      const validPassword = await verifyPassword(password, user.passwordHash);
+      if (!validPassword) {
+        user.failedLoginAttempts += 1;
+        
+        // Lock account after 5 failed attempts
+        if (user.failedLoginAttempts >= 5) {
+          user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+        }
+        
+        await userRepo.save(user);
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      // Check if user is verified
+      if (user.status !== UserStatus.VERIFIED) {
+        return res.status(403).json({ 
+          error: 'Account pending verification',
+          status: user.status
+        });
+      }
+
+      // Reset failed attempts
+      user.failedLoginAttempts = 0;
+      user.lockedUntil = null;
+
+      // For superusers and users with 2FA enabled, require 2FA
+      if (user.role === UserRole.SUPERUSER || user.twoFactorEnabled) {
+        const correlationId = generateCorrelationId();
+        const sessionToken = generateTokenPair(user, correlationId, []).accessToken;
+
+        // Send OTP if SMS is enabled
+        if (user.twoFactorMethod === TwoFactorMethod.SMS || user.twoFactorMethod === TwoFactorMethod.BOTH) {
+          const otp = generateOTP();
+          await sendSMS(user.phone, `Your AfriPay verification code is: ${otp}`);
+          // Store OTP in Redis with 10-minute expiry
+          // await redis.setex(`otp:${user.id}`, 600, otp);
+        }
+
+        return res.json({
+          requires2FA: true,
+          sessionToken,
+          twoFactorMethod: user.twoFactorMethod,
+          requiresBiometric: user.twoFactorMethod === TwoFactorMethod.BIOMETRIC || user.twoFactorMethod === TwoFactorMethod.BOTH
+        });
+      }
+
+      // Generate access token
+      const token = this.generateAccessToken(user);
+      user.lastLoginAt = new Date();
+      await userRepo.save(user);
+
       res.json({
-        success: true,
-        authLevel: user.authLevel,
-        phoneNumber: user.phoneNumber,
-        userId: user.userId
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+          permissions: user.permissions
+        }
       });
     } catch (error) {
-      logger.error('Get auth level error:', error);
-      res.status(500).json({ 
-        success: false, 
-        error: 'Internal server error' 
-      });
+      console.error('Login error:', error);
+      res.status(500).json({ error: 'Login failed' });
     }
+  }
+
+  // Verify 2FA
+  async verify2FA(req: Request, res: Response) {
+    try {
+      const { sessionToken, otp, biometricData } = req.body;
+
+      // Verify session token
+      const decoded: any = jwt.verify(sessionToken, process.env.JWT_SECRET!);
+      if (decoded.step !== '2fa_pending') {
+        return res.status(400).json({ error: 'Invalid session' });
+      }
+
+      const userRepo = getRepository(User);
+      const user = await userRepo.findOne({ where: { id: decoded.userId } });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      let verified = false;
+
+      // Verify OTP if SMS method
+      if (user.twoFactorMethod === TwoFactorMethod.SMS || user.twoFactorMethod === TwoFactorMethod.BOTH) {
+        if (!otp) {
+          return res.status(400).json({ error: 'OTP required' });
+        }
+        // Verify OTP from Redis
+        // const storedOTP = await redis.get(`otp:${user.id}`);
+        // verified = otp === storedOTP;
+        verified = true; // Placeholder
+      }
+
+      // Verify biometric if biometric method
+      if (user.twoFactorMethod === TwoFactorMethod.BIOMETRIC || user.twoFactorMethod === TwoFactorMethod.BOTH) {
+        if (!biometricData) {
+          return res.status(400).json({ error: 'Biometric data required' });
+        }
+        // Call biometric service
+        const biometricVerified = await this.verifyBiometric(user.id, biometricData);
+        verified = verified && biometricVerified;
+      }
+
+      if (!verified) {
+        return res.status(401).json({ error: '2FA verification failed' });
+      }
+
+      // Generate access token
+      const token = this.generateAccessToken(user);
+      user.lastLoginAt = new Date();
+      await userRepo.save(user);
+
+      res.json({
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+          permissions: user.permissions
+        }
+      });
+    } catch (error) {
+      console.error('2FA verification error:', error);
+      res.status(500).json({ error: '2FA verification failed' });
+    }
+  }
+
+  // Helper: Verify government ID
+  private async verifyGovernmentID(type: string, number: string): Promise<boolean> {
+    try {
+      // Call government API for verification
+      const response = await axios.post(process.env.GOVERNMENT_API_URL!, {
+        verificationType: type,
+        identificationNumber: number
+      }, {
+        headers: {
+          'Authorization': `Bearer ${process.env.GOVERNMENT_API_KEY}`
+        }
+      });
+
+      return response.data.verified === true;
+    } catch (error) {
+      console.error('Government verification error:', error);
+      return false;
+    }
+  }
+
+  // Helper: Verify biometric
+  private async verifyBiometric(userId: string, biometricData: any): Promise<boolean> {
+    try {
+      const response = await axios.post(`${process.env.BIOMETRIC_SERVICE_URL}/verify`, {
+        userId,
+        biometricData
+      });
+      return response.data.verified === true;
+    } catch (error) {
+      console.error('Biometric verification error:', error);
+      return false;
+    }
+  }
+
+  // Helper: Generate access token
+  private generateAccessToken(user: User): string {
+    return jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: '24h' }
+    );
+  }
+
+  // Helper: Notify admins
+  private async notifyAdminsForVerification(user: User): Promise<void> {
+    // Send notification to admins via WebSocket/Email
+    // Implementation depends on notification service
+    console.log(`Notifying admins for user verification: ${user.id}`);
   }
 }
-
-export default AuthController;

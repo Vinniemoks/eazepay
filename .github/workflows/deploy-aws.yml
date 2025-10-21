@@ -1,0 +1,55 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - identity-service
+          - biometric-service
+          - transaction-service
+          - wallet-service
+          - ussd-service
+          - agent-service
+          - customer-portal
+          - agent-portal
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+    
+    - name: Build and push Docker image
+      working-directory: ./services/${{ matrix.service }}
+      run: |
+        docker build -t $ECR_REGISTRY/${{ matrix.service }}:${{ github.sha }} .
+        docker push $ECR_REGISTRY/${{ matrix.service }}:${{ github.sha }}
+        docker tag $ECR_REGISTRY/${{ matrix.service }}:${{ github.sha }} $ECR_REGISTRY/${{ matrix.service }}:latest
+        docker push $ECR_REGISTRY/${{ matrix.service }}:latest
+    
+    - name: Update ECS service
+      run: |
+        aws ecs update-service \
+          --cluster afripay-production \
+          --service ${{ matrix.service }} \
+          --force-new-deployment \
+          --region ${{ env.AWS_REGION }}

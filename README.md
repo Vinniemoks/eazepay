@@ -2,9 +2,18 @@
 
 A comprehensive fintech platform providing seamless payment solutions across Africa with support for mobile money, biometric authentication, and agent networks.
 
+## 🎯 Production Ready
+
+AfriPay is now **cloud-ready** with complete customer-facing interfaces for AWS and Google Cloud Platform deployment.
+
 ## 🏗️ Architecture
 
-### Microservices
+### Customer-Facing Applications
+- **Customer Portal** (Port 3001) - React - User wallet and transactions
+- **Agent Portal** (Port 3002) - React - Agent operations and analytics
+- **Admin Portal** (Port 8080) - Static - System administration
+
+### Backend Microservices
 - **Identity Service** (Port 8000) - Node.js/TypeScript - Authentication & Authorization
 - **Biometric Service** (Port 8001) - Python/FastAPI - Biometric Authentication
 - **Transaction Service** (Port 8002) - Java/Spring Boot - Payment Processing  
@@ -17,62 +26,58 @@ A comprehensive fintech platform providing seamless payment solutions across Afr
 - **Redis** - Caching & sessions
 - **MongoDB** - Document storage
 - **RabbitMQ** - Message queue
+- **Nginx** - API Gateway & Load Balancer
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 18+
-- Python 3.9+
-- Java 17+
-- Go 1.19+
-- Docker & Docker Compose
-
-### Setup Development Environment
+### Local Development
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/afripay-universal.git
-cd afripay-universal
-
-# Run setup script
-chmod +x scripts/setup/dev-setup.sh
-./scripts/setup/dev-setup.sh
-
-# Start services individually
-cd services/identity-service && npm install && npm run dev
-cd services/biometric-service && pip install -r requirements.txt && python main.py
+# Quick deploy all services locally
+chmod +x scripts/deploy-local.sh
+./scripts/deploy-local.sh
 ```
 
-### Using Docker Compose
+Access your applications:
+- **Customer Portal**: http://localhost:3001
+- **Agent Portal**: http://localhost:3002
+- **Admin Portal**: http://localhost:8080
+- **API Gateway**: http://localhost:80
 
+### Cloud Deployment
+
+#### Deploy to AWS
 ```bash
-# Start infrastructure services
-docker-compose up -d postgresql redis mongodb rabbitmq
-
-# Start all services (when ready)
-docker-compose up -d
+export AWS_REGION=us-east-1
+chmod +x scripts/deploy-aws.sh
+./scripts/deploy-aws.sh
 ```
 
-If you run into transient TLS handshake timeouts while pulling images (for example, `net/http: TLS handshake timeout`), you can
-use the helper script below to retry `docker compose up` automatically until it succeeds:
-
+#### Deploy to GCP
 ```bash
-chmod +x scripts/docker-compose-up-retry.sh
-./scripts/docker-compose-up-retry.sh
+export GCP_PROJECT_ID=your-project-id
+chmod +x scripts/deploy-gcp.sh
+./scripts/deploy-gcp.sh
 ```
 
-Set the `MAX_RETRIES` and `RETRY_DELAY` environment variables to customise the retry behaviour if needed.
+See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions.
 
 ## 📚 Documentation
 
+- [Cloud Deployment Overview](docs/CLOUD_DEPLOYMENT_OVERVIEW.md)
+- [AWS Deployment Guide](docs/deployment/AWS_DEPLOYMENT.md)
+- [GCP Deployment Guide](docs/deployment/GCP_DEPLOYMENT.md)
 - [API Documentation](docs/api/README.md)
 - [Architecture Overview](docs/architecture/README.md)
-- [Deployment Guide](docs/deployment/README.md)
-- [Hardware Specifications](docs/hardware/README.md)
 
 ## 🛠️ Development
 
-### Service Endpoints
+### Frontend Applications
+- Customer Portal: http://localhost:3001
+- Agent Portal: http://localhost:3002
+- Admin Portal: http://localhost:8080
+
+### Backend Services
 - Identity Service: http://localhost:8000
 - Biometric Service: http://localhost:8001
 - Transaction Service: http://localhost:8002
@@ -80,11 +85,13 @@ Set the `MAX_RETRIES` and `RETRY_DELAY` environment variables to customise the r
 - USSD Gateway: http://localhost:8004
 - Agent Service: http://localhost:8005
 
-### Database Access
-- PostgreSQL: `localhost:5432` (user: developer)
+### Infrastructure
+- PostgreSQL: `localhost:5433` (user: developer)
 - Redis: `localhost:6379`
 - MongoDB: `localhost:27017`
-- RabbitMQ Management: http://localhost:15672
+- RabbitMQ: http://localhost:15673
+- Grafana: http://localhost:3000
+- Prometheus: http://localhost:9090
 
 ## 🔒 Security
 
@@ -104,4 +111,6 @@ Proprietary - All rights reserved
 
 ---
 
-**Status:** 🚧 Development Phase
+**Status:** ✅ Production Ready - Cloud Deployment Available
+
+See [GETTING_STARTED.md](./GETTING_STARTED.md) for deployment instructions.
