@@ -3,6 +3,7 @@
   padding: 2rem;
   background: linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(131, 68, 255, 0.05));
   min-height: 100vh;
+  animation: fadeIn var(--animation-speed-slow) var(--ease-out-quad) forwards;
 }
 
 /* Stat Cards */
@@ -10,9 +11,10 @@
   display: flex;
   align-items: center;
   padding: 1.5rem;
-  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  transition: transform var(--animation-speed-fast) var(--ease-out-quad),
+              box-shadow var(--animation-speed-fast) var(--ease-out-quad);
 }
 
 .stat-card::before {
@@ -23,11 +25,14 @@
   right: 0;
   height: 4px;
   background: var(--gradient-royal-blend);
+  transform: translateX(-100%);
+  animation: slideInRight var(--animation-speed-medium) var(--ease-out-quad) forwards;
 }
 
 .stat-icon {
   width: 48px;
   height: 48px;
+  animation: fadeInScale var(--animation-speed-medium) var(--ease-out-back) forwards;
   border-radius: 12px;
   display: flex;
   align-items: center;

@@ -1,29 +1,59 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, SectionHeader, Badge, ProgressBar, Loader } from './ui';
-import { animations, generateGradient } from '../utils/theme';
+import { generateGradient } from '../utils/theme';
+import '../styles/animations.css';
 
-// Stat Card with Animation
-export const StatCard = ({ icon, title, value, trend, loading }) => (
-  <Card className="stat-card">
-    {loading ? (
-      <Loader size={30} />
-    ) : (
-      <>
-        <div className="stat-icon">{icon}</div>
-        <div className="stat-content">
-          <h3>{title}</h3>
-          <div className="stat-value">{value}</div>
-          {trend && (
-            <Badge 
-              variant={trend > 0 ? 'success' : 'error'}
-              className="trend-badge"
-            >
-              {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}%
-            </Badge>
-          )}
+// Stat Card with Enhanced Animations
+export const StatCard = ({ icon, label, value, change, trend, loading }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <Card 
+      ref={cardRef}
+      className={`stat-card hover-lift ${isVisible ? 'fade-in' : ''}`}
+    >
+      {loading ? (
+        <div className="loading-shimmer">
+          <Loader size={30} />
         </div>
-      </>
-    )}
+      ) : (
+        <>
+          <div className={`stat-icon pulse ${icon}`}>{icon}</div>
+          <div className="stat-content">
+            <h3 className="slide-in-right">{label}</h3>
+            <div className={`stat-card-value ${trend === 'up' ? 'increasing' : trend === 'down' ? 'decreasing' : ''}`}>
+              {value}
+            </div>
+            {change && (
+              <Badge 
+                variant={trend === 'up' ? 'success' : 'error'}
+                className="trend-badge fade-in-scale"
+              >
+                {trend === 'up' ? '↑' : '↓'} {change}
+              </Badge>
+            )}
+          </div>
+        </>
+      )}
   </Card>
 );
 

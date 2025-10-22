@@ -1,0 +1,244 @@
+/* Fade Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--royal-gold-rgb), 0.4);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(var(--royal-gold-rgb), 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--royal-gold-rgb), 0);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animation Utility Classes */
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.fade-in-scale {
+  animation: fadeInScale 0.5s ease-out forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(var(--royal-gold-rgb), 0.1) 0%,
+    rgba(var(--purple-rgb), 0.2) 50%,
+    rgba(var(--royal-gold-rgb), 0.1) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient-shift {
+  background: linear-gradient(
+    45deg,
+    var(--royal-gold) 0%,
+    var(--purple) 50%,
+    var(--blue) 100%
+  );
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+/* Transition Classes */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 15px rgba(var(--royal-gold-rgb), 0.3);
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Loading States */
+.loading-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* Custom Transitions */
+.stat-card-value {
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.stat-card-value.increasing {
+  color: var(--success);
+  transform: scale(1.05);
+}
+
+.stat-card-value.decreasing {
+  color: var(--danger);
+  transform: scale(0.95);
+}
+
+/* Chart Animations */
+.chart-animate path {
+  transition: stroke-dashoffset 1s ease;
+}
+
+.chart-animate circle {
+  transition: r 0.3s ease;
+}
+
+/* Notification Animations */
+@keyframes slideInTop {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-enter {
+  animation: slideInTop 0.5s ease forwards;
+}
+
+/* Activity Timeline Animations */
+.timeline-item {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.timeline-item.visible {
+  animation: slideInRight 0.5s ease forwards;
+}
+
+/* Performance Metrics Animations */
+.metric-value {
+  transition: width 0.8s ease, background-color 0.3s ease;
+}
+
+.metric-icon {
+  transition: transform 0.3s ease;
+}
+
+.metric-icon:hover {
+  transform: rotate(15deg);
+}
+
+/* Quick Actions Animations */
+.action-button {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.action-button:hover::after {
+  width: 300%;
+  height: 300%;
+}

@@ -1,0 +1,198 @@
+:root {
+  /* Animation Timing Variables */
+  --animation-speed-fast: 0.3s;
+  --animation-speed-medium: 0.5s;
+  --animation-speed-slow: 0.8s;
+  
+  /* Color Variables for Animations */
+  --royal-gold-rgb: 218, 165, 32;
+  --purple-rgb: 128, 0, 128;
+  --blue-rgb: 0, 102, 204;
+  
+  /* Easing Functions */
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-cubic: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  --ease-out-back: cubic-bezier(0.175, 0.885, 0.320, 1.275);
+  
+  /* Shadow Variables */
+  --shadow-glow-gold: 0 0 15px rgba(var(--royal-gold-rgb), 0.3);
+  --shadow-glow-purple: 0 0 15px rgba(var(--purple-rgb), 0.3);
+  --shadow-glow-blue: 0 0 15px rgba(var(--blue-rgb), 0.3);
+}
+
+/* Dashboard Container Animations */
+.dashboard-container {
+  opacity: 0;
+  animation: fadeIn var(--animation-speed-slow) var(--ease-out-quad) forwards;
+}
+
+/* Card Animations */
+.stat-card {
+  transform: translateY(20px);
+  opacity: 0;
+  animation: slideIn var(--animation-speed-medium) var(--ease-out-cubic) forwards;
+}
+
+/* Hover Effects */
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow-gold);
+  transition: all var(--animation-speed-fast) var(--ease-out-quad);
+}
+
+.analytics-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow-purple);
+  transition: all var(--animation-speed-fast) var(--ease-out-quad);
+}
+
+.quick-actions-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow-blue);
+  transition: all var(--animation-speed-fast) var(--ease-out-quad);
+}
+
+/* Chart Animations */
+.chart-animate {
+  opacity: 0;
+  transform: scale(0.95);
+  animation: scaleIn var(--animation-speed-medium) var(--ease-out-back) forwards;
+}
+
+/* Grid Animations */
+.dashboard-grid {
+  display: grid;
+  gap: 1rem;
+  opacity: 0;
+  animation: fadeIn var(--animation-speed-medium) var(--ease-out-quad) forwards;
+  animation-delay: var(--animation-speed-fast);
+}
+
+/* Timeline Item Animations */
+.timeline-item {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideInRight var(--animation-speed-medium) var(--ease-out-quad) forwards;
+}
+
+/* Performance Metrics Animations */
+.metric-item {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: slideUp var(--animation-speed-medium) var(--ease-out-quad) forwards;
+}
+
+/* Notification Animations */
+.notification-item {
+  opacity: 0;
+  transform: translateX(20px);
+  animation: slideInLeft var(--animation-speed-fast) var(--ease-out-quad) forwards;
+}
+
+/* Loading State Animations */
+.loading-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--royal-gold-rgb), 0.1),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* Value Change Animations */
+.value-change {
+  transition: color var(--animation-speed-fast) ease,
+              transform var(--animation-speed-fast) var(--ease-out-back);
+}
+
+.value-change.positive {
+  color: #4caf50;
+  transform: scale(1.1);
+}
+
+.value-change.negative {
+  color: #f44336;
+  transform: scale(0.9);
+}
+
+/* Button Interactions */
+.action-button {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--animation-speed-fast) var(--ease-out-quad);
+}
+
+.action-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--animation-speed-medium) ease,
+              height var(--animation-speed-medium) ease;
+}
+
+.action-button:hover::after {
+  width: 300%;
+  height: 300%;
+}
+
+/* Progress Bar Animations */
+.progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: progressShimmer 2s infinite;
+}
+
+/* Icon Animations */
+.icon-pulse {
+  animation: pulse 2s infinite;
+}
+
+.icon-spin {
+  animation: spin 2s linear infinite;
+}
+
+/* Chart Loading Animation */
+.chart-loading {
+  background: linear-gradient(
+    90deg,
+    var(--royal-gold) 0%,
+    var(--purple) 50%,
+    var(--blue) 100%
+  );
+  background-size: 200% 100%;
+  animation: gradientMove 2s linear infinite;
+  opacity: 0.1;
+}

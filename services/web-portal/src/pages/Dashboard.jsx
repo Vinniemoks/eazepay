@@ -11,6 +11,8 @@ import {
 } from '../../../shared/components/dashboard';
 import { Card } from '../../../shared/components/ui';
 import '../../../shared/styles/dashboard.css';
+import '../../../shared/styles/animations.css';
+import '../../../shared/styles/dashboard-animations.css';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
