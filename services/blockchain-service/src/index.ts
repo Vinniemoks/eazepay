@@ -111,6 +111,49 @@ app.get('/api/blockchain/accounts/:accountId/history', async (req: Request, res:
   }
 });
 
+// Record audit log on blockchain
+app.post('/api/blockchain/audit-logs', async (req: Request, res: Response) => {
+  try {
+    const auditLog = req.body;
+    const txHash = await blockchainClient.recordAuditLog(auditLog);
+    
+    res.json({
+      success: true,
+      transactionHash: txHash,
+      message: 'Audit log recorded on blockchain'
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Get audit log from blockchain
+app.get('/api/blockchain/audit-logs/:id', async (req: Request, res: Response) => {
+  try {
+    const auditLog = await blockchainClient.getAuditLog(req.params.id);
+    
+    if (!auditLog) {
+      return res.status(404).json({
+        success: false,
+        error: 'Audit log not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      auditLog
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // Start server
 async function startServer() {
   try {

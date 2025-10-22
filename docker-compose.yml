@@ -364,6 +364,39 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  blockchain-service:
+    build:
+      context: ./services/blockchain-service
+      dockerfile: Dockerfile
+    container_name: afripay-blockchain
+    ports:
+      - "8020:8020"
+    environment:
+      - NODE_ENV=development
+      - PORT=8020
+      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/afripay
+      - FABRIC_CHANNEL_NAME=eazepay-channel
+      - FABRIC_CHAINCODE_NAME=transaction-ledger
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - afripay-network
+    volumes:
+      - blockchain_logs:/app/logs
+      - ./services/blockchain-service/fabric-network:/app/fabric-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8020/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # ================================
+  # WEB PORTALS
+  # ================================
+
   admin-portal:
     build:
       context: ./services/admin-portal
@@ -611,6 +644,8 @@ volumes:
   ussd_logs:
     driver: local
   agent_logs:
+    driver: local
+  blockchain_logs:
     driver: local
   admin_portal_logs:
     driver: local

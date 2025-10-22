@@ -155,6 +155,10 @@ export class BlockchainClient {
     }
 
     try {
+      const timestamp = auditLog.timestamp instanceof Date ? 
+        auditLog.timestamp.toISOString() : 
+        auditLog.timestamp;
+
       const result = await this.contract.submitTransaction(
         'CreateAuditLog',
         auditLog.id,
@@ -162,15 +166,39 @@ export class BlockchainClient {
         auditLog.actorUserId,
         auditLog.resourceType,
         auditLog.resourceId,
-        JSON.stringify(auditLog.beforeValue),
-        JSON.stringify(auditLog.afterValue),
-        auditLog.timestamp.toISOString()
+        JSON.stringify(auditLog.beforeValue || {}),
+        JSON.stringify(auditLog.afterValue || {}),
+        timestamp
       );
 
-      return result.toString();
+      const txHash = result.toString();
+      console.log(`✅ Audit log recorded on blockchain: ${txHash}`);
+      return txHash;
     } catch (error) {
       console.error('❌ Failed to record audit log:', error);
       throw error;
+    }
+  }
+
+  async getAuditLog(auditLogId: string): Promise<any | null> {
+    if (!this.contract) {
+      throw new Error('Not connected to blockchain');
+    }
+
+    try {
+      const result = await this.contract.evaluateTransaction(
+        'GetAuditLog',
+        auditLogId
+      );
+
+      if (!result || result.length === 0) {
+        return null;
+      }
+
+      return JSON.parse(result.toString());
+    } catch (error) {
+      console.error('❌ Failed to get audit log:', error);
+      return null;
     }
   }
 }

@@ -53,13 +53,18 @@ export class EventConsumer {
       // Listen for audit logs
       const auditQueue = 'blockchain.audit-logs';
       await this.channel.assertQueue(auditQueue, { durable: true });
-      await this.channel.bindQueue(auditQueue, exchange, 'audit.*');
+      await this.channel.bindQueue(auditQueue, 'eazepay.audit', 'audit.*');
 
       this.channel.consume(auditQueue, async (msg) => {
         if (msg) {
           try {
             const auditLog = JSON.parse(msg.content.toString());
             console.log(`📥 Received audit log: ${auditLog.id}`);
+
+            // Ensure timestamp is in correct format
+            if (!auditLog.timestamp) {
+              auditLog.timestamp = new Date().toISOString();
+            }
 
             await this.blockchainClient.recordAuditLog(auditLog);
             
