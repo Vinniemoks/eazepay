@@ -1,0 +1,201 @@
+# Render.com Blueprint - Eazepay Platform
+# This file allows one-click deployment of all services
+# Upload this to your GitHub repo root
+
+services:
+  # ================================
+  # DATABASES
+  # ================================
+  
+  - type: pserv
+    name: eazepay-postgres
+    env: docker
+    plan: free
+    region: oregon
+    databases:
+      - name: afripay_dev
+        user: developer
+
+  - type: redis
+    name: eazepay-redis
+    plan: free
+    region: oregon
+    maxmemoryPolicy: allkeys-lru
+
+  # ================================
+  # MICROSERVICES
+  # ================================
+
+  # Identity Service
+  - type: web
+    name: eazepay-identity
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    rootDir: services/identity-service
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: DB_HOST
+        fromDatabase:
+          name: eazepay-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: eazepay-postgres
+          property: port
+      - key: DB_NAME
+        value: afripay_dev
+      - key: DB_USER
+        fromDatabase:
+          name: eazepay-postgres
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: eazepay-postgres
+          property: password
+      - key: REDIS_HOST
+        fromService:
+          name: eazepay-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: eazepay-redis
+          type: redis
+          property: port
+      - key: JWT_SECRET
+        generateValue: true
+
+  # AI/ML Service
+  - type: web
+    name: eazepay-ai-ml
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: services/ai-ml-service
+    envVars:
+      - key: PORT
+        value: 8010
+      - key: LOG_LEVEL
+        value: INFO
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: eazepay-postgres
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: eazepay-postgres
+          property: port
+      - key: POSTGRES_DB
+        value: afripay_dev
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: eazepay-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: eazepay-postgres
+          property: password
+
+  # IoT Service
+  - type: web
+    name: eazepay-iot
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    rootDir: services/iot-service
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8020
+      - key: MQTT_BROKER_URL
+        value: mqtt://test.mosquitto.org:1883
+
+  # Blockchain Service
+  - type: web
+    name: eazepay-blockchain
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    rootDir: services/blockchain-service
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8030
+
+  # Robotics Service
+  - type: web
+    name: eazepay-robotics
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    rootDir: services/robotics-service
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8040
+
+  # Transaction Service
+  - type: web
+    name: eazepay-transaction
+    env: java
+    region: oregon
+    plan: free
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/transaction-service-1.0.0.jar
+    rootDir: services/transaction-service
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: SERVER_PORT
+        value: 8002
+
+  # ================================
+  # WEB PORTALS
+  # ================================
+
+  # Admin Portal
+  - type: web
+    name: eazepay-admin-portal
+    env: static
+    region: oregon
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    rootDir: services/admin-portal
+    envVars:
+      - key: VITE_API_GATEWAY_URL
+        value: https://eazepay-identity.onrender.com
+
+  # Customer Portal
+  - type: web
+    name: eazepay-customer-portal
+    env: static
+    region: oregon
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    rootDir: services/customer-portal
+
+  # Agent Portal
+  - type: web
+    name: eazepay-agent-portal
+    env: static
+    region: oregon
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    rootDir: services/agent-portal
