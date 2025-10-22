@@ -72,15 +72,15 @@ export const getContrastColor = (backgroundColor) => {
   return '#FFFFFF';  // Placeholder
 };
 
-// Theme context utilities
-export const createThemeContext = (initialTheme = {}) => {
-  const context = React.createContext(initialTheme);
-  
-  const ThemeProvider = ({ children, theme = initialTheme }) => (
-    <context.Provider value={theme}>{children}</context.Provider>
-  );
-  
-  const useTheme = () => React.useContext(context);
-  
-  return { ThemeProvider, useTheme };
+// Theme colors
+export const colors = {
+  royalGold: '#DAA520',
+  royalGoldLight: '#FFD700',
+  royalGoldDark: '#B8860B',
+  royalPurple: '#8344FF',
+  royalPurpleLight: '#9B66FF',
+  royalPurpleDark: '#6B2FE0',
+  royalBlue: '#0066CC',
+  royalBlueLight: '#3B82F6',
+  royalBlueDark: '#004E92',
 };

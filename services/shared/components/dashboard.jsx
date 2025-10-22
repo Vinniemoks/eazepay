@@ -54,8 +54,9 @@ export const StatCard = ({ icon, label, value, change, trend, loading }) => {
           </div>
         </>
       )}
-  </Card>
-);
+    </Card>
+  );
+};
 
 // Activity Timeline
 export const ActivityTimeline = ({ activities }) => (
