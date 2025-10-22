@@ -1,24 +1,5 @@
-:root {
-  /* Animation Timing Variables */
-  --animation-speed-fast: 0.3s;
-  --animation-speed-medium: 0.5s;
-  --animation-speed-slow: 0.8s;
-  
-  /* Color Variables for Animations */
-  --royal-gold-rgb: 218, 165, 32;
-  --purple-rgb: 128, 0, 128;
-  --blue-rgb: 0, 102, 204;
-  
-  /* Easing Functions */
-  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-out-cubic: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-  --ease-out-back: cubic-bezier(0.175, 0.885, 0.320, 1.275);
-  
-  /* Shadow Variables */
-  --shadow-glow-gold: 0 0 15px rgba(var(--royal-gold-rgb), 0.3);
-  --shadow-glow-purple: 0 0 15px rgba(var(--purple-rgb), 0.3);
-  --shadow-glow-blue: 0 0 15px rgba(var(--blue-rgb), 0.3);
-}
+/* Import Variables */
+@import './variables.css';
 
 /* Dashboard Container Animations */
 .dashboard-container {

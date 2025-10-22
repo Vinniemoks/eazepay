@@ -1,3 +1,6 @@
+/* Import Variables */
+@import './variables.css';
+
 /* Dashboard Specific Styles */
 .dashboard-container {
   padding: 2rem;
