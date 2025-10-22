@@ -8,6 +8,9 @@ export default defineConfig({
   publicDir: 'public',
   server: {
     port: 3002,
+    fs: {
+      allow: ['..']
+    },
     proxy: {
       '/api': {
         target: process.env.VITE_API_GATEWAY_URL || 'http://localhost:80',
@@ -15,8 +18,19 @@ export default defineConfig({
       }
     }
   },
+  resolve: {
+    alias: {
+      '@shared': resolve(__dirname, '../shared')
+    }
+  },
   build: {
     outDir: 'dist',
-    sourcemap: false
+    sourcemap: false,
+    commonjsOptions: {
+      include: [/shared/, /node_modules/]
+    }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom']
   }
 })
