@@ -274,9 +274,9 @@ Once you can:
 
 ### Get More Help
 
-- Check [test-apps/QUICK_TEST_GUIDE.md](./test-apps/QUICK_TEST_GUIDE.md)
-- Check [APPS_SETUP_GUIDE.md](./APPS_SETUP_GUIDE.md)
-- Check [COMPLETE_PLATFORM_GUIDE.md](./COMPLETE_PLATFORM_GUIDE.md)
+- Check [test-apps/QUICK_TEST_GUIDE.md](../../test-apps/QUICK_TEST_GUIDE.md)
+- Check [APPS_SETUP_GUIDE.md](../guides/APPS_SETUP_GUIDE.md)
+- Check [COMPLETE_PLATFORM_GUIDE.md](../guides/COMPLETE_PLATFORM_GUIDE.md)
 
 ---
 

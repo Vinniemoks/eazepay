@@ -313,8 +313,8 @@ netstat -ano | findstr :8080
 3. Check browser console (F12)
 4. Review documentation:
    - [TEST_APPS_NOW.md](./TEST_APPS_NOW.md)
-   - [test-apps/QUICK_TEST_GUIDE.md](./test-apps/QUICK_TEST_GUIDE.md)
-   - [APPS_SETUP_GUIDE.md](./APPS_SETUP_GUIDE.md)
+   - [QUICK_TEST_GUIDE.md](../../test-apps/QUICK_TEST_GUIDE.md)
+   - [APPS_SETUP_GUIDE.md](../guides/APPS_SETUP_GUIDE.md)
 
 ---
 

@@ -40,8 +40,23 @@ Database Sharding: User-based partitioning
 Caching Strategy: Multi-layer (L1: Memory, L2: Redis, L3: CDN)
 Load Balancing: Round-robin with health checks
 
+Infrastructure Architecture
+----------------------
+
+Our infrastructure is designed for high availability, security, and scalability. Please refer to our detailed infrastructure documentation:
+
+- [Infrastructure Architecture](./diagrams/infrastructure-architecture.md)
+  - Cloud Infrastructure Overview
+  - Kubernetes Infrastructure
+  - Network Architecture
+  - Disaster Recovery Setup
+  - Security Infrastructure
+  - Monitoring Infrastructure
+  - CI/CD Infrastructure
+
 Experience Visuals
 ------------------
+
 Refer to [Service Experience and System Visuals](service-visuals.md) for user-facing and backend diagrams, including the superuser governance model.
 
 For an interactive POS-terminal rendering of those experiences, open the [AfriPay POS Service Visuals](pos-terminal/index.html) prototype in a browser. The companion [stylesheet](pos-terminal/styles.css) can be reused within POS deployments that require the same look and feel.
