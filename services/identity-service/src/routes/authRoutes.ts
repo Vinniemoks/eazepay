@@ -2,11 +2,11 @@ import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
 
 const router = Router();
+const authController = new AuthController();
 
-// Use static methods directly
-router.post('/register', AuthController.register);
-router.post('/login', AuthController.login);
-router.post('/verify-biometric', AuthController.verifyBiometric);
-router.get('/auth-level/:phoneNumber', AuthController.getAuthLevel);
+// Use instance methods
+router.post('/register', (req, res) => authController.register(req, res));
+router.post('/login', (req, res) => authController.login(req, res));
+router.post('/verify-2fa', (req, res) => authController.verify2FA(req, res));
 
 export { router as authRoutes };

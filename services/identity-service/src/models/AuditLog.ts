@@ -7,6 +7,7 @@ export enum AuditActionType {
   USER_CREATED = 'USER_CREATED',
   USER_UPDATED = 'USER_UPDATED',
   USER_DELETED = 'USER_DELETED',
+  ROLE_CHANGED = 'ROLE_CHANGED',
   PERMISSION_GRANTED = 'PERMISSION_GRANTED',
   PERMISSION_REVOKED = 'PERMISSION_REVOKED',
   ACCESS_REQUEST_CREATED = 'ACCESS_REQUEST_CREATED',
@@ -42,6 +43,9 @@ export class AuditLog {
 
   @Column({ type: 'uuid' })
   actorUserId: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  userId: string;
 
   @Column({ type: 'enum', enum: ['SUPERUSER', 'ADMIN', 'MANAGER', 'EMPLOYEE', 'CUSTOMER', 'AGENT'] })
   actorRole: string;
@@ -84,4 +88,13 @@ export class AuditLog {
 
   @Column({ type: 'jsonb', nullable: true })
   metadata: any;
+
+  @Column({ type: 'jsonb', nullable: true })
+  details: any;
+
+  @Column({ type: 'inet', nullable: true })
+  ipAddress: string;
+
+  @Column({ type: 'text', nullable: true })
+  userAgent: string;
 }

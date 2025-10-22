@@ -18,6 +18,7 @@ declare global {
         role: string;
         permissions: string[];
         sessionId: string;
+        organizationId?: string;
       };
     }
   }

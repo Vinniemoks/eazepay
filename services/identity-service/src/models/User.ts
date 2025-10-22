@@ -3,12 +3,15 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 export enum UserRole {
   SUPERUSER = 'SUPERUSER',
   ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+  EMPLOYEE = 'EMPLOYEE',
   CUSTOMER = 'CUSTOMER',
   AGENT = 'AGENT'
 }
 
 export enum UserStatus {
   PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
   VERIFIED = 'VERIFIED',
   SUSPENDED = 'SUSPENDED',
   REJECTED = 'REJECTED'
@@ -104,6 +107,15 @@ export class User {
 
   @Column({ type: 'jsonb', nullable: true })
   permissions: string[];
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  department: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  managerId: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  organizationId: string;
 
   @Column({ type: 'int', default: 0 })
   failedLoginAttempts: number;

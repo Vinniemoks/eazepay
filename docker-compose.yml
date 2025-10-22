@@ -125,8 +125,9 @@ services:
     networks:
       - afripay-network
     volumes:
-      - ./services/identity-service:/app
-      - /app/node_modules
+      # Removed source code mount for production - code is baked into image
+      # - ./services/identity-service:/app
+      # - /app/node_modules
       - identity_logs:/app/logs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]

@@ -3,33 +3,34 @@ import { AppDataSource } from '../config/database';
 import { User, UserRole, UserStatus, TwoFactorMethod } from '../models/User';
 import { Session } from '../models/Session';
 import { UserPermission } from '../models/UserPermission';
-import { 
-  hashPassword, 
-  verifyPassword, 
-  generateTokenPair, 
+import {
+  hashPassword,
+  verifyPassword,
+  generateTokenPair,
   verifyAccessToken,
-  generateOTP, 
-  verifyTOTP, 
+  generateOTP,
+  verifyTOTP,
   sendSMS,
   generateCorrelationId
 } from '../utils/security';
 import { AuditLog, AuditActionType } from '../models/AuditLog';
 import axios from 'axios';
 import { getRepository } from 'typeorm';
+import jwt from 'jsonwebtoken';
 
 export class AuthController {
   // Customer/Agent Registration
   async register(req: Request, res: Response) {
     try {
-      const { 
-        email, 
-        phone, 
-        password, 
-        fullName, 
-        role, 
+      const {
+        email,
+        phone,
+        password,
+        fullName,
+        role,
         verificationType,
         verificationNumber,
-        businessDetails 
+        businessDetails
       } = req.body;
 
       const userRepo = AppDataSource.getRepository(User);
@@ -40,8 +41,8 @@ export class AuthController {
       }
 
       // Check if user exists
-      const existingUser = await userRepo.findOne({ 
-        where: [{ email }, { phone }] 
+      const existingUser = await userRepo.findOne({
+        where: [{ email }, { phone }]
       });
       if (existingUser) {
         return res.status(400).json({ error: 'User already exists' });
@@ -109,7 +110,7 @@ export class AuthController {
 
       // Check if account is locked
       if (user.lockedUntil && user.lockedUntil > new Date()) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           error: 'Account is locked. Please try again later.',
           lockedUntil: user.lockedUntil
         });
@@ -119,19 +120,19 @@ export class AuthController {
       const validPassword = await verifyPassword(password, user.passwordHash);
       if (!validPassword) {
         user.failedLoginAttempts += 1;
-        
+
         // Lock account after 5 failed attempts
         if (user.failedLoginAttempts >= 5) {
           user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
         }
-        
+
         await userRepo.save(user);
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
       // Check if user is verified
       if (user.status !== UserStatus.VERIFIED) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           error: 'Account pending verification',
           status: user.status
         });
@@ -261,7 +262,7 @@ export class AuthController {
         }
       });
 
-      return response.data.verified === true;
+      return (response.data as any).verified === true;
     } catch (error) {
       console.error('Government verification error:', error);
       return false;
@@ -275,7 +276,7 @@ export class AuthController {
         userId,
         biometricData
       });
-      return response.data.verified === true;
+      return (response.data as any).verified === true;
     } catch (error) {
       console.error('Biometric verification error:', error);
       return false;

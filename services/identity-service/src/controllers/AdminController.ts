@@ -357,8 +357,10 @@ export class AdminController {
       }
 
       const admin = await userRepo.findOne({ 
-        where: { id: adminId },
-        where: { role: UserRole.MANAGER } as any
+        where: { 
+          id: adminId,
+          role: UserRole.MANAGER
+        }
       });
       if (!admin) {
         return res.status(404).json({ error: 'Admin not found' });
