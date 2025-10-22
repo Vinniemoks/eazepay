@@ -429,6 +429,63 @@ services:
       start_period: 30s
     restart: unless-stopped
 
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: afripay-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./infrastructure/docker/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_logs:/mosquitto/log
+    networks:
+      - afripay-network
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  iot-service:
+    build:
+      context: ./services/iot-service
+      dockerfile: Dockerfile
+    container_name: afripay-iot
+    ports:
+      - "8030:8030"
+    environment:
+      - NODE_ENV=development
+      - PORT=8030
+      - MQTT_BROKER_URL=mqtt://mosquitto:1883
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=afripay_dev
+      - POSTGRES_USER=developer
+      - POSTGRES_PASSWORD=dev_password_2024!
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=redis_password_2024!
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - afripay-network
+    volumes:
+      - iot_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
   # ================================
   # WEB PORTALS
   # ================================
@@ -686,6 +743,12 @@ volumes:
   ai_ml_logs:
     driver: local
   ai_ml_models:
+    driver: local
+  mosquitto_data:
+    driver: local
+  mosquitto_logs:
+    driver: local
+  iot_logs:
     driver: local
   admin_portal_logs:
     driver: local
