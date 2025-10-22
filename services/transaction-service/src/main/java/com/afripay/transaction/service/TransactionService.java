@@ -1,5 +1,8 @@
 package com.afripay.transaction.service;
 
+import com.afripay.transaction.ai.FraudCheckClient;
+import com.afripay.transaction.ai.FraudCheckRequest;
+import com.afripay.transaction.ai.FraudCheckResult;
 import com.afripay.transaction.blockchain.BlockchainClient;
 import com.afripay.transaction.blockchain.TransactionBlockchainDTO;
 import com.afripay.transaction.model.Transaction;
@@ -24,19 +27,36 @@ public class TransactionService {
     
     @Autowired
     private BlockchainClient blockchainClient;
+    
+    @Autowired
+    private FraudCheckClient fraudCheckClient;
 
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
 
     public Transaction createTransaction(Transaction transaction) {
-        // Set initial status
-        transaction.setStatus("PENDING");
+        // Step 1: Fraud Detection (BEFORE processing)
+        FraudCheckResult fraudCheck = performFraudCheck(transaction);
         
-        // Save to database first (ACID guarantees)
+        if (fraudCheck.shouldBlock()) {
+            logger.warn("Transaction BLOCKED by fraud detection: {}", transaction.getId());
+            transaction.setStatus("BLOCKED");
+            transaction.setDescription("Blocked by fraud detection: High risk");
+            return transactionRepository.save(transaction);
+        }
+        
+        if (fraudCheck.shouldReview()) {
+            logger.info("Transaction flagged for REVIEW: {}", transaction.getId());
+            transaction.setStatus("PENDING_REVIEW");
+        } else {
+            transaction.setStatus("PENDING");
+        }
+        
+        // Step 2: Save to database (ACID guarantees)
         Transaction savedTransaction = transactionRepository.save(transaction);
         
-        // Record on blockchain asynchronously (immutability)
+        // Step 3: Record on blockchain asynchronously (immutability)
         try {
             TransactionBlockchainDTO blockchainDTO = convertToBlockchainDTO(savedTransaction);
             blockchainClient.recordTransactionAsync(blockchainDTO);
@@ -70,6 +90,29 @@ public class TransactionService {
         } catch (Exception e) {
             logger.error("Failed to verify transaction: {}", e.getMessage());
             return false;
+        }
+    }
+    
+    /**
+     * Perform fraud check on transaction
+     */
+    private FraudCheckResult performFraudCheck(Transaction transaction) {
+        try {
+            FraudCheckRequest request = new FraudCheckRequest();
+            request.setTransactionId(transaction.getId() != null ? transaction.getId().toString() : "unknown");
+            request.setAmount(transaction.getAmount() != null ? transaction.getAmount().doubleValue() : 0.0);
+            request.setCurrency("KES");
+            request.setFromAccount(transaction.getFromAccount());
+            request.setToAccount(transaction.getToAccount());
+            request.setTimestamp(java.time.LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+            
+            return fraudCheckClient.checkFraud(request);
+        } catch (Exception e) {
+            logger.error("Fraud check failed: {}", e.getMessage());
+            // Fail safe - allow transaction but flag for review
+            FraudCheckResult result = new FraudCheckResult();
+            result.setRecommendedAction("REVIEW");
+            return result;
         }
     }
     

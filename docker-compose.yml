@@ -393,6 +393,42 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  ai-ml-service:
+    build:
+      context: ./services/ai-ml-service
+      dockerfile: Dockerfile
+    container_name: afripay-ai-ml
+    ports:
+      - "8010:8010"
+    environment:
+      - PORT=8010
+      - LOG_LEVEL=INFO
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=afripay_dev
+      - POSTGRES_USER=developer
+      - POSTGRES_PASSWORD=dev_password_2024!
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=redis_password_2024!
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - afripay-network
+    volumes:
+      - ai_ml_logs:/app/logs
+      - ai_ml_models:/app/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
   # ================================
   # WEB PORTALS
   # ================================
@@ -646,6 +682,10 @@ volumes:
   agent_logs:
     driver: local
   blockchain_logs:
+    driver: local
+  ai_ml_logs:
+    driver: local
+  ai_ml_models:
     driver: local
   admin_portal_logs:
     driver: local
