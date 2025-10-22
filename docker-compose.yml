@@ -93,6 +93,22 @@ services:
   # CORE MICROSERVICES
   # ================================
 
+  web-portal:
+    build:
+      context: ./services/web-portal
+      dockerfile: Dockerfile
+    container_name: afripay-web-portal
+    ports:
+      - "3003:80"
+    networks:
+      - afripay-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
   identity-service:
     build: 
       context: ./services/identity-service
