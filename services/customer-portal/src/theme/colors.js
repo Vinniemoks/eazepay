@@ -1,33 +1,33 @@
-// Royal Yellow & Gold Theme System
-// Adaptive color system with light/dark modes and brightness adjustment
+// Luxury Royal Theme System
+// Blend of Royal Gold, Purple, and Blue with adaptive color modes
 
 export const themeColors = {
-  // Primary Brand Colors - Royal Yellow & Gold
+  // Primary Brand Colors - Royal Gold
   primary: {
-    50: '#FFFBEB',   // Lightest gold
-    100: '#FEF3C7',  // Very light gold
-    200: '#FDE68A',  // Light gold
-    300: '#FCD34D',  // Medium light gold
-    400: '#FBBF24',  // Base yellow
-    500: '#F59E0B',  // Primary gold
-    600: '#D97706',  // Dark gold
-    700: '#B45309',  // Darker gold
-    800: '#92400E',  // Very dark gold
-    900: '#78350F',  // Darkest gold
+    50: '#FFF8E7',   // Lightest gold
+    100: '#FFE7B3',  // Very light gold
+    200: '#FFD56F',  // Light gold
+    300: '#FFC53D',  // Medium light gold
+    400: '#FFB300',  // Base gold
+    500: '#DAA520',  // Royal gold (Main brand color)
+    600: '#B8860B',  // Dark gold
+    700: '#956C00',  // Darker gold
+    800: '#755400',  // Very dark gold
+    900: '#553C00',  // Darkest gold
   },
-  
-  // Royal Gold Accent
-  royal: {
-    50: '#FFF9E6',
-    100: '#FFECB3',
-    200: '#FFE082',
-    300: '#FFD54F',
-    400: '#FFCA28',
-    500: '#FFC107',  // Royal gold
-    600: '#FFB300',
-    700: '#FFA000',
-    800: '#FF8F00',
-    900: '#FF6F00',
+
+  // Regal Purple Accent
+  purple: {
+    50: '#F6F0FF',
+    100: '#E9DCFF',
+    200: '#D3B7FF',
+    300: '#B388FF',
+    400: '#9B66FF',
+    500: '#8344FF',  // Royal purple
+    600: '#6B24EA',
+    700: '#5A1FBE',
+    800: '#481B94',
+    900: '#35156D',
   },
 
   // Neutral Grays
