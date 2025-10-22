@@ -160,25 +160,4 @@ export default function Dashboard() {
       />
     </div>
   );
-      </div>
-
-      <Card title="Recent Activity">
-        {recentActivity.length > 0 ? (
-          recentActivity.map((activity, index) => (
-            <div key={index} style={styles.activityItem}>
-              <div style={styles.activityIcon}>{activity.icon}</div>
-              <div style={styles.activityContent}>
-                <div style={styles.activityTitle}>{activity.title}</div>
-                <div style={styles.activityTime}>{activity.time}</div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p style={{ color: theme.text.secondary, textAlign: 'center' }}>
-            No recent activity
-          </p>
-        )}
-      </Card>
-    </div>
-  );
 }

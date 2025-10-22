@@ -215,11 +215,3 @@ export default function Dashboard() {
     </div>
   );
 }
-        <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-          <h3>Recent Transactions</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{recentTransactions.length}</p>
-        </div>
-      </div>
-    </div>
-  )
-}

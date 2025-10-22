@@ -241,19 +241,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-      </div>
-      <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', marginTop: '2rem' }}>
-        <h2>Transaction Trends</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="transactions" stroke="#007bff" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  )
 }
