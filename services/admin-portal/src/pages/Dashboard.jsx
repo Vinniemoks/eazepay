@@ -12,6 +12,15 @@ import { Card } from '../../../shared/components/ui';
 import '../../../shared/styles/dashboard.css';
 import '../../../shared/styles/animations.css';
 import '../../../shared/styles/dashboard-animations.css';
+import '../../../shared/styles/premium-visuals.css';
+import {
+  PremiumStatistic,
+  PremiumMetricCard,
+  ActivityStream,
+  PremiumDataTable,
+  PerformanceWidget,
+  AlertBanner
+} from '../../../shared/components/premium-components';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
