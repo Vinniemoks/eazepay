@@ -9,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [buttonHover, setButtonHover] = useState(false)
   const navigate = useNavigate()
   const login = useAuthStore(state => state.login)
 
@@ -116,6 +117,11 @@ export default function Login() {
       marginTop: '24px',
       position: 'relative',
       overflow: 'hidden',
+      boxShadow: '0 4px 12px rgba(218, 165, 32, 0.3)',
+    },
+    buttonHover: {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 24px rgba(218, 165, 32, 0.4), 0 4px 12px rgba(131, 68, 255, 0.3)',
     },
     error: {
       background: 'rgba(239, 68, 68, 0.1)',
@@ -165,7 +171,13 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" style={styles.button} disabled={loading}>
+          <button 
+            type="submit" 
+            style={{...styles.button, ...(buttonHover ? styles.buttonHover : {})}} 
+            disabled={loading}
+            onMouseEnter={() => setButtonHover(true)}
+            onMouseLeave={() => setButtonHover(false)}
+          >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>

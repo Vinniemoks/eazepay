@@ -1,0 +1,12 @@
+{
+  "name": "afripay-web-portal",
+  "version": "1.0.0",
+  "description": "AfriPay Web Portal - Main Website",
+  "scripts": {
+    "dev": "npx serve public -p 8080",
+    "preview": "npx serve public -p 8080"
+  },
+  "keywords": ["afripay", "fintech", "web-portal"],
+  "author": "AfriPay Team",
+  "license": "MIT"
+}
