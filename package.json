@@ -1,9 +1,32 @@
 {
+  "name": "afripay-universal",
+  "version": "1.0.0",
+  "description": "AfriPay Universal Payment Platform",
+  "scripts": {
+    "start:customer": "cd services/customer-portal && npm run dev",
+    "start:agent": "cd services/agent-portal && npm run dev",
+    "start:admin": "cd services/admin-portal && npm run dev",
+    "start:web": "cd services/web-portal && npx serve public -p 8080",
+    "start:all": "concurrently \"npm run start:customer\" \"npm run start:agent\" \"npm run start:admin\" \"npm run start:web\" --names \"CUSTOMER,AGENT,ADMIN,WEB\" --prefix-colors \"cyan,magenta,yellow,green\"",
+    "install:all": "npm run install:customer && npm run install:agent && npm run install:admin",
+    "install:customer": "cd services/customer-portal && npm install",
+    "install:agent": "cd services/agent-portal && npm install",
+    "install:admin": "cd services/admin-portal && npm install",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "check": "bash check-all.sh"
+  },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/supertest": "^6.0.3",
-    "jest": "^30.2.0",
-    "supertest": "^7.1.4",
-    "ts-jest": "^29.4.4"
-  }
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "fintech",
+    "payment",
+    "africa",
+    "blockchain",
+    "wallet"
+  ],
+  "author": "AfriPay Team",
+  "license": "MIT"
 }

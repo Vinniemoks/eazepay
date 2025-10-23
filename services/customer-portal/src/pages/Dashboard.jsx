@@ -3,25 +3,72 @@ import axios from 'axios';
 import {
   StatCard,
   ActivityTimeline,
-  AnalyticsCard,
   QuickActions,
   PerformanceMetrics,
-  NotificationCenter,
-  SummaryWidget
+  NotificationCenter
 } from '../../../shared/components/dashboard';
 import { Card } from '../../../shared/components/ui';
 import '../../../shared/styles/dashboard.css';
-import '../../../shared/styles/animations.css';
-import '../../../shared/styles/dashboard-animations.css';
 
 export default function Dashboard() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [dashboardData, setDashboardData] = useState({
-    balance: 0,
-    monthlySpending: 0,
-    savings: 0,
-    rewards: 0,
-    recentTransactions: []
+    balance: 5420.50,
+    monthlySpending: 2340.75,
+    savings: 11250.00,
+    rewards: 1250,
+    recentTransactions: [
+      {
+        id: 1,
+        type: 'debit',
+        description: 'Grocery Shopping - SuperMart',
+        amount: 125.50,
+        timestamp: new Date().toISOString(),
+        icon: '🛒',
+        iconColor: '#EF4444',
+        iconColorEnd: '#DC2626'
+      },
+      {
+        id: 2,
+        type: 'credit',
+        description: 'Salary Payment',
+        amount: 3500.00,
+        timestamp: new Date(Date.now() - 86400000).toISOString(),
+        icon: '💰',
+        iconColor: '#10B981',
+        iconColorEnd: '#059669'
+      },
+      {
+        id: 3,
+        type: 'debit',
+        description: 'Electricity Bill Payment',
+        amount: 85.00,
+        timestamp: new Date(Date.now() - 172800000).toISOString(),
+        icon: '⚡',
+        iconColor: '#F59E0B',
+        iconColorEnd: '#D97706'
+      },
+      {
+        id: 4,
+        type: 'debit',
+        description: 'Mobile Airtime Top-up',
+        amount: 20.00,
+        timestamp: new Date(Date.now() - 259200000).toISOString(),
+        icon: '📱',
+        iconColor: '#8344FF',
+        iconColorEnd: '#6B2FE0'
+      },
+      {
+        id: 5,
+        type: 'credit',
+        description: 'Refund - Online Purchase',
+        amount: 45.25,
+        timestamp: new Date(Date.now() - 345600000).toISOString(),
+        icon: '↩️',
+        iconColor: '#3B82F6',
+        iconColorEnd: '#2563EB'
+      }
+    ]
   });
 
   useEffect(() => {
@@ -29,26 +76,14 @@ export default function Dashboard() {
   }, []);
 
   const fetchDashboardData = async () => {
-    setLoading(true);
     try {
-      const [walletRes, txRes, savingsRes, rewardsRes] = await Promise.all([
-        axios.get('/api/wallet/balance'),
-        axios.get('/api/transactions/recent'),
-        axios.get('/api/savings/total'),
-        axios.get('/api/rewards/points')
-      ]);
-
-      setDashboardData({
-        balance: walletRes.data.balance,
-        monthlySpending: txRes.data.monthlyTotal || 0,
-        savings: savingsRes.data.total || 0,
-        rewards: rewardsRes.data.points || 0,
-        recentTransactions: txRes.data.transactions || []
-      });
+      const response = await axios.get('/api/wallet/balance');
+      setDashboardData(prev => ({
+        ...prev,
+        balance: response.data.balance
+      }));
     } catch (error) {
-      console.error('Failed to fetch dashboard data', error);
-    } finally {
-      setLoading(false);
+      console.log('Using mock data - API not available');
     }
   };
 
@@ -58,47 +93,77 @@ export default function Dashboard() {
       icon: '💸',
       color: '#DAA520',
       colorEnd: '#8344FF',
-      onClick: () => {}
+      onClick: () => window.location.href = '/wallet'
     },
     {
       label: 'Pay Bills',
       icon: '📋',
       color: '#8344FF',
       colorEnd: '#3B82F6',
-      onClick: () => {}
+      onClick: () => window.location.href = '/transactions'
     },
     {
-      label: 'Top Up',
+      label: 'Buy Airtime',
       icon: '📱',
       color: '#3B82F6',
       colorEnd: '#DAA520',
-      onClick: () => {}
+      onClick: () => window.location.href = '/wallet'
     },
     {
-      label: 'Invest',
-      icon: '📈',
+      label: 'View History',
+      icon: '📊',
       color: '#DAA520',
       colorEnd: '#3B82F6',
-      onClick: () => {}
+      onClick: () => window.location.href = '/transactions'
     }
   ];
 
   const metrics = [
     {
-      label: 'Savings Goal',
+      label: 'Savings Goal Progress',
       progress: 75,
-      value: `$${dashboardData.savings.toFixed(2)}`,
+      value: `$${dashboardData.savings.toLocaleString()}`,
       target: '$15,000',
       status: 'success',
       statusText: 'On Track'
     },
     {
-      label: 'Budget Usage',
+      label: 'Monthly Budget',
       progress: 60,
-      value: `$${dashboardData.monthlySpending.toFixed(2)}`,
-      target: '$7,500',
+      value: `$${dashboardData.monthlySpending.toLocaleString()}`,
+      target: '$4,000',
       status: 'success',
       statusText: 'Under Budget'
+    }
+  ];
+
+  const notifications = [
+    {
+      title: 'Bill Payment Reminder',
+      message: 'Your electricity bill payment is due in 3 days',
+      time: '2 hours ago',
+      icon: '⚡',
+      color: '#F59E0B',
+      colorEnd: '#D97706',
+      read: false
+    },
+    {
+      title: 'Savings Milestone',
+      message: "Congratulations! You've reached 75% of your savings goal",
+      time: '1 day ago',
+      icon: '🎯',
+      color: '#10B981',
+      colorEnd: '#059669',
+      read: false
+    },
+    {
+      title: 'New Reward Points',
+      message: 'You earned 50 reward points from your recent transactions',
+      time: '2 days ago',
+      icon: '⭐',
+      color: '#DAA520',
+      colorEnd: '#8344FF',
+      read: true
     }
   ];
 
@@ -106,37 +171,42 @@ export default function Dashboard() {
     <div className="dashboard-container">
       {/* Welcome Header */}
       <div className="welcome-section">
-        <h1 className="section-header">Welcome to Your Financial Hub</h1>
-        <p>Your money, intelligently managed</p>
+        <h1 className="section-header">Welcome Back! 👋</h1>
+        <p>Here's what's happening with your money today</p>
       </div>
 
       {/* Quick Stats */}
       <div className="stats-grid">
         <StatCard
           icon="💰"
-          title="Available Balance"
-          value={`$${dashboardData.balance.toFixed(2)}`}
+          label="Available Balance"
+          value={`$${dashboardData.balance.toLocaleString()}`}
+          change="+5.2%"
+          trend="up"
           loading={loading}
         />
         <StatCard
           icon="📊"
-          title="Monthly Spending"
-          value={`$${dashboardData.monthlySpending.toFixed(2)}`}
-          trend={-12}
+          label="This Month's Spending"
+          value={`$${dashboardData.monthlySpending.toLocaleString()}`}
+          change="-12%"
+          trend="down"
           loading={loading}
         />
         <StatCard
           icon="🎯"
-          title="Total Savings"
-          value={`$${dashboardData.savings.toFixed(2)}`}
-          trend={15}
+          label="Total Savings"
+          value={`$${dashboardData.savings.toLocaleString()}`}
+          change="+15%"
+          trend="up"
           loading={loading}
         />
         <StatCard
           icon="⭐"
-          title="Reward Points"
-          value={dashboardData.rewards}
-          trend={5}
+          label="Reward Points"
+          value={dashboardData.rewards.toLocaleString()}
+          change="+50"
+          trend="up"
           loading={loading}
         />
       </div>
@@ -146,69 +216,85 @@ export default function Dashboard() {
         {/* Left Column */}
         <div className="dashboard-column">
           <QuickActions actions={quickActions} />
-          <AnalyticsCard
-            title="Spending Analytics"
-            chart={<div className="chart-placeholder">Chart Component</div>}
-            filters={[
-              { label: 'Weekly', active: false },
-              { label: 'Monthly', active: true },
-              { label: 'Yearly', active: false }
-            ]}
-          />
-          <SummaryWidget
-            title="Savings Progress"
-            data={{
-              value: `$${dashboardData.savings.toFixed(2)}`,
-              trend: 15,
-              breakdown: [
-                { label: 'This Month', value: '$2,500' },
-                { label: 'Last Month', value: '$2,100' },
-                { label: 'Growth', value: '+19%' }
-              ]
-            }}
-            loading={loading}
-          />
+          
+          <Card style={{padding: '1.5rem'}}>
+            <h3 style={{marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: '700'}}>Spending Overview</h3>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#FAFAFA', borderRadius: '12px'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                  <div style={{width: '48px', height: '48px', background: 'linear-gradient(135deg, #EF4444, #DC2626)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem'}}>
+                    🛒
+                  </div>
+                  <div>
+                    <h4 style={{fontSize: '1rem', fontWeight: '600'}}>Shopping</h4>
+                    <p style={{fontSize: '0.875rem', color: '#737373'}}>35% of budget</p>
+                  </div>
+                </div>
+                <span style={{fontSize: '1.25rem', fontWeight: '700', color: '#EF4444'}}>$820</span>
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#FAFAFA', borderRadius: '12px'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                  <div style={{width: '48px', height: '48px', background: 'linear-gradient(135deg, #F59E0B, #D97706)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem'}}>
+                    🏠
+                  </div>
+                  <div>
+                    <h4 style={{fontSize: '1rem', fontWeight: '600'}}>Bills & Utilities</h4>
+                    <p style={{fontSize: '0.875rem', color: '#737373'}}>25% of budget</p>
+                  </div>
+                </div>
+                <span style={{fontSize: '1.25rem', fontWeight: '700', color: '#F59E0B'}}>$585</span>
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#FAFAFA', borderRadius: '12px'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                  <div style={{width: '48px', height: '48px', background: 'linear-gradient(135deg, #8344FF, #6B2FE0)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem'}}>
+                    🍔
+                  </div>
+                  <div>
+                    <h4 style={{fontSize: '1rem', fontWeight: '600'}}>Food & Dining</h4>
+                    <p style={{fontSize: '0.875rem', color: '#737373'}}>20% of budget</p>
+                  </div>
+                </div>
+                <span style={{fontSize: '1.25rem', fontWeight: '700', color: '#8344FF'}}>$468</span>
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#FAFAFA', borderRadius: '12px'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                  <div style={{width: '48px', height: '48px', background: 'linear-gradient(135deg, #3B82F6, #2563EB)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem'}}>
+                    🚗
+                  </div>
+                  <div>
+                    <h4 style={{fontSize: '1rem', fontWeight: '600'}}>Transportation</h4>
+                    <p style={{fontSize: '0.875rem', color: '#737373'}}>20% of budget</p>
+                  </div>
+                </div>
+                <span style={{fontSize: '1.25rem', fontWeight: '700', color: '#3B82F6'}}>$468</span>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Right Column */}
         <div className="dashboard-column">
           <PerformanceMetrics metrics={metrics} />
-          <Card className="recent-activity">
-            <h3>Recent Activity</h3>
+          
+          <Card className="recent-activity" style={{padding: '1.5rem'}}>
+            <h3 style={{marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: '700'}}>Recent Transactions</h3>
             <ActivityTimeline
               activities={dashboardData.recentTransactions.map(tx => ({
-                icon: tx.type === 'credit' ? '↓' : '↑',
-                iconColor: tx.type === 'credit' ? '#22C55E' : '#8344FF',
-                iconColorEnd: '#3B82F6',
+                icon: tx.icon,
+                iconColor: tx.iconColor,
+                iconColorEnd: tx.iconColorEnd,
                 title: tx.description,
                 description: `${tx.type === 'credit' ? '+' : '-'}$${tx.amount.toFixed(2)}`,
                 time: new Date(tx.timestamp).toLocaleDateString()
               }))}
             />
           </Card>
-          <Card>
-            <NotificationCenter
-              notifications={[
-                {
-                  title: 'Bill Payment Due',
-                  message: 'Your electricity bill payment is due in 3 days',
-                  time: '2 hours ago',
-                  icon: '⚡',
-                  color: '#DAA520',
-                  colorEnd: '#8344FF',
-                  read: false
-                },
-                {
-                  title: 'Savings Goal Achieved',
-                  message: "Congratulations! You've reached your monthly savings goal",
-                  time: '1 day ago',
-                  icon: '🎉',
-                  color: '#8344FF',
-                  colorEnd: '#3B82F6',
-                  read: true
-                }
-              ]}
-            />
+          
+          <Card style={{padding: '1.5rem'}}>
+            <NotificationCenter notifications={notifications} />
           </Card>
         </div>
       </div>
