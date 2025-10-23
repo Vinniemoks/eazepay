@@ -1,8 +1,16 @@
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
 FROM nginx:1.25-alpine
 
-# Copy custom nginx config and static assets
+# Copy custom nginx config and built assets
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY public /usr/share/nginx/html
+COPY --from=builder /app/public /usr/share/nginx/html
 
 # Ensure logs directory exists for volume mounts
 RUN mkdir -p /var/log/nginx
