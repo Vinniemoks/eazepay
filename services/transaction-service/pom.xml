@@ -12,16 +12,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.5.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <!-- Dependency versions to fix security vulnerabilities -->
-        <spring-boot.version>3.2.5</spring-boot.version>
+        <spring-boot.version>3.5.0</spring-boot.version>
         <jackson.version>2.17.0</jackson.version>
-        <snakeyaml.version>2.2</snakeyaml.version>
+        <snakeyaml.version>2.3</snakeyaml.version>
         <postgresql.version>42.7.3</postgresql.version>
         <logback.version>1.5.3</logback.version>
         <tomcat.version>10.1.20</tomcat.version>
@@ -38,6 +38,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        
+        <!-- Lombok for reducing boilerplate code -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
         </dependency>
         
         <!-- PostgreSQL Driver with updated version -->
@@ -84,6 +92,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Actuator for monitoring and metrics -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Caching -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
     </dependencies>
     
