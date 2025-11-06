@@ -1,0 +1,21 @@
+{
+  "name": "@afripay/service-client",
+  "version": "1.0.0",
+  "description": "Shared service communication library with circuit breaker and retry logic",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "axios-retry": "^3.9.1",
+    "opossum": "^8.1.4",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
+  }
+}

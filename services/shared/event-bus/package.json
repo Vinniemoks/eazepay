@@ -1,0 +1,20 @@
+{
+  "name": "@afripay/event-bus",
+  "version": "1.0.0",
+  "description": "Shared event bus for async inter-service communication",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.4",
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
+  }
+}
