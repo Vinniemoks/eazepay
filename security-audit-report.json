@@ -1,0 +1,206 @@
+{
+  "timestamp": "2025-11-06T13:46:03.013Z",
+  "summary": {
+    "totalIssues": 8,
+    "totalWarnings": 18,
+    "totalRecommendations": 0,
+    "criticalIssues": 5,
+    "mediumIssues": 3,
+    "lowIssues": 0
+  },
+  "issues": [
+    {
+      "type": "HARDCODED_SECRET",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\mobile-app\\src\\services\\offline.ts",
+      "line": 17,
+      "match": "KEY = 'offline_queue'",
+      "severity": "HIGH",
+      "description": "Hardcoded secret found in source code"
+    },
+    {
+      "type": "CORS_MISCONFIGURATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\admin-portal\\vite.config.js",
+      "line": 15,
+      "match": "Origin: true",
+      "severity": "MEDIUM",
+      "description": "CORS misconfiguration detected"
+    },
+    {
+      "type": "HARDCODED_SECRET",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\agent-portal\\src\\pages\\Dashboard.jsx",
+      "line": 154,
+      "match": "Key=\"name\"",
+      "severity": "HIGH",
+      "description": "Hardcoded secret found in source code"
+    },
+    {
+      "type": "HARDCODED_SECRET",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\agent-portal\\src\\pages\\Dashboard.jsx",
+      "line": 159,
+      "match": "Key=\"transactions\"",
+      "severity": "HIGH",
+      "description": "Hardcoded secret found in source code"
+    },
+    {
+      "type": "CORS_MISCONFIGURATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\agent-portal\\vite.config.js",
+      "line": 17,
+      "match": "Origin: true",
+      "severity": "MEDIUM",
+      "description": "CORS misconfiguration detected"
+    },
+    {
+      "type": "CORS_MISCONFIGURATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\customer-portal\\vite.config.js",
+      "line": 17,
+      "match": "Origin: true",
+      "severity": "MEDIUM",
+      "description": "CORS misconfiguration detected"
+    },
+    {
+      "type": "HARDCODED_SECRET",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\shared\\error-handler\\src\\types.ts",
+      "line": 34,
+      "match": "TOKEN = 'INVALID_TOKEN'",
+      "severity": "HIGH",
+      "description": "Hardcoded secret found in source code"
+    },
+    {
+      "type": "HARDCODED_SECRET",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\shared\\error-handler\\src\\types.ts",
+      "line": 35,
+      "match": "TOKEN = 'MISSING_TOKEN'",
+      "severity": "HIGH",
+      "description": "Hardcoded secret found in source code"
+    }
+  ],
+  "warnings": [
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\agent-service\\src\\app.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\agent-service\\src\\app.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\blockchain-service\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\blockchain-service\\src\\index.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\financial-service\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\financial-service\\src\\routes\\analytics.routes.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\identity-service\\src\\app.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\identity-service\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\identity-service\\src\\routes\\userRoutes.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\identity-service\\src\\routes\\userRoutes.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\iot-service\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\iot-service\\src\\index.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\iot-service\\src\\routes.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\robotics-service\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\robotics-service\\src\\index.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\shared\\swagger-config\\src\\swagger.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\ussd-service\\index.js",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\ussd-service\\index.js",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    }
+  ],
+  "recommendations": []
+}

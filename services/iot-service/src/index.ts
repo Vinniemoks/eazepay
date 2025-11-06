@@ -14,6 +14,7 @@ import { DeviceRegistry } from './device-registry';
 import { TelemetryProcessor } from './telemetry-processor';
 import { LocationTracker } from './location-tracker';
 import { logger } from './utils/logger';
+import apiRoutes from './routes';
 
 dotenv.config();
 
@@ -56,6 +57,10 @@ const apiRateLimit = rateLimit({
   store: limiterStore as any,
 });
 app.use(apiRateLimit);
+
+// Routes
+app.use('/api', apiRoutes);
+
 const PORT = process.env.PORT || 8030;
 
 // Middleware
@@ -64,10 +69,7 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize services
-const mqttBroker = new MQTTBroker();
-const deviceRegistry = new DeviceRegistry();
-const telemetryProcessor = new TelemetryProcessor();
-const locationTracker = new LocationTracker();
+import { mqttBroker, deviceRegistry } from './services';
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
