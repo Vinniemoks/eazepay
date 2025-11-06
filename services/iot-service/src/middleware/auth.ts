@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyAccessToken } from './utils/security';
+import { verifyAccessTokenSecure, validateInternalApiKey } from '../utils/security-hardened';
 
 declare global {
   namespace Express {
@@ -20,8 +20,7 @@ export async function authenticate(
   next: NextFunction
 ): Promise<void> {
   const internalApiKeyHeader = req.headers['x-internal-api-key'] as string | undefined;
-  const expectedKey = process.env.INTERNAL_API_KEY;
-  if (expectedKey && internalApiKeyHeader && internalApiKeyHeader === expectedKey) {
+  if (validateInternalApiKey(internalApiKeyHeader)) {
     return next();
   }
   try {
@@ -39,7 +38,7 @@ export async function authenticate(
 
     let payload;
     try {
-      payload = verifyAccessToken(token);
+      payload = await verifyAccessTokenSecure(token, req.ip);
     } catch (error) {
       res.status(401).json({ 
         error: 'Unauthorized',

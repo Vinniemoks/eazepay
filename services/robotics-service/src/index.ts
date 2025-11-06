@@ -1,5 +1,6 @@
 // Robotics Service - Main Entry Point
 import express, { Request, Response } from 'express';
+import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
@@ -13,6 +14,18 @@ const PORT = process.env.PORT || 8040;
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+
+// Initialize authentication
+const jwtService = new JWTService({
+  jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
+  jwtExpiresIn: '8h',
+  issuer: 'afripay-services',
+  audience: 'afripay-services'
+});
+initializeAuth(jwtService);
+
+// Protect API routes (keep /health public)
+app.use('/api', authenticate);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {

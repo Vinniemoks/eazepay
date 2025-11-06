@@ -1,14 +1,14 @@
 // Transaction routes
 import { Router } from 'express';
 import { TransactionController } from '../controllers/TransactionController';
-import { authMiddleware } from '../middleware/auth';
-import { validateBody, schemas } from '@afripay/validation';
+import { authenticate } from '@afripay/auth-middleware';
+import { createTransactionValidator, getTransactionValidator } from '../middleware/validators';
 
 const router = Router();
 const controller = new TransactionController();
 
 // All routes require authentication
-router.use(authMiddleware);
+router.use(authenticate);
 
 /**
  * @swagger
@@ -78,7 +78,7 @@ router.use(authMiddleware);
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.post('/', validateBody(schemas.transactionCreate), controller.recordTransaction.bind(controller));
+router.post('/', createTransactionValidator, controller.recordTransaction.bind(controller));
 
 /**
  * @swagger
@@ -181,6 +181,6 @@ router.get('/search', controller.searchTransactions.bind(controller));
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/:id', controller.getTransaction.bind(controller));
+router.get('/:id', getTransactionValidator, controller.getTransaction.bind(controller));
 
 export default router;

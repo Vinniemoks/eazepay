@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
 const Redis = require('ioredis');
 const logger = require('./utils/logger');
+const { JWTService, initializeAuth, authenticate } = require('@afripay/auth-middleware');
 const app = express();
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
@@ -60,6 +61,16 @@ app.use((req, res, next) => {
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'ussd-service' });
 });
+
+// Initialize authentication and protect API routes
+const jwtService = new JWTService({
+  jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
+  jwtExpiresIn: '8h',
+  issuer: 'afripay-services',
+  audience: 'afripay-services'
+});
+initializeAuth(jwtService);
+app.use('/api', authenticate);
 
 app.post('/api/ussd', ussdController.handleUssdRequest);
 

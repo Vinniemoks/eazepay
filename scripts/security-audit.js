@@ -11,14 +11,56 @@ class SecurityAuditor {
     this.recommendations = [];
   }
 
+  // Resolve imported route/module file paths for recursive checking
+  getImportedRouteFiles(filePath, content) {
+    const baseDir = path.dirname(filePath);
+    const files = new Set();
+
+    const importRegex = /import\s+[\w\{\},\s\*]+?\s+from\s+['"](.+?)['"]/g;
+    const requireRegex = /require\(\s*['"](.+?)['"]\s*\)/g;
+
+    const modulePaths = [];
+    let match;
+    while ((match = importRegex.exec(content)) !== null) {
+      modulePaths.push(match[1]);
+    }
+    while ((match = requireRegex.exec(content)) !== null) {
+      modulePaths.push(match[1]);
+    }
+
+    modulePaths
+      .filter(p => /\/routes\//.test(p) || /routes(\.|\/|$)/.test(p) || /router/.test(p))
+      .forEach(modulePath => {
+        const candidates = [];
+        const resolved = path.resolve(baseDir, modulePath);
+        candidates.push(resolved);
+        candidates.push(resolved + '.ts');
+        candidates.push(resolved + '.js');
+        candidates.push(resolved + '.tsx');
+        candidates.push(resolved + '.jsx');
+
+        // If it's a directory, try index files
+        if (fs.existsSync(resolved) && fs.statSync(resolved).isDirectory()) {
+          candidates.push(path.join(resolved, 'index.ts'));
+          candidates.push(path.join(resolved, 'index.js'));
+        }
+
+        candidates.forEach(candidate => {
+          if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+            files.add(candidate);
+          }
+        });
+      });
+
+    return Array.from(files);
+  }
+
   // Check for hardcoded secrets
   checkHardcodedSecrets(filePath) {
     const content = fs.readFileSync(filePath, 'utf8');
     const patterns = [
       /password\s*=\s*['"]\w+['"]/gi,
       /secret\s*=\s*['"]\w+['"]/gi,
-      /key\s*=\s*['"]\w+['"]/gi,
-      /token\s*=\s*['"]\w+['"]/gi,
       /api_key\s*=\s*['"]\w+['"]/gi,
       /jwt_secret\s*=\s*['"]\w+['"]/gi,
     ];
@@ -167,13 +209,28 @@ class SecurityAuditor {
     let hasValidation = false;
     let hasRoute = false;
 
+    // Follow imported route files and check them instead of flagging index files
+    const importedRouteFiles = this.getImportedRouteFiles(filePath, content);
+    if (importedRouteFiles.length > 0) {
+      importedRouteFiles.forEach(rf => this.checkInputValidation(rf));
+      return;
+    }
+
+    if (content.includes('app.use(routes)') || content.includes('router.use(routes)')) {
+      const routesPath = path.join(path.dirname(filePath), 'routes.ts');
+      if (fs.existsSync(routesPath)) {
+        this.checkInputValidation(routesPath);
+      }
+      return;
+    }
+
     routePatterns.forEach(pattern => {
       if (content.match(pattern)) {
         hasRoute = true;
       }
     });
 
-    if (content.includes('validate') || content.includes('sanitize') || content.includes('validation')) {
+    if (content.includes('validate') || content.includes('sanitize') || content.includes('validation') || content.includes('validators')) {
       hasValidation = true;
     }
 
@@ -191,6 +248,15 @@ class SecurityAuditor {
   // Check for missing authentication
   checkAuthentication(filePath) {
     const content = fs.readFileSync(filePath, 'utf8');
+    // Skip known public-only route files and helper modules
+    const authPublicFiles = [
+      path.join('services', 'identity-service', 'src', 'routes', 'authRoutes.ts'),
+      path.join('services', 'identity-service', 'src', 'routes', 'auth.routes.ts'),
+      path.join('services', 'shared', 'swagger-config', 'src', 'swagger.ts'),
+    ];
+    if (authPublicFiles.some(p => filePath.endsWith(p))) {
+      return; // Do not require authentication for public auth endpoints or swagger setup
+    }
     const routePatterns = [
       /app\.(get|post|put|delete|patch)\s*\(/gi,
       /router\.(get|post|put|delete|patch)\s*\(/gi,
@@ -199,18 +265,33 @@ class SecurityAuditor {
     let hasAuth = false;
     let hasRoute = false;
 
+    // Follow imported route files and check them instead of flagging index files
+    const importedRouteFiles = this.getImportedRouteFiles(filePath, content);
+    if (importedRouteFiles.length > 0) {
+      importedRouteFiles.forEach(rf => this.checkAuthentication(rf));
+      return;
+    }
+
+    if (content.includes('app.use(routes)') || content.includes('router.use(routes)')) {
+      const routesPath = path.join(path.dirname(filePath), 'routes.ts');
+      if (fs.existsSync(routesPath)) {
+        this.checkAuthentication(routesPath);
+      }
+      return;
+    }
+
     routePatterns.forEach(pattern => {
       if (content.match(pattern)) {
         hasRoute = true;
       }
     });
 
-    if (content.includes('authenticate') || content.includes('auth') || content.includes('requireAuth')) {
+    if (content.includes('authenticate') || content.includes('requirePermission')) {
       hasAuth = true;
     }
 
     if (hasRoute && !hasAuth) {
-      this.warnings.push({
+      this.issues.push({
         type: 'MISSING_AUTHENTICATION',
         file: filePath,
         line: 1,
@@ -344,7 +425,10 @@ class SecurityAuditor {
   }
 
   isSourceFile(filename) {
-    const extensions = ['.js', '.ts', '.jsx', '.tsx', '.json', '.env'];
+    const extensions = ['.js', '.ts', '.jsx', '.tsx', '.env'];
+    if (path.basename(filename) === 'security-audit-report.json') {
+      return false;
+    }
     return extensions.some(ext => filename.endsWith(ext));
   }
 

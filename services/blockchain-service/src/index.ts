@@ -1,5 +1,6 @@
 // Blockchain Service - Main Entry Point (Mock Mode)
 import express, { Request, Response } from 'express';
+import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 // @ts-ignore
@@ -52,6 +53,18 @@ app.use(apiRateLimit);
 const PORT = process.env.PORT || 8030;
 
 app.use(express.json());
+
+// Initialize authentication
+const jwtService = new JWTService({
+  jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
+  jwtExpiresIn: '8h',
+  issuer: 'afripay-services',
+  audience: 'afripay-services'
+});
+initializeAuth(jwtService);
+
+// Protect blockchain API routes
+app.use('/api/blockchain', authenticate);
 
 // Mock blockchain storage (in-memory for now)
 const blockchainLedger = new Map<string, any>();
