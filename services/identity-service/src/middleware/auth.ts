@@ -30,6 +30,12 @@ export async function authenticate(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  // Basic internal service authentication using API key
+  const internalApiKeyHeader = req.headers['x-internal-api-key'] as string | undefined;
+  const expectedKey = process.env.INTERNAL_API_KEY;
+  if (expectedKey && internalApiKeyHeader && internalApiKeyHeader === expectedKey) {
+    return next();
+  }
   try {
     // Get token from Authorization header
     const authHeader = req.headers.authorization;

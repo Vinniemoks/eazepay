@@ -14,6 +14,20 @@ import { generateCorrelationId } from './utils/security';
 dotenv.config();
 
 const app: Application = express();
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
 const PORT = process.env.PORT || 8000;
 
 // Security middleware

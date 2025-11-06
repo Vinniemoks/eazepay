@@ -7,6 +7,36 @@ on:
     branches: [ main ]
 
 jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Trivy
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+        scan-type: 'fs'
+        ignore-unfixed: true
+        format: 'table'
+        severity: 'HIGH,CRITICAL'
+        exit-code: '1'
+        scanners: 'vuln,secret,config'
+        security-checks: 'vuln,secret,config'
+        github-pat: ${{ secrets.GITHUB_TOKEN }}
+
+  sbom-generate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Generate SBOM (CycloneDX)
+      uses: CycloneDX/gh-node-module-generatebom@v3
+      with:
+        path: '.'
+        output: 'bom.xml'
+    - name: Upload SBOM artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: sbom-cyclonedx
+        path: bom.xml
   # Node.js Services
   test-identity-service:
     runs-on: ubuntu-latest

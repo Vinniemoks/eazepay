@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 const app = require('./index');
 
 const envPath = path.resolve(__dirname, '.env');
@@ -31,6 +32,13 @@ try {
 }
 
 const PORT = process.env.PORT || 8004;
-app.listen(PORT, () => {
+const server = http.createServer(app);
+const REQUEST_TIMEOUT_MS = parseInt(process.env.REQUEST_TIMEOUT_MS || '30000', 10);
+const HEADERS_TIMEOUT_MS = parseInt(process.env.HEADERS_TIMEOUT_MS || '35000', 10);
+const KEEP_ALIVE_TIMEOUT_MS = parseInt(process.env.KEEP_ALIVE_TIMEOUT_MS || '5000', 10);
+server.requestTimeout = REQUEST_TIMEOUT_MS;
+server.headersTimeout = HEADERS_TIMEOUT_MS;
+server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT_MS;
+server.listen(PORT, () => {
   console.log(`USSD Service running on port ${PORT}`);
 });

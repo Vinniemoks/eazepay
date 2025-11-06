@@ -12,5 +12,11 @@ export const AppDataSource = new DataSource({
   entities: [Transaction],
   synchronize: false, // Use migrations instead
   logging: process.env.NODE_ENV === 'development',
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  extra: {
+    max: parseInt(process.env.DB_POOL_MAX || '30'),
+    min: parseInt(process.env.DB_POOL_MIN || '5'),
+    idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT_MS || '30000'),
+    connectionTimeoutMillis: parseInt(process.env.DB_CONNECTION_TIMEOUT_MS || '10000')
+  }
 });
