@@ -84,6 +84,15 @@ export class AuthController {
       // Notify admins for verification
       await this.notifyAdminsForVerification(user);
 
+      // Send welcome email
+      try {
+        const emailService = require('../config/email').default;
+        await emailService.sendWelcomeEmail(user.email, user.fullName);
+      } catch (emailError) {
+        console.error('Failed to send welcome email:', emailError);
+        // Continue anyway - don't fail registration
+      }
+
       res.status(201).json({
         message: 'Registration successful. Awaiting verification.',
         userId: user.id,

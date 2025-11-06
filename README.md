@@ -98,6 +98,34 @@ curl http://localhost:8080/health
   - SSL/TLS
   - Biometric Security
 
+## � Ennhanced Authentication System
+
+**NEW!** Enterprise-grade authentication with session management, token refresh, and multi-device support.
+
+### Features
+- ✅ Redis-based session management
+- ✅ JWT token pairs (access + refresh)
+- ✅ Token blacklisting on logout
+- ✅ Multi-device session tracking
+- ✅ Password reset flow
+- ✅ 2FA completion flow
+- ✅ Session activity monitoring
+
+### Quick Setup
+```bash
+# Windows
+.\scripts\setup-enhanced-auth.bat
+
+# Linux/Mac
+./scripts/setup-enhanced-auth.sh
+```
+
+### Documentation
+- [Quick Start Guide](./docs/QUICK_START_ENHANCED_AUTH.md)
+- [Full Documentation](./docs/ENHANCED_AUTHENTICATION.md)
+- [Implementation Summary](./docs/IMPLEMENTATION_SUMMARY.md)
+- [Setup Checklist](./ENHANCED_AUTH_CHECKLIST.md)
+
 ## 📊 Benchmarks
 
 ### Transaction Processing

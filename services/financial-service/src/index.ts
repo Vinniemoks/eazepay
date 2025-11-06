@@ -11,8 +11,33 @@ import { AppDataSource } from './config/database';
 import transactionRoutes from './routes/transaction.routes';
 import analyticsRoutes from './routes/analytics.routes';
 import logger from './utils/logger';
+import { JWTService, initializeAuth } from '@afripay/auth-middleware';
+import { setupSwagger } from '@afripay/swagger-config';
+import {
+  errorHandler,
+  notFoundHandler,
+  initializeErrorHandler,
+  setupUnhandledRejectionHandler,
+  setupUncaughtExceptionHandler
+} from '@afripay/error-handler';
 
 const app = express();
+
+// Initialize error handler
+initializeErrorHandler(logger);
+setupUnhandledRejectionHandler(logger);
+setupUncaughtExceptionHandler(logger);
+logger.info('Error handler initialized');
+
+// Initialize authentication
+const jwtService = new JWTService({
+  jwtSecret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
+  jwtExpiresIn: '8h',
+  issuer: 'afripay-services',
+  audience: 'afripay-services'
+});
+initializeAuth(jwtService);
+logger.info('Authentication middleware initialized');
 
 // Security & production settings
 app.set('trust proxy', 1);
@@ -79,33 +104,72 @@ app.use((req, res, next) => {
   next();
 });
 
+// API Documentation
+setupSwagger(app, {
+  serviceName: 'AfriPay Financial Service API',
+  serviceDescription: 'Financial transaction and analytics service for AfriPay platform',
+  version: '1.0.0',
+  basePath: '/api',
+  servers: [
+    {
+      url: `http://localhost:${PORT}`,
+      description: 'Development server'
+    },
+    {
+      url: 'https://api.afripay.com',
+      description: 'Production server'
+    }
+  ],
+  tags: [
+    {
+      name: 'Transactions',
+      description: 'Transaction management endpoints'
+    },
+    {
+      name: 'Analytics',
+      description: 'Financial analytics and reporting'
+    },
+    {
+      name: 'Health',
+      description: 'Service health check'
+    }
+  ],
+  apiFiles: ['./src/routes/**/*.ts']
+});
+
 // Routes
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
-// Health check
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: Service is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/HealthCheck'
+ */
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'healthy',
     service: 'financial-service',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: '1.0.0'
   });
 });
 
-// Error handling
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  logger.error('Request error', {
-    error: err.message,
-    stack: err.stack,
-    code: err.code || 'FIN_001',
-    path: req.path,
-    method: req.method
-  });
-  res.status(err.status || 500).json({
-    error: err.message || 'Internal server error',
-    code: err.code || 'FIN_001'
-  });
-});
+// 404 handler (must be before error handler)
+app.use(notFoundHandler);
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 // Initialize database and start server
 AppDataSource.initialize()

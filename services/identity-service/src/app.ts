@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { AppDataSource } from "./config/database";
 import { errorHandler } from "./middleware/errorHandler";
 import { authRoutes } from "./routes/authRoutes";
+import { authEnhancedRoutes } from "./routes/auth-enhanced.routes";
 import { userRoutes } from "./routes/userRoutes";
 import { logger } from "./utils/logger";
 
@@ -32,6 +33,7 @@ app.use(
 
 // ---------- Routes ----------
 app.use("/api/auth", authRoutes);
+app.use("/api/auth", authEnhancedRoutes); // Enhanced auth endpoints
 app.use("/api/users", userRoutes);
 
 app.get("/health", (_req: Request, res: Response) => {

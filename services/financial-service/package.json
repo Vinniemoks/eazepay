@@ -8,7 +8,14 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "jest",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "migrate": "ts-node src/scripts/migrate.ts",
+    "migrate:up": "ts-node src/scripts/migrate.ts up",
+    "migrate:down": "ts-node src/scripts/migrate.ts down",
+    "migrate:status": "ts-node src/scripts/migrate.ts status",
+    "migrate:reset": "ts-node src/scripts/migrate.ts reset",
+    "migrate:refresh": "ts-node src/scripts/migrate.ts refresh",
+    "migration:create": "ts-node src/scripts/create-migration.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
