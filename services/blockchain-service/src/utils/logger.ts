@@ -1,4 +1,3 @@
-// Logger utility
 import winston from 'winston';
 import path from 'path';
 
@@ -13,10 +12,11 @@ const logFormat = winston.format.combine(
   winston.format.json()
 );
 
+// Create the logger
 export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: logFormat,
-  defaultMeta: { service: 'iot-service' },
+  defaultMeta: { service: 'blockchain-service' },
   transports: [
     // Error logs
     new winston.transports.File({
@@ -45,3 +45,5 @@ if (process.env.NODE_ENV !== 'production') {
     })
   );
 }
+
+export default logger;

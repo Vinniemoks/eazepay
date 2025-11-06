@@ -1,7 +1,17 @@
 // ussdController.js
+const logger = require('./utils/logger');
+
 module.exports = {
   handleUssdRequest: (req, res) => {
     const { sessionId, phoneNumber, text } = req.body;
+    
+    logger.info('USSD request received', {
+      sessionId,
+      phoneNumber,
+      text,
+      ip: req.ip
+    });
+    
     // Basic USSD menu logic
     let response = '';
     if (!text || text === '') {
@@ -13,6 +23,13 @@ module.exports = {
     } else {
       response = 'END Invalid option.';
     }
+    
+    logger.info('USSD response sent', {
+      sessionId,
+      phoneNumber,
+      responseType: response.startsWith('CON') ? 'continue' : 'end'
+    });
+    
     res.send(response);
   }
 };

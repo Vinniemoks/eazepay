@@ -1,25 +1,49 @@
-import morgan from 'morgan';
-import { createWriteStream, existsSync, mkdirSync } from 'fs';
+import winston from 'winston';
 import path from 'path';
 
-const logsDir = path.resolve(process.cwd(), 'logs');
+// Create logs directory path
+const logsDir = path.join(__dirname, '../../logs');
 
-if (!existsSync(logsDir)) {
-  mkdirSync(logsDir, { recursive: true });
+// Define log format
+const logFormat = winston.format.combine(
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.errors({ stack: true }),
+  winston.format.metadata(),
+  winston.format.json()
+);
+
+// Create the logger
+export const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: logFormat,
+  defaultMeta: { service: 'agent-service' },
+  transports: [
+    // Error logs
+    new winston.transports.File({
+      filename: path.join(logsDir, 'error.log'),
+      level: 'error',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    }),
+    // Combined logs
+    new winston.transports.File({
+      filename: path.join(logsDir, 'combined.log'),
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    }),
+  ],
+});
+
+// Console logging for non-production
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      ),
+    })
+  );
 }
 
-const accessLogStream = createWriteStream(path.join(logsDir, 'access.log'), { flags: 'a' });
-
-export const httpLogger = morgan('combined', { stream: accessLogStream });
-
-export const logger = {
-  info: (message: string, ...meta: unknown[]) => {
-    console.log(`INFO: ${message}`, ...meta);
-  },
-  warn: (message: string, ...meta: unknown[]) => {
-    console.warn(`WARN: ${message}`, ...meta);
-  },
-  error: (message: string, ...meta: unknown[]) => {
-    console.error(`ERROR: ${message}`, ...meta);
-  }
-};
+export default logger;

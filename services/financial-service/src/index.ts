@@ -6,11 +6,11 @@ import rateLimit from 'express-rate-limit';
 // @ts-ignore
 import RedisStore from 'rate-limit-redis';
 import Redis from 'ioredis';
-import cors from 'cors';
 import helmet from 'helmet';
 import { AppDataSource } from './config/database';
 import transactionRoutes from './routes/transaction.routes';
 import analyticsRoutes from './routes/analytics.routes';
+import logger from './utils/logger';
 
 const app = express();
 
@@ -70,7 +70,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  logger.info('Incoming request', {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+    userAgent: req.get('user-agent')
+  });
   next();
 });
 
@@ -89,7 +94,13 @@ app.get('/health', (req, res) => {
 
 // Error handling
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Error:', err);
+  logger.error('Request error', {
+    error: err.message,
+    stack: err.stack,
+    code: err.code || 'FIN_001',
+    path: req.path,
+    method: req.method
+  });
   res.status(err.status || 500).json({
     error: err.message || 'Internal server error',
     code: err.code || 'FIN_001'
@@ -99,7 +110,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Initialize database and start server
 AppDataSource.initialize()
   .then(() => {
-    console.log('Database connected successfully');
+    logger.info('Database connected successfully');
 
     const server = http.createServer(app);
     const REQUEST_TIMEOUT_MS = parseInt(process.env.REQUEST_TIMEOUT_MS || '30000');
@@ -113,12 +124,17 @@ AppDataSource.initialize()
     server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT_MS;
 
     server.listen(PORT, () => {
-      console.log(`Financial Service running on port ${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info('Financial Service started', {
+        port: PORT,
+        environment: process.env.NODE_ENV || 'development'
+      });
     });
   })
   .catch((error) => {
-    console.error('Failed to initialize database:', error);
+    logger.error('Failed to initialize database', {
+      error: error.message,
+      stack: error.stack
+    });
     process.exit(1);
   });
 

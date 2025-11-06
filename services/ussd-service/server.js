@@ -31,6 +31,10 @@ try {
   }
 }
 
+const logger = require('./utils/logger');
+
+const logger = require('./utils/logger');
+
 const PORT = process.env.PORT || 8004;
 const server = http.createServer(app);
 const REQUEST_TIMEOUT_MS = parseInt(process.env.REQUEST_TIMEOUT_MS || '30000', 10);
@@ -40,5 +44,5 @@ server.requestTimeout = REQUEST_TIMEOUT_MS;
 server.headersTimeout = HEADERS_TIMEOUT_MS;
 server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT_MS;
 server.listen(PORT, () => {
-  console.log(`USSD Service running on port ${PORT}`);
+  logger.info('USSD Service started', { port: PORT });
 });

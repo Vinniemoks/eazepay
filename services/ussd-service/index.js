@@ -3,6 +3,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
 const Redis = require('ioredis');
+const logger = require('./utils/logger');
 const app = express();
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
@@ -44,6 +45,17 @@ app.use(apiRateLimit);
 const ussdController = require('./ussdController');
 
 app.use(express.json());
+
+// Request logging middleware
+app.use((req, res, next) => {
+  logger.info('Incoming request', {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+    userAgent: req.get('user-agent')
+  });
+  next();
+});
 
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'ussd-service' });

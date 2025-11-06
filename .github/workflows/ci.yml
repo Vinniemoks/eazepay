@@ -162,6 +162,54 @@ jobs:
         cd services/ussd-service
         npm run build || echo "No build script"
 
+  test-financial-service:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: afripay_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: services/financial-service/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd services/financial-service
+        npm ci
+    
+    - name: Run tests
+      run: |
+        cd services/financial-service
+        npm test
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: afripay_test
+        DB_USER: postgres
+        DB_PASS: test_password
+
+    - name: Build application
+      run: |
+        cd services/financial-service
+        npm run build
+
   # Python Services
   test-biometric-service:
     runs-on: ubuntu-latest
@@ -360,6 +408,10 @@ jobs:
           - identity-service
           - agent-service
           - ussd-service
+          - financial-service
+          - iot-service
+          - blockchain-service
+          - robotics-service
           - admin-portal
           - customer-portal
           - agent-portal
@@ -420,6 +472,69 @@ jobs:
         NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
   # Code Quality
+  test-iot-service:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        cd services/iot-service
+        npm ci
+    
+    - name: Build application
+      run: |
+        cd services/iot-service
+        npm run build
+
+  test-blockchain-service:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        cd services/blockchain-service
+        npm ci
+    
+    - name: Build application
+      run: |
+        cd services/blockchain-service
+        npm run build
+
+  test-robotics-service:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        cd services/robotics-service
+        npm ci
+    
+    - name: Build application
+      run: |
+        cd services/robotics-service
+        npm run build
+
   code-quality-node:
     runs-on: ubuntu-latest
     strategy:
@@ -428,6 +543,10 @@ jobs:
           - identity-service
           - agent-service
           - ussd-service
+          - financial-service
+          - iot-service
+          - blockchain-service
+          - robotics-service
     steps:
     - uses: actions/checkout@v3
     

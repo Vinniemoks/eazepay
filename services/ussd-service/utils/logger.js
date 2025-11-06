@@ -1,9 +1,8 @@
-// Logger utility
-import winston from 'winston';
-import path from 'path';
+const winston = require('winston');
+const path = require('path');
 
 // Create logs directory path
-const logsDir = path.join(__dirname, '../../logs');
+const logsDir = path.join(__dirname, '../logs');
 
 // Define log format
 const logFormat = winston.format.combine(
@@ -13,10 +12,11 @@ const logFormat = winston.format.combine(
   winston.format.json()
 );
 
-export const logger = winston.createLogger({
+// Create the logger
+const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: logFormat,
-  defaultMeta: { service: 'iot-service' },
+  defaultMeta: { service: 'ussd-service' },
   transports: [
     // Error logs
     new winston.transports.File({
@@ -45,3 +45,5 @@ if (process.env.NODE_ENV !== 'production') {
     })
   );
 }
+
+module.exports = logger;
