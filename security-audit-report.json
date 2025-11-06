@@ -1,39 +1,14 @@
 {
-  "timestamp": "2025-11-06T15:16:20.962Z",
+  "timestamp": "2025-11-06T16:12:50.817Z",
   "summary": {
-    "totalIssues": 3,
+    "totalIssues": 0,
     "totalWarnings": 4,
     "totalRecommendations": 0,
     "criticalIssues": 0,
-    "mediumIssues": 3,
+    "mediumIssues": 0,
     "lowIssues": 0
   },
-  "issues": [
-    {
-      "type": "CORS_MISCONFIGURATION",
-      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\admin-portal\\vite.config.js",
-      "line": 15,
-      "match": "Origin: true",
-      "severity": "MEDIUM",
-      "description": "CORS misconfiguration detected"
-    },
-    {
-      "type": "CORS_MISCONFIGURATION",
-      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\agent-portal\\vite.config.js",
-      "line": 17,
-      "match": "Origin: true",
-      "severity": "MEDIUM",
-      "description": "CORS misconfiguration detected"
-    },
-    {
-      "type": "CORS_MISCONFIGURATION",
-      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\customer-portal\\vite.config.js",
-      "line": 17,
-      "match": "Origin: true",
-      "severity": "MEDIUM",
-      "description": "CORS misconfiguration detected"
-    }
-  ],
+  "issues": [],
   "warnings": [
     {
       "type": "MISSING_VALIDATION",

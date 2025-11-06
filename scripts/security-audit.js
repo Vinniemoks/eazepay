@@ -358,7 +358,7 @@ class SecurityAuditor {
     const content = fs.readFileSync(filePath, 'utf8');
     const corsPatterns = [
       /cors\s*\(\s*\{\s*origin:\s*['"]\*['"]/gi,
-      /origin:\s*true/gi,
+      /cors\s*\(\s*\{\s*origin:\s*true/gi,
       /cors\s*\(\s*\{\s*credentials:\s*true.*origin:\s*['"]\*['"]/gi,
     ];
 
