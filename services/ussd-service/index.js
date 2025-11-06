@@ -5,6 +5,7 @@ const RedisStore = require('rate-limit-redis');
 const Redis = require('ioredis');
 const logger = require('./utils/logger');
 const { JWTService, initializeAuth, authenticate } = require('@afripay/auth-middleware');
+const { validateRequest, joi } = require('@afripay/validation');
 const app = express();
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
@@ -72,6 +73,16 @@ const jwtService = new JWTService({
 initializeAuth(jwtService);
 app.use('/api', authenticate);
 
-app.post('/api/ussd', ussdController.handleUssdRequest);
+// Validate USSD request payload
+const ussdSchema = joi.object({
+  sessionId: joi.string().min(6).max(128).required(),
+  serviceCode: joi.string().min(1).max(32).required(),
+  phoneNumber: joi.string().min(6).max(20).required(),
+  text: joi.string().allow('').max(1024).required(),
+  network: joi.string().optional(),
+  channel: joi.string().optional()
+});
+
+app.post('/api/ussd', validateRequest(ussdSchema), ussdController.handleUssdRequest);
 
 module.exports = app;

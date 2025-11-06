@@ -1,6 +1,7 @@
 // Robotics Service - Main Entry Point
 import express, { Request, Response } from 'express';
 import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
+import { validateRequest, joi } from '@afripay/validation';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
@@ -38,19 +39,39 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // Placeholder endpoints
-app.post('/api/kiosks/register', async (req: Request, res: Response) => {
+const kioskRegisterSchema = joi.object({
+  kioskId: joi.string().uuid().required(),
+  location: joi.string().min(2).max(256).required(),
+  meta: joi.object().optional()
+});
+app.post('/api/kiosks/register', validateRequest(kioskRegisterSchema), async (req: Request, res: Response) => {
   res.json({ success: true, message: 'Kiosk registration endpoint' });
 });
 
-app.post('/api/rpa/jobs', async (req: Request, res: Response) => {
+const rpaJobSchema = joi.object({
+  jobName: joi.string().min(2).max(128).required(),
+  payload: joi.object().required(),
+  priority: joi.string().valid('low','medium','high').default('medium')
+});
+app.post('/api/rpa/jobs', validateRequest(rpaJobSchema), async (req: Request, res: Response) => {
   res.json({ success: true, message: 'RPA job creation endpoint' });
 });
 
-app.post('/api/documents/kyc/process', async (req: Request, res: Response) => {
+const kycProcessSchema = joi.object({
+  customerId: joi.string().uuid().required(),
+  documentType: joi.string().min(2).max(64).required(),
+  fileUrl: joi.string().uri().required()
+});
+app.post('/api/documents/kyc/process', validateRequest(kycProcessSchema), async (req: Request, res: Response) => {
   res.json({ success: true, message: 'Document processing endpoint' });
 });
 
-app.post('/api/biometric/enroll', async (req: Request, res: Response) => {
+const biometricEnrollSchema = joi.object({
+  customerId: joi.string().uuid().required(),
+  biometricType: joi.string().valid('fingerprint','face','iris','voice').required(),
+  data: joi.string().min(10).required()
+});
+app.post('/api/biometric/enroll', validateRequest(biometricEnrollSchema), async (req: Request, res: Response) => {
   res.json({ success: true, message: 'Biometric enrollment endpoint' });
 });
 

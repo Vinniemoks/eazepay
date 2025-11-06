@@ -1,6 +1,7 @@
 // Blockchain Service - Main Entry Point (Mock Mode)
 import express, { Request, Response } from 'express';
 import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
+import { validateRequest, validateParams, validateQuery, joi, commonSchemas } from '@afripay/validation';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 // @ts-ignore
@@ -86,7 +87,16 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // Record transaction on blockchain
-app.post('/api/blockchain/transactions', async (req: Request, res: Response) => {
+const transactionSchema = joi.object({
+  transactionId: joi.string().optional(),
+  fromAccount: joi.string().required(),
+  toAccount: joi.string().required(),
+  amount: joi.number().positive().required(),
+  currency: joi.string().length(3).required(),
+  metadata: joi.object().optional()
+});
+
+app.post('/api/blockchain/transactions', validateRequest(transactionSchema), async (req: Request, res: Response) => {
   try {
     const transaction = req.body;
     const txHash = `0x${Date.now().toString(16)}${Math.random().toString(16).substring(2, 10)}`;
@@ -117,7 +127,7 @@ app.post('/api/blockchain/transactions', async (req: Request, res: Response) => 
 });
 
 // Get transaction from blockchain
-app.get('/api/blockchain/transactions/:id', async (req: Request, res: Response) => {
+app.get('/api/blockchain/transactions/:id', validateParams(joi.object({ id: commonSchemas.uuid.required() })), async (req: Request, res: Response) => {
   try {
     const transaction = blockchainLedger.get(req.params.id);
     
@@ -141,7 +151,13 @@ app.get('/api/blockchain/transactions/:id', async (req: Request, res: Response) 
 });
 
 // Verify transaction integrity
-app.post('/api/blockchain/transactions/:id/verify', async (req: Request, res: Response) => {
+const verifySchema = joi.object({
+  expectedHash: joi.string().pattern(/^0x[a-fA-F0-9]+$/).required()
+});
+app.post('/api/blockchain/transactions/:id/verify', 
+  validateParams(joi.object({ id: commonSchemas.uuid.required() })),
+  validateRequest(verifySchema),
+  async (req: Request, res: Response) => {
   try {
     const transaction = blockchainLedger.get(req.params.id);
     
@@ -169,7 +185,13 @@ app.post('/api/blockchain/transactions/:id/verify', async (req: Request, res: Re
 });
 
 // Get transaction history for account
-app.get('/api/blockchain/accounts/:accountId/history', async (req: Request, res: Response) => {
+const historyQuerySchema = joi.object({
+  limit: joi.number().integer().min(1).max(1000).optional()
+});
+app.get('/api/blockchain/accounts/:accountId/history', 
+  validateParams(joi.object({ accountId: commonSchemas.uuid.required() })),
+  validateQuery(historyQuerySchema),
+  async (req: Request, res: Response) => {
   try {
     const { accountId } = req.params;
     const limit = parseInt(req.query.limit as string) || 100;
@@ -194,7 +216,14 @@ app.get('/api/blockchain/accounts/:accountId/history', async (req: Request, res:
 });
 
 // Record audit log on blockchain
-app.post('/api/blockchain/audit-logs', async (req: Request, res: Response) => {
+const auditLogSchema = joi.object({
+  id: joi.string().optional(),
+  actor: joi.string().required(),
+  action: joi.string().required(),
+  resource: joi.string().required(),
+  details: joi.object().optional()
+});
+app.post('/api/blockchain/audit-logs', validateRequest(auditLogSchema), async (req: Request, res: Response) => {
   try {
     const auditLog = req.body;
     const logHash = `0x${Date.now().toString(16)}${Math.random().toString(16).substring(2, 10)}`;
@@ -222,7 +251,7 @@ app.post('/api/blockchain/audit-logs', async (req: Request, res: Response) => {
 });
 
 // Get audit log from blockchain
-app.get('/api/blockchain/audit-logs/:id', async (req: Request, res: Response) => {
+app.get('/api/blockchain/audit-logs/:id', validateParams(joi.object({ id: commonSchemas.uuid.required() })), async (req: Request, res: Response) => {
   try {
     const auditLog = auditLogs.get(req.params.id);
     

@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-11-06T16:12:50.817Z",
+  "timestamp": "2025-11-06T18:51:03.892Z",
   "summary": {
     "totalIssues": 0,
-    "totalWarnings": 4,
+    "totalWarnings": 1,
     "totalRecommendations": 0,
     "criticalIssues": 0,
     "mediumIssues": 0,
@@ -12,28 +12,7 @@
   "warnings": [
     {
       "type": "MISSING_VALIDATION",
-      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\blockchain-service\\src\\index.ts",
-      "line": 1,
-      "severity": "MEDIUM",
-      "description": "Route handlers found without input validation"
-    },
-    {
-      "type": "MISSING_VALIDATION",
-      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\robotics-service\\src\\index.ts",
-      "line": 1,
-      "severity": "MEDIUM",
-      "description": "Route handlers found without input validation"
-    },
-    {
-      "type": "MISSING_VALIDATION",
       "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\shared\\swagger-config\\src\\swagger.ts",
-      "line": 1,
-      "severity": "MEDIUM",
-      "description": "Route handlers found without input validation"
-    },
-    {
-      "type": "MISSING_VALIDATION",
-      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\ussd-service\\index.js",
       "line": 1,
       "severity": "MEDIUM",
       "description": "Route handlers found without input validation"
