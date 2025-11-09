@@ -108,8 +108,8 @@ function generateSecureConfig(): SecurityConfig {
       secret: process.env.JWT_SECRET!,
       expiresIn: process.env.JWT_EXPIRES_IN || '8h',
       refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
-      issuer: process.env.JWT_ISSUER || 'afripay-iot-service',
-      audience: process.env.JWT_AUDIENCE || 'afripay-services',
+      issuer: process.env.JWT_ISSUER || 'eazepay-iot-service',
+      audience: process.env.JWT_AUDIENCE || 'eazepay-services',
       algorithm: process.env.JWT_ALGORITHM || 'HS256',
     },
     apiKeys: {

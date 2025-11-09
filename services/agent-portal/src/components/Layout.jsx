@@ -9,7 +9,7 @@ export default function Layout() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <nav style={{ background: '#28a745', color: 'white', padding: '1rem 2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1>AfriPay Agent</h1>
+          <h1>Eazepay Agent</h1>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Dashboard</Link>
             <Link to="/transactions" style={{ color: 'white', textDecoration: 'none' }}>Transactions</Link>

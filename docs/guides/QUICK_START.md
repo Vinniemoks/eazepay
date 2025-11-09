@@ -19,7 +19,7 @@ docker-compose up -d customer-portal agent-portal
 
 ## Option 2: Start Everything (Full Stack)
 
-To run the complete AfriPay platform with all services:
+To run the complete Eazepay platform with all services:
 
 ```bash
 # Start all services (this will take a few minutes)

@@ -11,15 +11,15 @@ import { AppDataSource } from './config/database';
 import transactionRoutes from './routes/transaction.routes';
 import analyticsRoutes from './routes/analytics.routes';
 import logger from './utils/logger';
-import { JWTService, initializeAuth } from '@afripay/auth-middleware';
-import { setupSwagger } from '@afripay/swagger-config';
+import { JWTService, initializeAuth } from '@eazepay/auth-middleware';
+import { setupSwagger } from '@eazepay/swagger-config';
 import {
   errorHandler,
   notFoundHandler,
   initializeErrorHandler,
   setupUnhandledRejectionHandler,
   setupUncaughtExceptionHandler
-} from '@afripay/error-handler';
+} from '@eazepay/error-handler';
 
 const app = express();
 
@@ -33,8 +33,8 @@ logger.info('Error handler initialized');
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
   jwtExpiresIn: '8h',
-  issuer: 'afripay-services',
-  audience: 'afripay-services'
+  issuer: 'eazepay-services',
+  audience: 'eazepay-services'
 });
 initializeAuth(jwtService);
 logger.info('Authentication middleware initialized');
@@ -106,8 +106,8 @@ app.use((req, res, next) => {
 
 // API Documentation
 setupSwagger(app, {
-  serviceName: 'AfriPay Financial Service API',
-  serviceDescription: 'Financial transaction and analytics service for AfriPay platform',
+  serviceName: 'Eazepay Financial Service API',
+  serviceDescription: 'Financial transaction and analytics service for Eazepay platform',
   version: '1.0.0',
   basePath: '/api',
   servers: [
@@ -116,7 +116,7 @@ setupSwagger(app, {
       description: 'Development server'
     },
     {
-      url: 'https://api.afripay.com',
+      url: 'https://api.eazepay.com',
       description: 'Production server'
     }
   ],

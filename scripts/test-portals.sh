@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🧪 Testing AfriPay Portals..."
+echo "🧪 Testing Eazepay Portals..."
 
 # Build frontend applications
 echo "📦 Building Customer Portal..."

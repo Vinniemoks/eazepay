@@ -38,17 +38,17 @@ for %%s in (%SERVICES%) do (
     if exist "services\%%s\package.json" (
         echo Updating %%s...
         
-        findstr /C:"@afripay/service-client" "services\%%s\package.json" >nul 2>&1
+        findstr /C:"@eazepay/service-client" "services\%%s\package.json" >nul 2>&1
         if !errorlevel! neq 0 (
-            echo   Adding @afripay/service-client dependency
+            echo   Adding @eazepay/service-client dependency
             cd services\%%s
             call npm install --save file:../shared/service-client
             cd ..\..
         )
         
-        findstr /C:"@afripay/event-bus" "services\%%s\package.json" >nul 2>&1
+        findstr /C:"@eazepay/event-bus" "services\%%s\package.json" >nul 2>&1
         if !errorlevel! neq 0 (
-            echo   Adding @afripay/event-bus dependency
+            echo   Adding @eazepay/event-bus dependency
             cd services\%%s
             call npm install --save file:../shared/event-bus
             cd ..\..

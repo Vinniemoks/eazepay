@@ -49,7 +49,7 @@ jobs:
     - name: Update ECS service
       run: |
         aws ecs update-service \
-          --cluster afripay-production \
+          --cluster eazepay-production \
           --service ${{ matrix.service }} \
           --force-new-deployment \
           --region ${{ env.AWS_REGION }}

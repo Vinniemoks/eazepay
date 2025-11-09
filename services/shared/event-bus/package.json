@@ -1,5 +1,5 @@
 {
-  "name": "@afripay/event-bus",
+  "name": "@eazepay/event-bus",
   "version": "1.0.0",
   "description": "Shared event bus for async inter-service communication",
   "main": "dist/index.js",

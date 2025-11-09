@@ -19,7 +19,7 @@
       "type": "graph",
       "title": "Response Time Avg (s)",
       "targets": [
-        { "expr": "afripay:response_time_avg_5m" }
+        { "expr": "eazepay:response_time_avg_5m" }
       ]
     }
   ]

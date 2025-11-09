@@ -78,7 +78,7 @@ coverage/
 
 # Create main README.md
 cat > README.md << 'EOF'
-# AfriPay Universal
+# Eazepay Universal
 
 Cross-generational payment system designed for Kenya and Africa expansion.
 
@@ -103,8 +103,8 @@ Cross-generational payment system designed for Kenya and Africa expansion.
 
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/afripay-universal.git
-cd afripay-universal
+git clone https://github.com/YOUR_USERNAME/eazepay-universal.git
+cd eazepay-universal
 
 # Start development environment
 ./scripts/setup/dev-setup.sh

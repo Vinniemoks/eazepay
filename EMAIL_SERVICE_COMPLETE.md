@@ -74,10 +74,10 @@ Successfully integrated comprehensive email service into the authentication syst
 EMAIL_PROVIDER=development  # smtp, sendgrid, mailgun, development
 
 # Email Settings
-EMAIL_FROM=noreply@afripay.com
-APP_NAME=AfriPay
+EMAIL_FROM=noreply@eazepay.com
+APP_NAME=Eazepay
 APP_URL=http://localhost:3000
-SUPPORT_EMAIL=support@afripay.com
+SUPPORT_EMAIL=support@eazepay.com
 
 # SMTP (if using SMTP)
 SMTP_HOST=smtp.gmail.com
@@ -294,7 +294,7 @@ EMAIL_PROVIDER=development
 # Emails logged to console instead of sent
 📧 Email sent (development mode):
 To: user@example.com
-Subject: Reset your AfriPay password
+Subject: Reset your Eazepay password
 Message: [email content]
 ```
 

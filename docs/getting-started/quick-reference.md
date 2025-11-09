@@ -135,19 +135,19 @@ curl http://localhost:8040/health  # Robotics
 
 ```bash
 # Connect to database
-docker compose exec postgresql psql -U developer -d afripay_dev
+docker compose exec postgresql psql -U developer -d eazepay_dev
 
 # Backup database
-docker compose exec postgresql pg_dump -U developer afripay_dev > backup.sql
+docker compose exec postgresql pg_dump -U developer eazepay_dev > backup.sql
 
 # Restore database
-docker compose exec -T postgresql psql -U developer afripay_dev < backup.sql
+docker compose exec -T postgresql psql -U developer eazepay_dev < backup.sql
 
 # List databases
 docker compose exec postgresql psql -U developer -c "\l"
 
 # List tables
-docker compose exec postgresql psql -U developer -d afripay_dev -c "\dt"
+docker compose exec postgresql psql -U developer -d eazepay_dev -c "\dt"
 ```
 
 ### MongoDB
@@ -452,7 +452,7 @@ docker compose up -d <service-name>
 docker compose down
 
 # 2. Restore from backup
-docker compose exec -T postgresql psql -U developer afripay_dev < backup.sql
+docker compose exec -T postgresql psql -U developer eazepay_dev < backup.sql
 
 # 3. Restart services
 docker compose up -d

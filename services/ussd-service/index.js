@@ -4,8 +4,8 @@ const rateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
 const Redis = require('ioredis');
 const logger = require('./utils/logger');
-const { JWTService, initializeAuth, authenticate } = require('@afripay/auth-middleware');
-const { validateRequest, joi } = require('@afripay/validation');
+const { JWTService, initializeAuth, authenticate } = require('@eazepay/auth-middleware');
+const { validateRequest, joi } = require('@eazepay/validation');
 const app = express();
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
@@ -67,8 +67,8 @@ app.get('/health', (req, res) => {
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
   jwtExpiresIn: '8h',
-  issuer: 'afripay-services',
-  audience: 'afripay-services'
+  issuer: 'eazepay-services',
+  audience: 'eazepay-services'
 });
 initializeAuth(jwtService);
 app.use('/api', authenticate);

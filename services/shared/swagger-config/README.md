@@ -1,6 +1,6 @@
-# @afripay/swagger-config
+# @eazepay/swagger-config
 
-Shared Swagger/OpenAPI configuration for AfriPay microservices. Provides interactive API documentation with a consistent look and feel across all services.
+Shared Swagger/OpenAPI configuration for Eazepay microservices. Provides interactive API documentation with a consistent look and feel across all services.
 
 ## Features
 
@@ -34,13 +34,13 @@ npm install file:../shared/swagger-config
 
 ```typescript
 import express from 'express';
-import { setupSwagger } from '@afripay/swagger-config';
+import { setupSwagger } from '@eazepay/swagger-config';
 
 const app = express();
 
 // Setup Swagger documentation
 setupSwagger(app, {
-  serviceName: 'AfriPay Financial Service API',
+  serviceName: 'Eazepay Financial Service API',
   serviceDescription: 'Financial transaction and analytics service',
   version: '1.0.0',
   basePath: '/api',
@@ -455,4 +455,4 @@ For issues or questions:
 
 **Version**: 1.0.0  
 **License**: MIT  
-**Maintained By**: AfriPay DevOps Team
+**Maintained By**: Eazepay DevOps Team

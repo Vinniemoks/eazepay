@@ -193,12 +193,12 @@ Complete 2FA verification after initial login.
 
 ### Components
 
-1. **SessionManager** (`@afripay/auth-middleware`)
+1. **SessionManager** (`@eazepay/auth-middleware`)
    - Manages Redis-based sessions
    - Handles session creation, validation, and termination
    - Supports multi-device session tracking
 
-2. **JWTService** (`@afripay/auth-middleware`)
+2. **JWTService** (`@eazepay/auth-middleware`)
    - Generates and validates JWT tokens
    - Manages token pairs (access + refresh)
    - Handles token blacklisting

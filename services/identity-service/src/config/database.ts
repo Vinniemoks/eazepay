@@ -15,7 +15,7 @@ export const AppDataSource = new DataSource({
   port: parseInt(process.env.DB_PORT || '5433'),
   username: process.env.DB_USER || 'developer',
   password: process.env.DB_PASS || 'dev_password_2024!',
-  database: process.env.DB_NAME || 'afripay_dev',
+  database: process.env.DB_NAME || 'eazepay_dev',
   synchronize: false, // Use migrations instead
   logging: process.env.NODE_ENV === 'development',
   entities: [User, UserPermission, PermissionCode, AccessRequest, AuditLog, Session],

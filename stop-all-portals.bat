@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo   AfriPay - Stopping All Portals
+echo   Eazepay - Stopping All Portals
 echo ========================================
 echo.
 

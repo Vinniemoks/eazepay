@@ -1,6 +1,6 @@
 # Service Experience and System Visuals
 
-This document illustrates how AfriPay's channels surface capabilities to end users and how each channel maps to the backend landscape. It focuses on the experience for the three primary personas:
+This document illustrates how Eazepay's channels surface capabilities to end users and how each channel maps to the backend landscape. It focuses on the experience for the three primary personas:
 
 - **Superuser** – A privileged operator who can reach every administrative surface and manage global policy.
 - **Administrator** – Operations staff with scoped permissions that are granted and revoked by the superuser.

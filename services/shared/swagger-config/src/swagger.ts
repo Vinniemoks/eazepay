@@ -31,7 +31,7 @@ export function setupSwagger(app: Express, config: SwaggerConfig): void {
         description: 'Development server'
       },
       {
-        url: 'https://api.afripay.com',
+        url: 'https://api.eazepay.com',
         description: 'Production server'
       }
     ],
@@ -54,9 +54,9 @@ export function setupSwagger(app: Express, config: SwaggerConfig): void {
       version: version,
       description: serviceDescription,
       contact: {
-        name: 'AfriPay API Support',
-        email: 'api-support@afripay.com',
-        url: 'https://afripay.com/support'
+        name: 'Eazepay API Support',
+        email: 'api-support@eazepay.com',
+        url: 'https://eazepay.com/support'
       },
       license: {
         name: 'MIT',

@@ -1,5 +1,5 @@
 #!/bin/bash
-# AfriPay Universal - Security, Dependency, and Documentation Automation Script
+# Eazepay Universal - Security, Dependency, and Documentation Automation Script
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -152,7 +152,7 @@ function check_docs() {
 }
 
 function main() {
-  echo -e "${BLUE}🔒 AfriPay Universal Security, Dependency & Docs Automation${NC}"
+  echo -e "${BLUE}🔒 Eazepay Universal Security, Dependency & Docs Automation${NC}"
   echo "========================================================="
 
   # Node.js services

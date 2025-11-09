@@ -1,6 +1,6 @@
-# @afripay/validation
+# @eazepay/validation
 
-Centralized input validation and sanitization for AfriPay microservices with Joi schemas and custom validators.
+Centralized input validation and sanitization for Eazepay microservices with Joi schemas and custom validators.
 
 ## Features
 
@@ -34,7 +34,7 @@ npm install file:../shared/validation
 ### 1. Use Pre-built Schemas
 
 ```typescript
-import { validateBody, schemas } from '@afripay/validation';
+import { validateBody, schemas } from '@eazepay/validation';
 
 // User registration
 router.post('/register', 
@@ -58,7 +58,7 @@ router.post('/transactions',
 ### 2. Use Common Schemas
 
 ```typescript
-import { validateBody, commonSchemas } from '@afripay/validation';
+import { validateBody, commonSchemas } from '@eazepay/validation';
 import Joi from 'joi';
 
 // Build custom schema from common schemas
@@ -77,7 +77,7 @@ router.put('/profile',
 ### 3. Validate Multiple Sources
 
 ```typescript
-import { validateRequest, commonSchemas, schemas } from '@afripay/validation';
+import { validateRequest, commonSchemas, schemas } from '@eazepay/validation';
 import Joi from 'joi';
 
 router.get('/transactions/:id',
@@ -172,7 +172,7 @@ commonSchemas.coordinates
 ### User Registration
 
 ```typescript
-import { validateBody, schemas } from '@afripay/validation';
+import { validateBody, schemas } from '@eazepay/validation';
 
 router.post('/register',
   validateBody(schemas.userRegistration),
@@ -261,7 +261,7 @@ router.get('/reports',
 ### Kenyan-Specific Validators
 
 ```typescript
-import { validators } from '@afripay/validation';
+import { validators } from '@eazepay/validation';
 
 // Kenyan phone number
 validators.isKenyanPhoneNumber('+254712345678'); // true
@@ -305,7 +305,7 @@ validators.isPassportNumber('AB123456'); // true
 ### Automatic Sanitization
 
 ```typescript
-import { sanitize } from '@afripay/validation';
+import { sanitize } from '@eazepay/validation';
 
 // Apply to all routes
 app.use(sanitize());
@@ -321,7 +321,7 @@ app.use(sanitize({
 ### Manual Sanitization
 
 ```typescript
-import { sanitizeInput } from '@afripay/validation';
+import { sanitizeInput } from '@eazepay/validation';
 
 const sanitized = sanitizeInput(userInput, {
   trim: true,
@@ -338,7 +338,7 @@ import {
   normalizeEmail,
   stripHTML,
   removeSensitiveFields
-} from '@afripay/validation';
+} from '@eazepay/validation';
 
 // Normalize phone number
 const phone = normalizePhoneNumber('0712345678'); // +254712345678
@@ -361,7 +361,7 @@ const safe = removeSensitiveFields({
 ### Validate Body
 
 ```typescript
-import { validateBody } from '@afripay/validation';
+import { validateBody } from '@eazepay/validation';
 import Joi from 'joi';
 
 const schema = Joi.object({
@@ -375,7 +375,7 @@ router.post('/users', validateBody(schema), handler);
 ### Validate Query
 
 ```typescript
-import { validateQuery } from '@afripay/validation';
+import { validateQuery } from '@eazepay/validation';
 import Joi from 'joi';
 
 const schema = Joi.object({
@@ -389,7 +389,7 @@ router.get('/users', validateQuery(schema), handler);
 ### Validate Params
 
 ```typescript
-import { validateParams } from '@afripay/validation';
+import { validateParams } from '@eazepay/validation';
 import Joi from 'joi';
 
 const schema = Joi.object({
@@ -402,7 +402,7 @@ router.get('/users/:id', validateParams(schema), handler);
 ### Validate Multiple Sources
 
 ```typescript
-import { validateRequest } from '@afripay/validation';
+import { validateRequest } from '@eazepay/validation';
 import Joi from 'joi';
 
 router.put('/users/:id',
@@ -456,7 +456,7 @@ Validation errors return a consistent format:
 ### Build Your Own
 
 ```typescript
-import { commonSchemas } from '@afripay/validation';
+import { commonSchemas } from '@eazepay/validation';
 import Joi from 'joi';
 
 const customSchema = Joi.object({
@@ -499,7 +499,7 @@ const schema = Joi.object({
 
 ```typescript
 // Good
-import { schemas } from '@afripay/validation';
+import { schemas } from '@eazepay/validation';
 router.post('/register', validateBody(schemas.userRegistration), handler);
 
 // Avoid
@@ -510,7 +510,7 @@ const schema = Joi.object({ /* duplicate validation */ });
 
 ```typescript
 // Good
-import { commonSchemas } from '@afripay/validation';
+import { commonSchemas } from '@eazepay/validation';
 const schema = Joi.object({
   email: commonSchemas.email,
   amount: commonSchemas.amount
@@ -549,7 +549,7 @@ validateRequest({
 ## Testing
 
 ```typescript
-import { validators, schemas } from '@afripay/validation';
+import { validators, schemas } from '@eazepay/validation';
 
 describe('Validation', () => {
   it('should validate Kenyan phone number', () => {
@@ -591,7 +591,7 @@ router.post('/users', (req, res) => {
 ### After
 
 ```typescript
-import { validateBody, schemas } from '@afripay/validation';
+import { validateBody, schemas } from '@eazepay/validation';
 
 router.post('/users',
   validateBody(schemas.userRegistration),
@@ -611,4 +611,4 @@ For issues or questions:
 
 **Version**: 1.0.0  
 **License**: MIT  
-**Maintained By**: AfriPay DevOps Team
+**Maintained By**: Eazepay DevOps Team

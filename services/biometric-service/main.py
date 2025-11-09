@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
     await db_service.disconnect()
 
 app = FastAPI(
-    title="AfriPay Biometric Service",
+    title="Eazepay Biometric Service",
     description="Biometric processing service for fingerprint, face, and voice recognition",
     version="1.0.0",
     lifespan=lifespan

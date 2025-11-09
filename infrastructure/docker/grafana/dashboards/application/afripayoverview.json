@@ -2,7 +2,7 @@
   "annotations": {
     "list": []
   },
-  "description": "AfriPay Universal - Application Overview Dashboard",
+  "description": "Eazepay Universal - Application Overview Dashboard",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -276,7 +276,7 @@
   "schemaVersion": 36,
   "style": "dark",
   "tags": [
-    "afripay",
+    "eazepay",
     "overview"
   ],
   "templating": {
@@ -288,8 +288,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "AfriPay Universal - Overview",
-  "uid": "afripay-overview",
+  "title": "Eazepay Universal - Overview",
+  "uid": "eazepay-overview",
   "version": 1,
   "weekStart": ""
 }

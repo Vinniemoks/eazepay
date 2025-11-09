@@ -2,7 +2,7 @@
 
 ## Overview
 
-A comprehensive enterprise-grade administrative system specification has been created for AfriPay, featuring real-time dashboards, financial analytics with millisecond-precision timestamps, organizational hierarchy management, and comprehensive access control workflows.
+A comprehensive enterprise-grade administrative system specification has been created for Eazepay, featuring real-time dashboards, financial analytics with millisecond-precision timestamps, organizational hierarchy management, and comprehensive access control workflows.
 
 ## Specification Location
 

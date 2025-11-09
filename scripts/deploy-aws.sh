@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Deploying AfriPay to AWS..."
+echo "🚀 Deploying Eazepay to AWS..."
 
 # Variables
 AWS_REGION=${AWS_REGION:-us-east-1}

@@ -1,7 +1,7 @@
 {
-  "name": "@afripay/error-handler",
+  "name": "@eazepay/error-handler",
   "version": "1.0.0",
-  "description": "Centralized error handling for AfriPay microservices",
+  "description": "Centralized error handling for Eazepay microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

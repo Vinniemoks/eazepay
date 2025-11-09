@@ -13,7 +13,7 @@
 
 ## Solution Implemented
 
-Created `@afripay/validation` - a centralized validation and sanitization library with Joi schemas and custom validators.
+Created `@eazepay/validation` - a centralized validation and sanitization library with Joi schemas and custom validators.
 
 ### What Was Created
 
@@ -164,7 +164,7 @@ validateRequest({ body, query, params })
 ### Pre-built Schemas
 
 ```typescript
-import { validateBody, schemas } from '@afripay/validation';
+import { validateBody, schemas } from '@eazepay/validation';
 
 // User registration
 router.post('/register', 
@@ -188,7 +188,7 @@ router.get('/users',
 ### Common Schemas
 
 ```typescript
-import { validateBody, commonSchemas } from '@afripay/validation';
+import { validateBody, commonSchemas } from '@eazepay/validation';
 import Joi from 'joi';
 
 const schema = Joi.object({
@@ -204,7 +204,7 @@ router.post('/payment', validateBody(schema), handler);
 ### Multiple Sources
 
 ```typescript
-import { validateRequest, schemas } from '@afripay/validation';
+import { validateRequest, schemas } from '@eazepay/validation';
 
 router.get('/transactions/:id',
   validateRequest({
@@ -218,7 +218,7 @@ router.get('/transactions/:id',
 ### Custom Validation
 
 ```typescript
-import { commonSchemas } from '@afripay/validation';
+import { commonSchemas } from '@eazepay/validation';
 import Joi from 'joi';
 
 const customSchema = Joi.object({
@@ -299,7 +299,7 @@ npm install file:../shared/validation
 ### 3. Use in Routes
 
 ```typescript
-import { validateBody, schemas } from '@afripay/validation';
+import { validateBody, schemas } from '@eazepay/validation';
 
 router.post('/users',
   validateBody(schemas.userRegistration),
@@ -339,7 +339,7 @@ export const validateTransaction = (req, res, next) => {
 ### After
 
 ```typescript
-import { validateBody, schemas } from '@afripay/validation';
+import { validateBody, schemas } from '@eazepay/validation';
 
 router.post('/transactions',
   validateBody(schemas.transactionCreate),

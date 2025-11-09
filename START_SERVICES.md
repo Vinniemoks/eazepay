@@ -1,6 +1,6 @@
-# Starting AfriPay Services
+# Starting Eazepay Services
 
-Multiple ways to start all AfriPay portals and services.
+Multiple ways to start all Eazepay portals and services.
 
 ---
 
@@ -187,12 +187,12 @@ Once started, access the portals at:
 ## 🔑 Demo Credentials
 
 ### Admin Portal
-- **Super Admin**: superadmin@afripay.com / SuperAdmin@2024
-- **Admin**: admin@afripay.com / Admin@2024
-- **Manager**: manager@afripay.com / Manager@2024
+- **Super Admin**: superadmin@eazepay.com / SuperAdmin@2024
+- **Admin**: admin@eazepay.com / Admin@2024
+- **Manager**: manager@eazepay.com / Manager@2024
 
 ### Customer Portal
-- **Demo Customer**: customer@afripay.com / Customer@2024
+- **Demo Customer**: customer@eazepay.com / Customer@2024
 
 ### Agent Portal
 - **Demo Agent**: AG001 / Agent@2024
@@ -378,4 +378,4 @@ Once all portals are running:
 6. **Test navigation** between pages
 7. **Try different user roles** in admin portal
 
-Enjoy your AfriPay platform! 🎉
+Enjoy your Eazepay platform! 🎉

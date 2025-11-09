@@ -159,7 +159,7 @@ export class AuthController {
         // Send OTP if SMS is enabled
         if (user.twoFactorMethod === TwoFactorMethod.SMS || user.twoFactorMethod === TwoFactorMethod.BOTH) {
           const otp = generateOTP();
-          await sendSMS(user.phone, `Your AfriPay verification code is: ${otp}`);
+          await sendSMS(user.phone, `Your Eazepay verification code is: ${otp}`);
           // Store OTP in Redis with 10-minute expiry
           // await redis.setex(`otp:${user.id}`, 600, otp);
         }

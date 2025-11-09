@@ -1,6 +1,6 @@
 # USSD Service
 
-A Node.js microservice for USSD session handling and integration for AfriPay.
+A Node.js microservice for USSD session handling and integration for Eazepay.
 
 ## Endpoints
 - `GET /health` — Health check

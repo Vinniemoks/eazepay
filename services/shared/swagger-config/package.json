@@ -1,7 +1,7 @@
 {
-  "name": "@afripay/swagger-config",
+  "name": "@eazepay/swagger-config",
   "version": "1.0.0",
-  "description": "Shared Swagger/OpenAPI configuration for AfriPay services",
+  "description": "Shared Swagger/OpenAPI configuration for Eazepay services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

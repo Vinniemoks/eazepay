@@ -11,8 +11,8 @@
       "limits": {}
     },
     {
-      "name": "afripay_user",
-      "password": "afripay123",
+      "name": "eazepay_user",
+      "password": "eazepay123",
       "tags": [],
       "limits": {}
     }
@@ -25,8 +25,8 @@
       "default_queue_type": "classic"
     },
     {
-      "name": "afripay",
-      "description": "AfriPay Universal virtual host",
+      "name": "eazepay",
+      "description": "Eazepay Universal virtual host",
       "tags": [],
       "default_queue_type": "classic"
     }
@@ -41,17 +41,17 @@
     },
     {
       "user": "admin",
-      "vhost": "afripay",
+      "vhost": "eazepay",
       "configure": ".*",
       "write": ".*",
       "read": ".*"
     },
     {
-      "user": "afripay_user",
-      "vhost": "afripay",
-      "configure": "^afripay\\.",
-      "write": "^afripay\\.",
-      "read": "^afripay\\."
+      "user": "eazepay_user",
+      "vhost": "eazepay",
+      "configure": "^eazepay\\.",
+      "write": "^eazepay\\.",
+      "read": "^eazepay\\."
     }
   ],
   "topic_permissions": [],
@@ -59,14 +59,14 @@
   "global_parameters": [
     {
       "name": "cluster_name",
-      "value": "afripay-cluster"
+      "value": "eazepay-cluster"
     }
   ],
   "policies": [
     {
-      "vhost": "afripay",
+      "vhost": "eazepay",
       "name": "ha-all",
-      "pattern": "^afripay\\.",
+      "pattern": "^eazepay\\.",
       "apply-to": "all",
       "definition": {
         "ha-mode": "all",
@@ -77,12 +77,12 @@
       "priority": 0
     },
     {
-      "vhost": "afripay",
+      "vhost": "eazepay",
       "name": "dlx-policy",
-      "pattern": "^afripay\\..*\\.main$",
+      "pattern": "^eazepay\\..*\\.main$",
       "apply-to": "queues",
       "definition": {
-        "dead-letter-exchange": "afripay.dlx",
+        "dead-letter-exchange": "eazepay.dlx",
         "dead-letter-routing-key": "failed"
       },
       "priority": 1
@@ -90,32 +90,32 @@
   ],
   "queues": [
     {
-      "name": "afripay.transactions.pending",
-      "vhost": "afripay",
+      "name": "eazepay.transactions.pending",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
         "x-message-ttl": 3600000,
         "x-max-length": 10000,
-        "x-dead-letter-exchange": "afripay.dlx",
+        "x-dead-letter-exchange": "eazepay.dlx",
         "x-dead-letter-routing-key": "transactions.failed"
       }
     },
     {
-      "name": "afripay.transactions.processing",
-      "vhost": "afripay",
+      "name": "eazepay.transactions.processing",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
         "x-message-ttl": 1800000,
         "x-max-length": 5000,
-        "x-dead-letter-exchange": "afripay.dlx",
+        "x-dead-letter-exchange": "eazepay.dlx",
         "x-dead-letter-routing-key": "transactions.failed"
       }
     },
     {
-      "name": "afripay.transactions.completed",
-      "vhost": "afripay",
+      "name": "eazepay.transactions.completed",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
@@ -124,44 +124,44 @@
       }
     },
     {
-      "name": "afripay.notifications.sms",
-      "vhost": "afripay",
+      "name": "eazepay.notifications.sms",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
         "x-message-ttl": 300000,
         "x-max-length": 10000,
-        "x-dead-letter-exchange": "afripay.dlx",
+        "x-dead-letter-exchange": "eazepay.dlx",
         "x-dead-letter-routing-key": "notifications.failed"
       }
     },
     {
-      "name": "afripay.notifications.push",
-      "vhost": "afripay",
+      "name": "eazepay.notifications.push",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
         "x-message-ttl": 300000,
         "x-max-length": 10000,
-        "x-dead-letter-exchange": "afripay.dlx",
+        "x-dead-letter-exchange": "eazepay.dlx",
         "x-dead-letter-routing-key": "notifications.failed"
       }
     },
     {
-      "name": "afripay.notifications.email",
-      "vhost": "afripay",
+      "name": "eazepay.notifications.email",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
         "x-message-ttl": 1800000,
         "x-max-length": 5000,
-        "x-dead-letter-exchange": "afripay.dlx",
+        "x-dead-letter-exchange": "eazepay.dlx",
         "x-dead-letter-routing-key": "notifications.failed"
       }
     },
     {
-      "name": "afripay.biometric.enrollment",
-      "vhost": "afripay",
+      "name": "eazepay.biometric.enrollment",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
@@ -170,8 +170,8 @@
       }
     },
     {
-      "name": "afripay.biometric.verification",
-      "vhost": "afripay",
+      "name": "eazepay.biometric.verification",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
@@ -180,8 +180,8 @@
       }
     },
     {
-      "name": "afripay.agents.terminal.events",
-      "vhost": "afripay",
+      "name": "eazepay.agents.terminal.events",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
@@ -190,8 +190,8 @@
       }
     },
     {
-      "name": "afripay.analytics.events",
-      "vhost": "afripay",
+      "name": "eazepay.analytics.events",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
@@ -200,8 +200,8 @@
       }
     },
     {
-      "name": "afripay.audit.logs",
-      "vhost": "afripay",
+      "name": "eazepay.audit.logs",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
@@ -210,8 +210,8 @@
       }
     },
     {
-      "name": "afripay.ussd.sessions",
-      "vhost": "afripay",
+      "name": "eazepay.ussd.sessions",
+      "vhost": "eazepay",
       "durable": false,
       "auto_delete": false,
       "arguments": {
@@ -220,20 +220,20 @@
       }
     },
     {
-      "name": "afripay.fraud.detection",
-      "vhost": "afripay",
+      "name": "eazepay.fraud.detection",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
         "x-message-ttl": 1800000,
         "x-max-length": 20000,
-        "x-dead-letter-exchange": "afripay.dlx",
+        "x-dead-letter-exchange": "eazepay.dlx",
         "x-dead-letter-routing-key": "fraud.failed"
       }
     },
     {
-      "name": "afripay.dlq.failed",
-      "vhost": "afripay",
+      "name": "eazepay.dlq.failed",
+      "vhost": "eazepay",
       "durable": true,
       "auto_delete": false,
       "arguments": {
@@ -244,8 +244,8 @@
   ],
   "exchanges": [
     {
-      "name": "afripay.transactions",
-      "vhost": "afripay",
+      "name": "eazepay.transactions",
+      "vhost": "eazepay",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -253,8 +253,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.notifications",
-      "vhost": "afripay",
+      "name": "eazepay.notifications",
+      "vhost": "eazepay",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -262,8 +262,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.biometric",
-      "vhost": "afripay",
+      "name": "eazepay.biometric",
+      "vhost": "eazepay",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -271,8 +271,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.agents",
-      "vhost": "afripay",
+      "name": "eazepay.agents",
+      "vhost": "eazepay",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -280,8 +280,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.analytics",
-      "vhost": "afripay",
+      "name": "eazepay.analytics",
+      "vhost": "eazepay",
       "type": "fanout",
       "durable": true,
       "auto_delete": false,
@@ -289,8 +289,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.audit",
-      "vhost": "afripay",
+      "name": "eazepay.audit",
+      "vhost": "eazepay",
       "type": "fanout",
       "durable": true,
       "auto_delete": false,
@@ -298,8 +298,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.ussd",
-      "vhost": "afripay",
+      "name": "eazepay.ussd",
+      "vhost": "eazepay",
       "type": "direct",
       "durable": false,
       "auto_delete": false,
@@ -307,8 +307,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.fraud",
-      "vhost": "afripay",
+      "name": "eazepay.fraud",
+      "vhost": "eazepay",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -316,8 +316,8 @@
       "arguments": {}
     },
     {
-      "name": "afripay.dlx",
-      "vhost": "afripay",
+      "name": "eazepay.dlx",
+      "vhost": "eazepay",
       "type": "direct",
       "durable": true,
       "auto_delete": false,
@@ -327,121 +327,121 @@
   ],
   "bindings": [
     {
-      "source": "afripay.transactions",
-      "vhost": "afripay",
-      "destination": "afripay.transactions.pending",
+      "source": "eazepay.transactions",
+      "vhost": "eazepay",
+      "destination": "eazepay.transactions.pending",
       "destination_type": "queue",
       "routing_key": "transaction.created",
       "arguments": {}
     },
     {
-      "source": "afripay.transactions",
-      "vhost": "afripay",
-      "destination": "afripay.transactions.processing",
+      "source": "eazepay.transactions",
+      "vhost": "eazepay",
+      "destination": "eazepay.transactions.processing",
       "destination_type": "queue",
       "routing_key": "transaction.processing",
       "arguments": {}
     },
     {
-      "source": "afripay.transactions",
-      "vhost": "afripay",
-      "destination": "afripay.transactions.completed",
+      "source": "eazepay.transactions",
+      "vhost": "eazepay",
+      "destination": "eazepay.transactions.completed",
       "destination_type": "queue",
       "routing_key": "transaction.completed",
       "arguments": {}
     },
     {
-      "source": "afripay.transactions",
-      "vhost": "afripay",
-      "destination": "afripay.analytics",
+      "source": "eazepay.transactions",
+      "vhost": "eazepay",
+      "destination": "eazepay.analytics",
       "destination_type": "exchange",
       "routing_key": "transaction.*",
       "arguments": {}
     },
     {
-      "source": "afripay.notifications",
-      "vhost": "afripay",
-      "destination": "afripay.notifications.sms",
+      "source": "eazepay.notifications",
+      "vhost": "eazepay",
+      "destination": "eazepay.notifications.sms",
       "destination_type": "queue",
       "routing_key": "sms",
       "arguments": {}
     },
     {
-      "source": "afripay.notifications",
-      "vhost": "afripay",
-      "destination": "afripay.notifications.push",
+      "source": "eazepay.notifications",
+      "vhost": "eazepay",
+      "destination": "eazepay.notifications.push",
       "destination_type": "queue",
       "routing_key": "push",
       "arguments": {}
     },
     {
-      "source": "afripay.notifications",
-      "vhost": "afripay",
-      "destination": "afripay.notifications.email",
+      "source": "eazepay.notifications",
+      "vhost": "eazepay",
+      "destination": "eazepay.notifications.email",
       "destination_type": "queue",
       "routing_key": "email",
       "arguments": {}
     },
     {
-      "source": "afripay.biometric",
-      "vhost": "afripay",
-      "destination": "afripay.biometric.enrollment",
+      "source": "eazepay.biometric",
+      "vhost": "eazepay",
+      "destination": "eazepay.biometric.enrollment",
       "destination_type": "queue",
       "routing_key": "enrollment.*",
       "arguments": {}
     },
     {
-      "source": "afripay.biometric",
-      "vhost": "afripay",
-      "destination": "afripay.biometric.verification",
+      "source": "eazepay.biometric",
+      "vhost": "eazepay",
+      "destination": "eazepay.biometric.verification",
       "destination_type": "queue",
       "routing_key": "verification.*",
       "arguments": {}
     },
     {
-      "source": "afripay.agents",
-      "vhost": "afripay",
-      "destination": "afripay.agents.terminal.events",
+      "source": "eazepay.agents",
+      "vhost": "eazepay",
+      "destination": "eazepay.agents.terminal.events",
       "destination_type": "queue",
       "routing_key": "terminal.*",
       "arguments": {}
     },
     {
-      "source": "afripay.analytics",
-      "vhost": "afripay",
-      "destination": "afripay.analytics.events",
+      "source": "eazepay.analytics",
+      "vhost": "eazepay",
+      "destination": "eazepay.analytics.events",
       "destination_type": "queue",
       "routing_key": "",
       "arguments": {}
     },
     {
-      "source": "afripay.audit",
-      "vhost": "afripay",
-      "destination": "afripay.audit.logs",
+      "source": "eazepay.audit",
+      "vhost": "eazepay",
+      "destination": "eazepay.audit.logs",
       "destination_type": "queue",
       "routing_key": "",
       "arguments": {}
     },
     {
-      "source": "afripay.ussd",
-      "vhost": "afripay",
-      "destination": "afripay.ussd.sessions",
+      "source": "eazepay.ussd",
+      "vhost": "eazepay",
+      "destination": "eazepay.ussd.sessions",
       "destination_type": "queue",
       "routing_key": "session",
       "arguments": {}
     },
     {
-      "source": "afripay.fraud",
-      "vhost": "afripay",
-      "destination": "afripay.fraud.detection",
+      "source": "eazepay.fraud",
+      "vhost": "eazepay",
+      "destination": "eazepay.fraud.detection",
       "destination_type": "queue",
       "routing_key": "transaction.check",
       "arguments": {}
     },
     {
-      "source": "afripay.dlx",
-      "vhost": "afripay",
-      "destination": "afripay.dlq.failed",
+      "source": "eazepay.dlx",
+      "vhost": "eazepay",
+      "destination": "eazepay.dlq.failed",
       "destination_type": "queue",
       "routing_key": "failed",
       "arguments": {}

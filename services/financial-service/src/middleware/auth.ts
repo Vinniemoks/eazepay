@@ -1,4 +1,4 @@
-// Authentication middleware - now using shared @afripay/auth-middleware
+// Authentication middleware - now using shared @eazepay/auth-middleware
 // This file delegates to the shared authentication library
 
 export { 
@@ -6,4 +6,4 @@ export {
   AuthRequest,
   requireRole,
   requirePermission
-} from '@afripay/auth-middleware';
+} from '@eazepay/auth-middleware';

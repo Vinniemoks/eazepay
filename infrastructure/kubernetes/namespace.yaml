@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: afripay
+  name: eazepay
   labels:
-    name: afripay
+    name: eazepay
     environment: production

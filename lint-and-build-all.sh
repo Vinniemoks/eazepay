@@ -1,5 +1,5 @@
 #!/bin/bash
-# AfriPay Universal - Linting and Build Automation Script
+# Eazepay Universal - Linting and Build Automation Script
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -136,7 +136,7 @@ function build_go() {
 }
 
 function main() {
-  echo -e "${BLUE}🛠️ AfriPay Universal Lint & Build Automation${NC}"
+  echo -e "${BLUE}🛠️ Eazepay Universal Lint & Build Automation${NC}"
   echo "============================================="
 
   # Node.js services

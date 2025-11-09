@@ -1,7 +1,7 @@
 // Analytics routes
 import { Router } from 'express';
 import { AnalyticsController } from '../controllers/AnalyticsController';
-import { authenticate } from '@afripay/auth-middleware';
+import { authenticate } from '@eazepay/auth-middleware';
 import { requirePermission } from '../middleware/permissions';
 import { getAnalyticsValidator } from '../middleware/validators';
 

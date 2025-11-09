@@ -17,7 +17,7 @@ class DatabaseService:
                 port=int(os.getenv('DB_PORT', '5432')),
                 user=os.getenv('DB_USER', 'developer'),
                 password=os.getenv('DB_PASS', 'dev_password_2024!'),
-                database=os.getenv('DB_NAME', 'afripay_dev'),
+                database=os.getenv('DB_NAME', 'eazepay_dev'),
                 min_size=5,
                 max_size=20
             )

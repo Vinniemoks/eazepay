@@ -79,8 +79,8 @@ export async function verifyAccessTokenSecure(
     // Verify token with enhanced security options
     const payload = jwt.verify(token, secret!, {
       algorithms: ['HS256'], // Explicitly specify allowed algorithms
-      issuer: 'afripay-identity-service',
-      audience: 'afripay-services',
+      issuer: 'eazepay-identity-service',
+      audience: 'eazepay-services',
       clockTolerance: 30, // 30 second clock skew tolerance
       maxAge: '8h', // Maximum token age
     }) as AccessTokenPayload;

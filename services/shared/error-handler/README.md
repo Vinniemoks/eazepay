@@ -1,6 +1,6 @@
-# @afripay/error-handler
+# @eazepay/error-handler
 
-Centralized error handling for AfriPay microservices with consistent error responses, proper logging, and error tracking.
+Centralized error handling for Eazepay microservices with consistent error responses, proper logging, and error tracking.
 
 ## Features
 
@@ -42,7 +42,7 @@ import {
   initializeErrorHandler,
   setupUnhandledRejectionHandler,
   setupUncaughtExceptionHandler
-} from '@afripay/error-handler';
+} from '@eazepay/error-handler';
 import logger from './utils/logger';
 
 const app = express();
@@ -74,7 +74,7 @@ import {
   ValidationError,
   UnauthorizedError,
   BadRequestError
-} from '@afripay/error-handler';
+} from '@eazepay/error-handler';
 
 // In your route handler
 app.get('/users/:id', async (req, res) => {
@@ -91,7 +91,7 @@ app.get('/users/:id', async (req, res) => {
 ### 3. Wrap Async Handlers
 
 ```typescript
-import { asyncHandler } from '@afripay/error-handler';
+import { asyncHandler } from '@eazepay/error-handler';
 
 // Automatically catches async errors
 app.get('/users', asyncHandler(async (req, res) => {
@@ -256,7 +256,7 @@ enum ErrorCode {
 ### Custom Error Classes
 
 ```typescript
-import { AppError, ErrorCode } from '@afripay/error-handler';
+import { AppError, ErrorCode } from '@eazepay/error-handler';
 
 class PaymentDeclinedError extends AppError {
   constructor(reason: string) {
@@ -295,7 +295,7 @@ throw new InsufficientBalanceError(
 Wrap async route handlers:
 
 ```typescript
-import { asyncHandler } from '@afripay/error-handler';
+import { asyncHandler } from '@eazepay/error-handler';
 
 router.get('/users', asyncHandler(async (req, res) => {
   const users = await User.find();
@@ -379,7 +379,7 @@ Setup handlers for unhandled errors:
 import {
   setupUnhandledRejectionHandler,
   setupUncaughtExceptionHandler
-} from '@afripay/error-handler';
+} from '@eazepay/error-handler';
 
 // Handle unhandled promise rejections
 setupUnhandledRejectionHandler(logger);
@@ -443,7 +443,7 @@ throw new InternalServerError('Unexpected error');
 ## Testing
 
 ```typescript
-import { NotFoundError, ValidationError } from '@afripay/error-handler';
+import { NotFoundError, ValidationError } from '@eazepay/error-handler';
 
 describe('Error Handling', () => {
   it('should throw NotFoundError', () => {
@@ -489,7 +489,7 @@ app.get('/users/:id', async (req, res) => {
 ### After
 
 ```typescript
-import { asyncHandler, NotFoundError } from '@afripay/error-handler';
+import { asyncHandler, NotFoundError } from '@eazepay/error-handler';
 
 app.get('/users/:id', asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -512,4 +512,4 @@ For issues or questions:
 
 **Version**: 1.0.0  
 **License**: MIT  
-**Maintained By**: AfriPay DevOps Team
+**Maintained By**: Eazepay DevOps Team

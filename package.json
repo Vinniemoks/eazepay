@@ -1,7 +1,7 @@
 {
-  "name": "afripay-universal",
+  "name": "eazepay-universal",
   "version": "1.0.0",
-  "description": "AfriPay Universal Payment Platform",
+  "description": "Eazepay Universal Payment Platform",
   "scripts": {
     "start:customer": "cd services/customer-portal && npm run dev",
     "start:agent": "cd services/agent-portal && npm run dev",
@@ -27,6 +27,6 @@
     "blockchain",
     "wallet"
   ],
-  "author": "AfriPay Team",
+  "author": "Eazepay Team",
   "license": "MIT"
 }

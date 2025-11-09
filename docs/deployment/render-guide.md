@@ -85,7 +85,7 @@ git push -u origin main
 2. Select **"PostgreSQL"**
 3. Fill in details:
    - **Name**: `eazepay-postgres`
-   - **Database**: `afripay_dev`
+   - **Database**: `eazepay_dev`
    - **User**: `developer` (auto-generated)
    - **Region**: Choose closest to you (e.g., Oregon, Frankfurt)
    - **Plan**: **Free** (90 days)
@@ -101,7 +101,7 @@ Render will show you:
 
 Example:
 ```
-postgresql://developer:password@dpg-xxxxx-a.oregon-postgres.render.com/afripay_dev
+postgresql://developer:password@dpg-xxxxx-a.oregon-postgres.render.com/eazepay_dev
 ```
 
 ---
@@ -164,7 +164,7 @@ PORT=8000
 # Database (use your Internal Database URL from Step 3)
 DB_HOST=dpg-xxxxx-a.oregon-postgres.render.com
 DB_PORT=5432
-DB_NAME=afripay_dev
+DB_NAME=eazepay_dev
 DB_USER=developer
 DB_PASS=your_password_from_render
 
@@ -214,7 +214,7 @@ PORT=8010
 LOG_LEVEL=INFO
 POSTGRES_HOST=dpg-xxxxx-a.oregon-postgres.render.com
 POSTGRES_PORT=5432
-POSTGRES_DB=afripay_dev
+POSTGRES_DB=eazepay_dev
 POSTGRES_USER=developer
 POSTGRES_PASSWORD=your_password
 REDIS_HOST=red-xxxxx
@@ -244,7 +244,7 @@ NODE_ENV=production
 PORT=8020
 POSTGRES_HOST=dpg-xxxxx-a.oregon-postgres.render.com
 POSTGRES_PORT=5432
-POSTGRES_DB=afripay_dev
+POSTGRES_DB=eazepay_dev
 POSTGRES_USER=developer
 POSTGRES_PASSWORD=your_password
 REDIS_HOST=red-xxxxx
@@ -299,7 +299,7 @@ IDENTITY_SERVICE_URL=https://eazepay-identity.onrender.com
 BIOMETRIC_SERVICE_URL=https://eazepay-biometric.onrender.com
 POSTGRES_HOST=dpg-xxxxx-a.oregon-postgres.render.com
 POSTGRES_PORT=5432
-POSTGRES_DB=afripay_dev
+POSTGRES_DB=eazepay_dev
 POSTGRES_USER=developer
 POSTGRES_PASSWORD=your_password
 REDIS_HOST=red-xxxxx
@@ -325,7 +325,7 @@ REDIS_PASSWORD=your_redis_password
 ```env
 SPRING_PROFILES_ACTIVE=production
 SERVER_PORT=8002
-SPRING_DATASOURCE_URL=jdbc:postgresql://dpg-xxxxx-a.oregon-postgres.render.com:5432/afripay_dev
+SPRING_DATASOURCE_URL=jdbc:postgresql://dpg-xxxxx-a.oregon-postgres.render.com:5432/eazepay_dev
 SPRING_DATASOURCE_USERNAME=developer
 SPRING_DATASOURCE_PASSWORD=your_password
 SPRING_REDIS_HOST=red-xxxxx

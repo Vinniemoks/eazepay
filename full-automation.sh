@@ -10,7 +10,7 @@
   # CI/CD integration: set exit code for pipeline
   EXIT_CODE=0
 #!/bin/bash
-# AfriPay Universal - Full Automation Script
+# Eazepay Universal - Full Automation Script
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -29,7 +29,7 @@ function validate_api_contract() {
           echo -e "${GREEN}✅ $spec is valid in $dir${NC}"
 
       #!/bin/bash
-      # AfriPay Universal - Full Automation Script (Refactored)
+      # Eazepay Universal - Full Automation Script (Refactored)
 
       RED='\033[0;31m'
       GREEN='\033[0;32m'
@@ -215,15 +215,15 @@ function validate_api_contract() {
 
       # Slack/Webhook notifications
       if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
-        curl -X POST -H 'Content-type: application/json' --data '{"text":"AfriPay Automation Results '$ENV' - See attached log."}' "$SLACK_WEBHOOK_URL"
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"Eazepay Automation Results '$ENV' - See attached log."}' "$SLACK_WEBHOOK_URL"
       fi
       if [ ! -z "$WEBHOOK_URL" ]; then
-        curl -X POST -H 'Content-type: application/json' --data '{"result":"AfriPay Automation Results '$ENV'","log":"'$LOGFILE'"}' "$WEBHOOK_URL"
+        curl -X POST -H 'Content-type: application/json' --data '{"result":"Eazepay Automation Results '$ENV'","log":"'$LOGFILE'"}' "$WEBHOOK_URL"
       fi
 
       # Email notification: send log summary if EMAIL_TO is set
       if [ ! -z "$EMAIL_TO" ]; then
-        SUBJECT="AfriPay Automation Results $ENV $(date +%Y-%m-%d)"
+        SUBJECT="Eazepay Automation Results $ENV $(date +%Y-%m-%d)"
         RECIPIENTS="$EMAIL_TO"
         [ ! -z "$EMAIL_CC" ] && RECIPIENTS="$RECIPIENTS,$EMAIL_CC"
         [ ! -z "$EMAIL_BCC" ] && RECIPIENTS="$RECIPIENTS,$EMAIL_BCC"

@@ -1,6 +1,6 @@
 # Identity Service
 
-The Identity Service provides user onboarding, authentication, and KYC orchestration for AfriPay. It is built with Node.js, Express, and TypeORM.
+The Identity Service provides user onboarding, authentication, and KYC orchestration for Eazepay. It is built with Node.js, Express, and TypeORM.
 
 ## Prerequisites
 
@@ -21,7 +21,7 @@ The service reads configuration from `.env`:
 | `DB_PORT` | Shared PostgreSQL port | `5432` |
 | `DB_USER` | Shared PostgreSQL user | `developer` |
 | `DB_PASS` | Shared PostgreSQL password | `dev_password_2024!` |
-| `DB_NAME` | Shared database name | `afripay_dev` |
+| `DB_NAME` | Shared database name | `eazepay_dev` |
 | `IDENTITY_DB_NAME` | Identity-specific schema/database | `identity_service_dev` |
 | `IDENTITY_DB_USER` | Identity-specific DB user | `developer` |
 | `IDENTITY_DB_PASS` | Identity-specific DB password | `dev_password_2024!` |

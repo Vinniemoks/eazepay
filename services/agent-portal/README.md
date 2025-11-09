@@ -1,6 +1,6 @@
 # Agent Portal
 
-Agent-facing web application for AfriPay agents to manage customers, transactions, and commissions.
+Agent-facing web application for Eazepay agents to manage customers, transactions, and commissions.
 
 ## Features
 
@@ -31,6 +31,6 @@ Access at http://localhost:3002
 
 ```bash
 npm run build
-docker build -t afripay/agent-portal .
-docker run -p 3002:80 afripay/agent-portal
+docker build -t eazepay/agent-portal .
+docker run -p 3002:80 eazepay/agent-portal
 ```

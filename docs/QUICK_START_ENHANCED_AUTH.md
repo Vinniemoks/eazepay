@@ -235,7 +235,7 @@ JWT_SECRET=<generated_secret>
 
 ### Module Not Found Error
 
-**Error:** `Cannot find module '@afripay/auth-middleware'`
+**Error:** `Cannot find module '@eazepay/auth-middleware'`
 
 **Solution:**
 ```bash
@@ -249,7 +249,7 @@ npm link
 
 # In identity-service
 cd ../../identity-service
-npm link @afripay/auth-middleware
+npm link @eazepay/auth-middleware
 ```
 
 ### Database Connection Error

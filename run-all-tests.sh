@@ -1,5 +1,5 @@
 #!/bin/bash
-# AfriPay Universal - Automated Test Runner for All Microservices
+# Eazepay Universal - Automated Test Runner for All Microservices
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -72,7 +72,7 @@ function run_go_tests() {
 }
 
 function main() {
-  echo -e "${BLUE}🔬 AfriPay Universal Automated Test Runner${NC}"
+  echo -e "${BLUE}🔬 Eazepay Universal Automated Test Runner${NC}"
   echo "========================================="
 
   # Node.js services

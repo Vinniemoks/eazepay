@@ -12,7 +12,7 @@
 
 ## Solution Implemented
 
-Created `@afripay/migrations` - a centralized database migration system with TypeORM support.
+Created `@eazepay/migrations` - a centralized database migration system with TypeORM support.
 
 ### What Was Created
 
@@ -299,7 +299,7 @@ npm install file:../shared/migrations
 
 ```typescript
 // src/scripts/migrate.ts
-import { MigrationRunner } from '@afripay/migrations';
+import { MigrationRunner } from '@eazepay/migrations';
 import { AppDataSource } from '../config/database';
 import logger from '../utils/logger';
 

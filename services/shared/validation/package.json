@@ -1,7 +1,7 @@
 {
-  "name": "@afripay/validation",
+  "name": "@eazepay/validation",
   "version": "1.0.0",
-  "description": "Centralized input validation for AfriPay microservices",
+  "description": "Centralized input validation for Eazepay microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

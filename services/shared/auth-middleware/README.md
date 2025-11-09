@@ -1,6 +1,6 @@
-# @afripay/auth-middleware
+# @eazepay/auth-middleware
 
-Shared authentication and authorization middleware for AfriPay microservices.
+Shared authentication and authorization middleware for Eazepay microservices.
 
 ## Features
 
@@ -33,7 +33,7 @@ npm install file:../shared/auth-middleware
 
 ```typescript
 import express from 'express';
-import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
+import { JWTService, initializeAuth, authenticate } from '@eazepay/auth-middleware';
 
 const app = express();
 
@@ -41,8 +41,8 @@ const app = express();
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET!,
   jwtExpiresIn: '8h',
-  issuer: 'afripay-services',
-  audience: 'afripay-services'
+  issuer: 'eazepay-services',
+  audience: 'eazepay-services'
 });
 
 // Initialize auth middleware
@@ -55,7 +55,7 @@ app.use('/api/protected', authenticate);
 ### 2. Generate Tokens
 
 ```typescript
-import { JWTService } from '@afripay/auth-middleware';
+import { JWTService } from '@eazepay/auth-middleware';
 
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET!
@@ -77,7 +77,7 @@ const refreshToken = jwtService.generateRefreshToken(user.id, session.id);
 ### 3. Authentication Middleware
 
 ```typescript
-import { authenticate, optionalAuth } from '@afripay/auth-middleware';
+import { authenticate, optionalAuth } from '@eazepay/auth-middleware';
 
 // Require authentication
 app.get('/api/profile', authenticate, (req, res) => {
@@ -97,7 +97,7 @@ app.get('/api/public', optionalAuth, (req, res) => {
 ### 4. Role-Based Authorization
 
 ```typescript
-import { authenticate, requireRole, requireAnyRole, UserRole } from '@afripay/auth-middleware';
+import { authenticate, requireRole, requireAnyRole, UserRole } from '@eazepay/auth-middleware';
 
 // Require specific role
 app.get('/api/admin', authenticate, requireRole(UserRole.ADMIN), (req, res) => {
@@ -114,7 +114,7 @@ app.get('/api/management',
 );
 
 // Convenience methods
-import { requireSuperuser, requireAdmin, requireManager } from '@afripay/auth-middleware';
+import { requireSuperuser, requireAdmin, requireManager } from '@eazepay/auth-middleware';
 
 app.get('/api/superuser', authenticate, requireSuperuser(), handler);
 app.get('/api/admin', authenticate, requireAdmin(), handler);
@@ -124,7 +124,7 @@ app.get('/api/manager', authenticate, requireManager(), handler);
 ### 5. Permission-Based Authorization
 
 ```typescript
-import { authenticate, requirePermission, requireAnyPermission } from '@afripay/auth-middleware';
+import { authenticate, requirePermission, requireAnyPermission } from '@eazepay/auth-middleware';
 
 // Require specific permission
 app.get('/api/users', 
@@ -148,7 +148,7 @@ app.post('/api/transactions',
 ### 6. Session Validation
 
 ```typescript
-import { JWTService, initializeAuth } from '@afripay/auth-middleware';
+import { JWTService, initializeAuth } from '@eazepay/auth-middleware';
 
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET!,
@@ -166,7 +166,7 @@ initializeAuth(jwtService);
 ### 7. Access User Info in Routes
 
 ```typescript
-import { AuthRequest } from '@afripay/auth-middleware';
+import { AuthRequest } from '@eazepay/auth-middleware';
 
 app.get('/api/profile', authenticate, (req: AuthRequest, res) => {
   const user = req.user!;
@@ -261,8 +261,8 @@ JWT_SECRET=your-super-secret-key-min-32-chars
 
 # Optional
 JWT_EXPIRES_IN=8h
-JWT_ISSUER=afripay-services
-JWT_AUDIENCE=afripay-services
+JWT_ISSUER=eazepay-services
+JWT_AUDIENCE=eazepay-services
 ```
 
 ## Security Best Practices
@@ -294,7 +294,7 @@ export const authMiddleware = (req, res, next) => {
 
 ```typescript
 // financial-service/src/index.ts
-import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
+import { JWTService, initializeAuth, authenticate } from '@eazepay/auth-middleware';
 
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET!
@@ -308,7 +308,7 @@ app.use('/api', authenticate);
 ## Testing
 
 ```typescript
-import { JWTService } from '@afripay/auth-middleware';
+import { JWTService } from '@eazepay/auth-middleware';
 
 describe('JWTService', () => {
   const jwtService = new JWTService({
@@ -347,4 +347,4 @@ User doesn't have required permission. Check token payload.
 
 **Version**: 1.0.0  
 **License**: MIT  
-**Maintained By**: AfriPay DevOps Team
+**Maintained By**: Eazepay DevOps Team

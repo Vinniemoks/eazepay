@@ -8,8 +8,8 @@ export class JWTService {
   constructor(config: AuthConfig) {
     this.config = {
       jwtExpiresIn: '8h',
-      issuer: 'afripay-services',
-      audience: 'afripay-services',
+      issuer: 'eazepay-services',
+      audience: 'eazepay-services',
       validateSession: false,
       sessionValidator: async () => true,
       ...config

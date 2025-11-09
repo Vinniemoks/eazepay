@@ -1,6 +1,6 @@
 # Robotics Service
 
-AfriPay Robotics Service for managing robotic payment terminals and automated transaction processing.
+Eazepay Robotics Service for managing robotic payment terminals and automated transaction processing.
 
 ## Features
 

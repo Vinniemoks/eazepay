@@ -4,7 +4,7 @@ import { validateRequest } from '../middleware/validation';
 import { 
   createAuthRateLimiter, 
   create2FALimiter 
-} from '@afripay/auth-middleware';
+} from '@eazepay/auth-middleware';
 import redisClient from '../config/redis';
 import {
   registerSchema,

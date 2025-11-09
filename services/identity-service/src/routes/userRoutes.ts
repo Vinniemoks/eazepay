@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import Joi from 'joi';
-import { validateParams, commonSchemas } from '@afripay/validation';
+import { validateParams, commonSchemas } from '@eazepay/validation';
 
 const router = Router();
 

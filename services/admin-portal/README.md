@@ -1,4 +1,4 @@
-# AfriPay Admin Portal
+# Eazepay Admin Portal
 
 Enterprise-grade admin portal for superusers and administrators with royal yellow/gold theme.
 
@@ -60,8 +60,8 @@ npm run preview # Preview production build
 ## Docker
 
 ```bash
-docker build -t afripay-admin-portal .
-docker run -p 3001:80 afripay-admin-portal
+docker build -t eazepay-admin-portal .
+docker run -p 3001:80 eazepay-admin-portal
 ```
 
 ## Environment Variables
@@ -69,7 +69,7 @@ docker run -p 3001:80 afripay-admin-portal
 Create a `.env` file:
 ```
 VITE_API_URL=http://localhost:8000
-VITE_APP_NAME=AfriPay Admin Portal
+VITE_APP_NAME=Eazepay Admin Portal
 ```
 
 ## Color Palette

@@ -13,7 +13,7 @@ export const AgentDataSource = new DataSource({
   port: parseInt(process.env.DB_PORT || '5432', 10),
   username: process.env.DB_USER || 'developer',
   password: process.env.DB_PASS || 'dev_password_2024!',
-  database: process.env.DB_NAME || 'afripay_dev',
+  database: process.env.DB_NAME || 'eazepay_dev',
   entities: [Agent, AgentTerminal, AgentTransaction],
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',

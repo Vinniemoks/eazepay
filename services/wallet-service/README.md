@@ -1,6 +1,6 @@
 # Wallet Service
 
-A Go microservice for digital wallet management in AfriPay.
+A Go microservice for digital wallet management in Eazepay.
 
 ## Endpoints
 - `GET /health` — Health check

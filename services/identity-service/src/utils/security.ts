@@ -38,8 +38,8 @@ export function generateAccessToken(user: User, sessionId: string, permissions: 
 
   return jwt.sign(payload, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
-    issuer: 'afripay-identity-service',
-    audience: 'afripay-services'
+    issuer: 'eazepay-identity-service',
+    audience: 'eazepay-services'
   });
 }
 
@@ -65,8 +65,8 @@ export function generateTokenPair(user: User, sessionId: string, permissions: st
 export function verifyAccessToken(token: string): TokenPayload {
   try {
     return jwt.verify(token, JWT_SECRET, {
-      issuer: 'afripay-identity-service',
-      audience: 'afripay-services'
+      issuer: 'eazepay-identity-service',
+      audience: 'eazepay-services'
     }) as TokenPayload;
   } catch (error) {
     throw new Error('Invalid or expired token');
@@ -76,7 +76,7 @@ export function verifyAccessToken(token: string): TokenPayload {
 // Generate TOTP secret for 2FA
 export function generateTwoFactorSecret(): string {
   const secret = speakeasy.generateSecret({
-    name: 'AfriPay',
+    name: 'Eazepay',
     length: 32
   });
   return secret.base32;

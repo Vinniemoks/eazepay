@@ -1,7 +1,7 @@
 // Blockchain Service - Main Entry Point (Mock Mode)
 import express, { Request, Response } from 'express';
-import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
-import { validateRequest, validateParams, validateQuery, joi, commonSchemas } from '@afripay/validation';
+import { JWTService, initializeAuth, authenticate } from '@eazepay/auth-middleware';
+import { validateRequest, validateParams, validateQuery, joi, commonSchemas } from '@eazepay/validation';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 // @ts-ignore
@@ -59,8 +59,8 @@ app.use(express.json());
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
   jwtExpiresIn: '8h',
-  issuer: 'afripay-services',
-  audience: 'afripay-services'
+  issuer: 'eazepay-services',
+  audience: 'eazepay-services'
 });
 initializeAuth(jwtService);
 

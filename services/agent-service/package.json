@@ -1,7 +1,7 @@
 {
   "name": "agent-service",
   "version": "1.0.0",
-  "description": "AfriPay Agent Service",
+  "description": "Eazepay Agent Service",
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",

@@ -2,7 +2,7 @@
 
 ## Task Overview
 
-This implementation plan breaks down the enterprise admin/superuser portal into incremental, testable tasks. Each task builds on previous work and integrates into the existing AfriPay system.
+This implementation plan breaks down the enterprise admin/superuser portal into incremental, testable tasks. Each task builds on previous work and integrates into the existing Eazepay system.
 
 ---
 

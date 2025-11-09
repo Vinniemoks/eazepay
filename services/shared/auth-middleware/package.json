@@ -1,7 +1,7 @@
 {
-  "name": "@afripay/auth-middleware",
+  "name": "@eazepay/auth-middleware",
   "version": "1.0.0",
-  "description": "Shared authentication and authorization middleware for AfriPay services",
+  "description": "Shared authentication and authorization middleware for Eazepay services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

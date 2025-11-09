@@ -123,7 +123,7 @@ npm run dev
 curl -X POST http://localhost:8000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "superuser@afripay.com",
+    "email": "superuser@eazepay.com",
     "phone": "+254712345678",
     "password": "SecurePass123!",
     "fullName": "Super User",
@@ -138,7 +138,7 @@ curl -X POST http://localhost:8000/api/auth/register \
 curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "superuser@afripay.com",
+    "email": "superuser@eazepay.com",
     "password": "SecurePass123!"
   }'
 ```
@@ -149,7 +149,7 @@ curl -X POST http://localhost:8000/api/admin/users \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
-    "email": "manager@afripay.com",
+    "email": "manager@eazepay.com",
     "phone": "+254712345679",
     "password": "SecurePass123!",
     "fullName": "Finance Manager",

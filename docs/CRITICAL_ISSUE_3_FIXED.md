@@ -14,7 +14,7 @@
 
 ## Solution Implemented
 
-Created `@afripay/error-handler` - a centralized error handling system with consistent responses and proper logging.
+Created `@eazepay/error-handler` - a centralized error handling system with consistent responses and proper logging.
 
 ### What Was Created
 
@@ -145,7 +145,7 @@ Automatically redacts sensitive fields:
 ### 6. Async Error Handling
 
 ```typescript
-import { asyncHandler } from '@afripay/error-handler';
+import { asyncHandler } from '@eazepay/error-handler';
 
 // Automatically catches async errors
 router.get('/users', asyncHandler(async (req, res) => {
@@ -193,7 +193,7 @@ Every error includes a unique request ID for tracing.
 ### Basic Usage
 
 ```typescript
-import { NotFoundError, ValidationError } from '@afripay/error-handler';
+import { NotFoundError, ValidationError } from '@eazepay/error-handler';
 
 // In route handler
 app.get('/users/:id', async (req, res) => {
@@ -210,7 +210,7 @@ app.get('/users/:id', async (req, res) => {
 ### With Async Handler
 
 ```typescript
-import { asyncHandler, NotFoundError } from '@afripay/error-handler';
+import { asyncHandler, NotFoundError } from '@eazepay/error-handler';
 
 router.get('/users/:id', asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -224,7 +224,7 @@ router.get('/users/:id', asyncHandler(async (req, res) => {
 ### Business Logic Errors
 
 ```typescript
-import { InsufficientBalanceError } from '@afripay/error-handler';
+import { InsufficientBalanceError } from '@eazepay/error-handler';
 
 // Check balance
 if (wallet.balance < amount) {
@@ -239,7 +239,7 @@ if (wallet.balance < amount) {
 ### Validation Errors
 
 ```typescript
-import { ValidationError } from '@afripay/error-handler';
+import { ValidationError } from '@eazepay/error-handler';
 
 throw new ValidationError('Validation failed', [
   { field: 'email', message: 'Invalid email format' },
@@ -322,7 +322,7 @@ import {
   initializeErrorHandler,
   setupUnhandledRejectionHandler,
   setupUncaughtExceptionHandler
-} from '@afripay/error-handler';
+} from '@eazepay/error-handler';
 import logger from './utils/logger';
 
 // Initialize
@@ -338,7 +338,7 @@ app.use(errorHandler);
 ### 4. Use in Routes
 
 ```typescript
-import { NotFoundError, asyncHandler } from '@afripay/error-handler';
+import { NotFoundError, asyncHandler } from '@eazepay/error-handler';
 
 router.get('/users/:id', asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -377,7 +377,7 @@ app.get('/users/:id', async (req, res) => {
 ### After
 
 ```typescript
-import { asyncHandler, NotFoundError } from '@afripay/error-handler';
+import { asyncHandler, NotFoundError } from '@eazepay/error-handler';
 
 app.get('/users/:id', asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);

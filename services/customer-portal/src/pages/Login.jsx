@@ -145,7 +145,7 @@ export default function Login() {
         <div style={styles.logo}>
           <div style={styles.logoIcon}>💰</div>
           <h1 style={styles.title}>Welcome Back</h1>
-          <p style={styles.subtitle}>Sign in to your AfriPay account</p>
+          <p style={styles.subtitle}>Sign in to your Eazepay account</p>
         </div>
 
         {error && <div style={styles.error}>{error}</div>}

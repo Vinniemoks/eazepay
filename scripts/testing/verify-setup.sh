@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# AfriPay Universal - Setup Verification Script
+# Eazepay Universal - Setup Verification Script
 # This script verifies that all services are running correctly
 
-echo "🔍 Verifying AfriPay Universal Setup..."
+echo "🔍 Verifying Eazepay Universal Setup..."
 
 # Colors for output
 RED='\033[0;31m'
@@ -54,25 +54,25 @@ check_database() {
     
     case $db_name in
         "PostgreSQL")
-            if docker exec afripay-postgres pg_isready -h localhost -p 5432 -U developer > /dev/null 2>&1; then
+            if docker exec eazepay-postgres pg_isready -h localhost -p 5432 -U developer > /dev/null 2>&1; then
                 echo -e "${GREEN}✅ $db_name is ready${NC}"
                 return 0
             fi
             ;;
         "Redis")
-            if docker exec afripay-redis redis-cli ping > /dev/null 2>&1; then
+            if docker exec eazepay-redis redis-cli ping > /dev/null 2>&1; then
                 echo -e "${GREEN}✅ $db_name is ready${NC}"
                 return 0
             fi
             ;;
         "MongoDB")
-            if docker exec afripay-mongo mongosh --quiet --eval "db.runCommand('ping')" > /dev/null 2>&1; then
+            if docker exec eazepay-mongo mongosh --quiet --eval "db.runCommand('ping')" > /dev/null 2>&1; then
                 echo -e "${GREEN}✅ $db_name is ready${NC}"
                 return 0
             fi
             ;;
         "RabbitMQ")
-            if docker exec afripay-rabbitmq rabbitmq-diagnostics -q ping > /dev/null 2>&1; then
+            if docker exec eazepay-rabbitmq rabbitmq-diagnostics -q ping > /dev/null 2>&1; then
                 echo -e "${GREEN}✅ $db_name is ready${NC}"
                 return 0
             fi
@@ -146,7 +146,7 @@ test_apis() {
 }
 
 # Main verification process
-echo -e "${BLUE}🏗️  AfriPay Universal Setup Verification${NC}"
+echo -e "${BLUE}🏗️  Eazepay Universal Setup Verification${NC}"
 echo "========================================"
 
 # Check if Docker is running
@@ -184,18 +184,18 @@ echo -e "${BLUE}🎯 Verification Summary:${NC}"
 echo "========================================"
 
 # Count running containers
-local running_containers=$(docker ps --filter "name=afripay-" --format "{{.Names}}" | wc -l)
-echo "• Running AfriPay containers: $running_containers"
+local running_containers=$(docker ps --filter "name=eazepay-" --format "{{.Names}}" | wc -l)
+echo "• Running Eazepay containers: $running_containers"
 
 # Check Docker volumes
-local volumes=$(docker volume ls --filter "name=afripay-universal" --format "{{.Name}}" | wc -l)
+local volumes=$(docker volume ls --filter "name=eazepay-universal" --format "{{.Name}}" | wc -l)
 echo "• Data volumes created: $volumes"
 
 # Check network
-if docker network ls | grep -q "afripay-network"; then
-    echo -e "• Docker network: ${GREEN}afripay-network created${NC}"
+if docker network ls | grep -q "eazepay-network"; then
+    echo -e "• Docker network: ${GREEN}eazepay-network created${NC}"
 else
-    echo -e "• Docker network: ${RED}afripay-network missing${NC}"
+    echo -e "• Docker network: ${RED}eazepay-network missing${NC}"
 fi
 
 echo ""
@@ -208,5 +208,5 @@ echo "3. Start developing additional services"
 echo "4. Run integration tests: ./scripts/testing/integration-test.sh"
 echo "5. Run unit tests: ./scripts/testing/unit-test.sh"
 echo "6. Monitor services with Prometheus and Grafana"
-echo ""echo -e "${BLUE}Thank you for using AfriPay Universal!${NC}"
+echo ""echo -e "${BLUE}Thank you for using Eazepay Universal!${NC}"
 echo ""

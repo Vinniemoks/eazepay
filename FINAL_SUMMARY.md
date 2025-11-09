@@ -209,8 +209,8 @@ REDIS_PORT=6379
 
 # Email (Development Mode)
 EMAIL_PROVIDER=development
-EMAIL_FROM=noreply@afripay.com
-APP_NAME=AfriPay
+EMAIL_FROM=noreply@eazepay.com
+APP_NAME=Eazepay
 APP_URL=http://localhost:3000
 ```
 

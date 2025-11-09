@@ -240,17 +240,17 @@ npm run dev  # Port 3002
 
 ```bash
 # Build
-docker build -t afripay-admin-portal services/admin-portal
+docker build -t eazepay-admin-portal services/admin-portal
 
 # Run
-docker run -p 3001:80 afripay-admin-portal
+docker run -p 3001:80 eazepay-admin-portal
 ```
 
 ## Environment Variables
 
 ```env
 VITE_API_URL=http://localhost:8000
-VITE_APP_NAME=AfriPay Admin Portal
+VITE_APP_NAME=Eazepay Admin Portal
 ```
 
 ## Files Created

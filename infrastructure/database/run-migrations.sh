@@ -7,10 +7,10 @@ set -e
 # Database connection details
 DB_HOST=${DB_HOST:-localhost}
 DB_PORT=${DB_PORT:-5433}
-DB_NAME=${DB_NAME:-afripay_dev}
+DB_NAME=${DB_NAME:-eazepay_dev}
 DB_USER=${DB_USER:-developer}
 
-echo "🚀 Running AfriPay Database Migrations..."
+echo "🚀 Running Eazepay Database Migrations..."
 echo "Database: $DB_NAME on $DB_HOST:$DB_PORT"
 echo ""
 

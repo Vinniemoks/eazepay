@@ -12,7 +12,7 @@
 
 ## Solution Implemented
 
-Created `@afripay/auth-middleware` - a centralized, secure authentication library.
+Created `@eazepay/auth-middleware` - a centralized, secure authentication library.
 
 ### What Was Created
 
@@ -83,13 +83,13 @@ services/shared/auth-middleware/
 ### Initialize in Service
 
 ```typescript
-import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
+import { JWTService, initializeAuth, authenticate } from '@eazepay/auth-middleware';
 
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET!,
   jwtExpiresIn: '8h',
-  issuer: 'afripay-services',
-  audience: 'afripay-services'
+  issuer: 'eazepay-services',
+  audience: 'eazepay-services'
 });
 
 initializeAuth(jwtService);
@@ -98,7 +98,7 @@ initializeAuth(jwtService);
 ### Use in Routes
 
 ```typescript
-import { authenticate, requireRole, requirePermission, UserRole } from '@afripay/auth-middleware';
+import { authenticate, requireRole, requirePermission, UserRole } from '@eazepay/auth-middleware';
 
 // Require authentication
 app.get('/api/profile', authenticate, handler);
@@ -187,8 +187,8 @@ JWT_SECRET=your-super-secret-key-min-32-chars
 
 # Optional
 JWT_EXPIRES_IN=8h
-JWT_ISSUER=afripay-services
-JWT_AUDIENCE=afripay-services
+JWT_ISSUER=eazepay-services
+JWT_AUDIENCE=eazepay-services
 ```
 
 ### Recommended JWT Secret
@@ -234,7 +234,7 @@ npm install file:../shared/auth-middleware
 ### Step 2: Initialize in Service
 
 ```typescript
-import { JWTService, initializeAuth } from '@afripay/auth-middleware';
+import { JWTService, initializeAuth } from '@eazepay/auth-middleware';
 
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET!
@@ -249,7 +249,7 @@ initializeAuth(jwtService);
 import { authMiddleware } from './middleware/auth';
 
 // After
-import { authenticate as authMiddleware } from '@afripay/auth-middleware';
+import { authenticate as authMiddleware } from '@eazepay/auth-middleware';
 ```
 
 ### Step 4: Update Routes (if needed)
@@ -265,7 +265,7 @@ app.get('/api/users', authMiddleware, handler);
 ## Testing
 
 ```typescript
-import { JWTService } from '@afripay/auth-middleware';
+import { JWTService } from '@eazepay/auth-middleware';
 
 describe('Authentication', () => {
   const jwtService = new JWTService({

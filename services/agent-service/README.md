@@ -1,6 +1,6 @@
 # Agent Service
 
-The Agent Service manages AfriPay's agent network including onboarding, terminal registration, and transaction tracking. It is a Node.js service built with TypeScript and TypeORM.
+The Agent Service manages Eazepay's agent network including onboarding, terminal registration, and transaction tracking. It is a Node.js service built with TypeScript and TypeORM.
 
 ## Prerequisites
 

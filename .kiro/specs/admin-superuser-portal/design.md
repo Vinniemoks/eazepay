@@ -538,7 +538,7 @@ spec:
     spec:
       containers:
       - name: admin-service
-        image: afripay/admin-service:latest
+        image: eazepay/admin-service:latest
         resources:
           requests:
             memory: "512Mi"

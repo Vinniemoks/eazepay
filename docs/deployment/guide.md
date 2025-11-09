@@ -207,7 +207,7 @@ docker build -t eazepay-identity .
 docker run -p 8000:8000 \
   -e DB_HOST=postgresql \
   -e DB_PORT=5432 \
-  -e DB_NAME=afripay_dev \
+  -e DB_NAME=eazepay_dev \
   -e DB_USER=developer \
   -e DB_PASS=dev_password_2024! \
   eazepay-identity
@@ -227,7 +227,7 @@ java -jar target/transaction-service-1.0.0.jar
 # Or with Docker
 docker build -t eazepay-transaction .
 docker run -p 8002:8002 \
-  -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/afripay_dev \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/eazepay_dev \
   -e SPRING_DATASOURCE_USERNAME=developer \
   -e SPRING_DATASOURCE_PASSWORD=dev_password_2024! \
   eazepay-transaction
@@ -249,7 +249,7 @@ docker build -t eazepay-wallet .
 docker run -p 8003:8003 \
   -e DB_HOST=postgresql \
   -e DB_PORT=5432 \
-  -e DB_NAME=afripay_dev \
+  -e DB_NAME=eazepay_dev \
   eazepay-wallet
 ```
 
@@ -476,7 +476,7 @@ Create `.env` file in the root directory:
 # Database Configuration
 POSTGRES_HOST=postgresql
 POSTGRES_PORT=5432
-POSTGRES_DB=afripay_dev
+POSTGRES_DB=eazepay_dev
 POSTGRES_USER=developer
 POSTGRES_PASSWORD=dev_password_2024!
 
@@ -490,7 +490,7 @@ RABBITMQ_HOST=rabbitmq
 RABBITMQ_PORT=5672
 RABBITMQ_USER=admin
 RABBITMQ_PASSWORD=rabbitmq_password_2024!
-RABBITMQ_VHOST=afripay
+RABBITMQ_VHOST=eazepay
 
 # Service URLs
 IDENTITY_SERVICE_URL=http://identity-service:8000
@@ -673,7 +673,7 @@ docker compose logs postgresql
 docker compose restart postgresql
 
 # Connect to database
-docker compose exec postgresql psql -U developer -d afripay_dev
+docker compose exec postgresql psql -U developer -d eazepay_dev
 ```
 
 #### 3. Service Won't Start
@@ -802,10 +802,10 @@ Password: rabbitmq_password_2024!
 
 ```bash
 # Backup PostgreSQL
-docker compose exec postgresql pg_dump -U developer afripay_dev > backup_$(date +%Y%m%d).sql
+docker compose exec postgresql pg_dump -U developer eazepay_dev > backup_$(date +%Y%m%d).sql
 
 # Restore PostgreSQL
-docker compose exec -T postgresql psql -U developer afripay_dev < backup_20251022.sql
+docker compose exec -T postgresql psql -U developer eazepay_dev < backup_20251022.sql
 
 # Backup MongoDB
 docker compose exec mongodb mongodump --username admin --password mongo_password_2024! --out /backup
@@ -840,7 +840,7 @@ BACKUP_DIR="./backups/$(date +%Y%m%d)"
 mkdir -p "$BACKUP_DIR"
 
 # Backup databases
-docker compose exec -T postgresql pg_dump -U developer afripay_dev > "$BACKUP_DIR/postgres.sql"
+docker compose exec -T postgresql pg_dump -U developer eazepay_dev > "$BACKUP_DIR/postgres.sql"
 docker compose exec mongodb mongodump --username admin --password mongo_password_2024! --out "$BACKUP_DIR/mongodb"
 
 # Backup volumes

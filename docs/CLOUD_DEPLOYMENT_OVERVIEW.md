@@ -1,6 +1,6 @@
 # Cloud Deployment Overview
 
-AfriPay is now production-ready for deployment to AWS or Google Cloud Platform with complete customer-facing interfaces.
+Eazepay is now production-ready for deployment to AWS or Google Cloud Platform with complete customer-facing interfaces.
 
 ## Architecture Components
 

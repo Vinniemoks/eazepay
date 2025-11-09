@@ -1,8 +1,8 @@
-# Getting Started with AfriPay Cloud Deployment
+# Getting Started with Eazepay Cloud Deployment
 
 ## Overview
 
-AfriPay is now a complete, production-ready fintech platform with customer-facing interfaces for both AWS and Google Cloud Platform.
+Eazepay is now a complete, production-ready fintech platform with customer-facing interfaces for both AWS and Google Cloud Platform.
 
 ## What You Have
 
@@ -174,14 +174,14 @@ bash scripts/deploy-gcp.sh
 ## Customer Interaction Flow
 
 ### For End Users (Customer Portal)
-1. User visits `app.afripay.com`
+1. User visits `app.eazepay.com`
 2. Registers/logs in via Identity Service
 3. Views wallet balance via Wallet Service
 4. Initiates transfer via Transaction Service
 5. Views transaction history
 
 ### For Agents (Agent Portal)
-1. Agent visits `agent.afripay.com`
+1. Agent visits `agent.eazepay.com`
 2. Logs in with agent credentials
 3. Registers new customers
 4. Processes transactions

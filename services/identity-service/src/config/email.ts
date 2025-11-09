@@ -1,13 +1,13 @@
-import { EmailService } from '@afripay/email-service';
+import { EmailService } from '@eazepay/email-service';
 import path from 'path';
 import { logger } from '../utils/logger';
 
 const emailConfig = {
   provider: (process.env.EMAIL_PROVIDER || 'development') as any,
-  from: process.env.EMAIL_FROM || 'noreply@afripay.com',
-  appName: process.env.APP_NAME || 'AfriPay',
+  from: process.env.EMAIL_FROM || 'noreply@eazepay.com',
+  appName: process.env.APP_NAME || 'Eazepay',
   appUrl: process.env.APP_URL || 'http://localhost:3000',
-  supportEmail: process.env.SUPPORT_EMAIL || 'support@afripay.com',
+  supportEmail: process.env.SUPPORT_EMAIL || 'support@eazepay.com',
   templatesDir: path.join(__dirname, '..', 'templates', 'emails'),
   
   smtp: process.env.EMAIL_PROVIDER === 'smtp' ? {

@@ -1,11 +1,11 @@
-# AfriPay Universal - Prometheus Configuration
+# Eazepay Universal - Prometheus Configuration
 # Monitoring configuration for all microservices
 
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: 'afripay-dev'
+    cluster: 'eazepay-dev'
     environment: 'development'
 
 # Alertmanager configuration
@@ -167,7 +167,7 @@ scrape_configs:
         replacement: blackbox-exporter:9115
 
   # Custom application metrics
-  - job_name: 'afripay-business-metrics'
+  - job_name: 'eazepay-business-metrics'
     static_configs:
       - targets: 
         - 'transaction-service:8002'
@@ -197,41 +197,41 @@ storage:
 # Recording rules for better performance
 # These create pre-computed metrics
 recording_rules:
-  - name: afripay.rules
+  - name: eazepay.rules
     rules:
       # Transaction rate per minute
-      - record: afripay:transaction_rate_1m
+      - record: eazepay:transaction_rate_1m
         expr: rate(transactions_total[1m])
         labels:
           service: "transaction"
           
       # API request rate per service
-      - record: afripay:api_request_rate_5m
+      - record: eazepay:api_request_rate_5m
         expr: rate(http_requests_total[5m])
         
       # Error rate percentage
-      - record: afripay:error_rate_5m
+      - record: eazepay:error_rate_5m
         expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100
         
       # Average response time
-      - record: afripay:response_time_avg_5m
+      - record: eazepay:response_time_avg_5m
         expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])
         
       # Database connection pool utilization
-      - record: afripay:db_pool_utilization
+      - record: eazepay:db_pool_utilization
         expr: (db_connections_active / db_connections_max) * 100
         
       # Memory utilization per service
-      - record: afripay:memory_utilization
+      - record: eazepay:memory_utilization
         expr: (process_resident_memory_bytes / container_spec_memory_limit_bytes) * 100
         
       # CPU utilization per service
-      - record: afripay:cpu_utilization
+      - record: eazepay:cpu_utilization
         expr: rate(process_cpu_seconds_total[5m]) * 100
 
 # Alerting rules
 alerting_rules:
-  - name: afripay.alerts
+  - name: eazepay.alerts
     rules:
       # Service down alert
       - alert: ServiceDown
@@ -245,7 +245,7 @@ alerting_rules:
           
       # High error rate alert
       - alert: HighErrorRate
-        expr: afripay:error_rate_5m > 10
+        expr: eazepay:error_rate_5m > 10
         for: 5m
         labels:
           severity: warning
@@ -255,7 +255,7 @@ alerting_rules:
           
       # High response time alert
       - alert: HighResponseTime
-        expr: afripay:response_time_avg_5m > 2
+        expr: eazepay:response_time_avg_5m > 2
         for: 5m
         labels:
           severity: warning
@@ -265,7 +265,7 @@ alerting_rules:
           
       # Database connection pool exhaustion
       - alert: DatabasePoolExhaustion
-        expr: afripay:db_pool_utilization > 90
+        expr: eazepay:db_pool_utilization > 90
         for: 2m
         labels:
           severity: critical
@@ -275,7 +275,7 @@ alerting_rules:
           
       # High memory usage
       - alert: HighMemoryUsage
-        expr: afripay:memory_utilization > 85
+        expr: eazepay:memory_utilization > 85
         for: 5m
         labels:
           severity: warning
@@ -285,7 +285,7 @@ alerting_rules:
           
       # High CPU usage
       - alert: HighCPUUsage
-        expr: afripay:cpu_utilization > 80
+        expr: eazepay:cpu_utilization > 80
         for: 5m
         labels:
           severity: warning
@@ -305,7 +305,7 @@ alerting_rules:
           
       # Transaction volume spike
       - alert: TransactionVolumeSpike
-        expr: increase(afripay:transaction_rate_1m[5m]) > 1000
+        expr: increase(eazepay:transaction_rate_1m[5m]) > 1000
         for: 2m
         labels:
           severity: info

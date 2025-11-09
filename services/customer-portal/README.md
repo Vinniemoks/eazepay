@@ -1,6 +1,6 @@
 # Customer Portal
 
-Customer-facing web application for AfriPay users to manage their wallets, transactions, and profiles.
+Customer-facing web application for Eazepay users to manage their wallets, transactions, and profiles.
 
 ## Features
 
@@ -31,8 +31,8 @@ Access at http://localhost:3001
 
 ```bash
 npm run build
-docker build -t afripay/customer-portal .
-docker run -p 3001:80 afripay/customer-portal
+docker build -t eazepay/customer-portal .
+docker run -p 3001:80 eazepay/customer-portal
 ```
 
 ## Environment Variables

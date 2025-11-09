@@ -1,21 +1,21 @@
-# AfriPay Demo Credentials
+# Eazepay Demo Credentials
 
 ## Admin Portal Login Credentials
 
 ### Super Administrator
-- **Email**: `superadmin@afripay.com`
+- **Email**: `superadmin@eazepay.com`
 - **Password**: `SuperAdmin@2024`
 - **Role**: Super Admin
 - **Permissions**: Full system access, user management, system configuration
 
 ### System Administrator
-- **Email**: `admin@afripay.com`
+- **Email**: `admin@eazepay.com`
 - **Password**: `Admin@2024`
 - **Role**: Admin
 - **Permissions**: User management, reports, system monitoring
 
 ### Operations Manager
-- **Email**: `manager@afripay.com`
+- **Email**: `manager@eazepay.com`
 - **Password**: `Manager@2024`
 - **Role**: Manager
 - **Permissions**: Operations management, reports viewing
@@ -25,7 +25,7 @@
 ## Customer Portal Demo Credentials
 
 ### Demo Customer 1
-- **Email**: `customer@afripay.com`
+- **Email**: `customer@eazepay.com`
 - **Password**: `Customer@2024`
 - **Account Type**: Personal
 - **Wallet Balance**: $1,000.00
@@ -146,7 +146,7 @@ If you want to test the APIs directly:
 # Login to get token
 curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@afripay.com","password":"Admin@2024"}'
+  -d '{"email":"admin@eazepay.com","password":"Admin@2024"}'
 
 # Use token for authenticated requests
 curl -X GET http://localhost:8000/api/users \

@@ -1,4 +1,4 @@
-# AfriPay Enterprise Features Implementation
+# Eazepay Enterprise Features Implementation
 
 ## ✅ Implemented Features
 

@@ -1,4 +1,4 @@
-# AfriPay Universal - Grafana Datasource Configuration
+# Eazepay Universal - Grafana Datasource Configuration
 # This file configures data sources for Grafana dashboards
 
 apiVersion: 1
@@ -28,7 +28,7 @@ datasources:
     type: postgres
     access: proxy
     url: postgresql:5432
-    database: afripay_dev
+    database: eazepay_dev
     user: developer
     secureJsonData:
       password: dev_password_2024!
@@ -45,8 +45,8 @@ datasources:
   - name: MongoDB
     type: grafana-mongodb-datasource
     access: proxy
-    url: mongodb://admin:mongo_password_2024!@mongodb:27017/afripay_analytics?authSource=admin
-    database: afripay_analytics
+    url: mongodb://admin:mongo_password_2024!@mongodb:27017/eazepay_analytics?authSource=admin
+    database: eazepay_analytics
     jsonData:
       authType: credentials
       tlsAuth: false
@@ -86,7 +86,7 @@ datasources:
   #   type: influxdb
   #   access: proxy
   #   url: http://influxdb:8086
-  #   database: afripay_metrics
+  #   database: eazepay_metrics
   #   user: admin
   #   secureJsonData:
   #     password: influx_password_2024!

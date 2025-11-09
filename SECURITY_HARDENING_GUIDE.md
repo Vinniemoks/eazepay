@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides comprehensive security hardening recommendations for the AfriPay system, implementing the principles of least privilege and high secrecy.
+This guide provides comprehensive security hardening recommendations for the Eazepay system, implementing the principles of least privilege and high secrecy.
 
 ## Critical Security Issues Found
 
@@ -279,8 +279,8 @@ app.use((req, res, next) => {
 ## Contact Information
 
 For security-related questions or to report security vulnerabilities:
-- Security Team: security@afripay.com
+- Security Team: security@eazepay.com
 - Emergency Contact: +1-XXX-XXX-XXXX
-- Security Portal: https://security.afripay.com
+- Security Portal: https://security.eazepay.com
 
 Remember: Security is an ongoing process, not a one-time implementation. Regular reviews and updates are essential to maintain a secure system.

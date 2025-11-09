@@ -292,10 +292,10 @@ curl http://localhost:8040/health
 
 ### View Logs
 ```bash
-docker logs afripay-ai-ml -f
-docker logs afripay-iot -f
-docker logs afripay-blockchain -f
-docker logs afripay-robotics -f
+docker logs eazepay-ai-ml -f
+docker logs eazepay-iot -f
+docker logs eazepay-blockchain -f
+docker logs eazepay-robotics -f
 ```
 
 ### Restart Services

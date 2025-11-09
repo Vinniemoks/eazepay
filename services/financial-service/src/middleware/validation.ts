@@ -1,4 +1,4 @@
-// Validation middleware - now using shared @afripay/validation
+// Validation middleware - now using shared @eazepay/validation
 // This file delegates to the shared validation library
 
 export { 
@@ -7,7 +7,7 @@ export {
   validateParams,
   validateRequest,
   sanitize
-} from '@afripay/validation';
+} from '@eazepay/validation';
 
 // Export common schemas for use in routes
-export { schemas, commonSchemas } from '@afripay/validation';
+export { schemas, commonSchemas } from '@eazepay/validation';

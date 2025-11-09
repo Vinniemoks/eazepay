@@ -1,7 +1,7 @@
 // Robotics Service - Main Entry Point
 import express, { Request, Response } from 'express';
-import { JWTService, initializeAuth, authenticate } from '@afripay/auth-middleware';
-import { validateRequest, joi } from '@afripay/validation';
+import { JWTService, initializeAuth, authenticate } from '@eazepay/auth-middleware';
+import { validateRequest, joi } from '@eazepay/validation';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
@@ -20,8 +20,8 @@ app.use(express.json({ limit: '10mb' }));
 const jwtService = new JWTService({
   jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
   jwtExpiresIn: '8h',
-  issuer: 'afripay-services',
-  audience: 'afripay-services'
+  issuer: 'eazepay-services',
+  audience: 'eazepay-services'
 });
 initializeAuth(jwtService);
 

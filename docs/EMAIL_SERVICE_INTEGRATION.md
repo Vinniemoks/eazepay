@@ -48,10 +48,10 @@ Copy `.env.example` to `.env` and configure:
 EMAIL_PROVIDER=development  # or smtp, sendgrid, mailgun
 
 # Email Settings
-EMAIL_FROM=noreply@afripay.com
-APP_NAME=AfriPay
+EMAIL_FROM=noreply@eazepay.com
+APP_NAME=Eazepay
 APP_URL=http://localhost:3000
-SUPPORT_EMAIL=support@afripay.com
+SUPPORT_EMAIL=support@eazepay.com
 ```
 
 ### 3. Provider-Specific Configuration

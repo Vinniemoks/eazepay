@@ -9,7 +9,7 @@
 
 ## Architecture
 
-AfriPay on AWS uses:
+Eazepay on AWS uses:
 - **ECS Fargate** for container orchestration
 - **RDS PostgreSQL** for relational data
 - **ElastiCache Redis** for caching
@@ -23,9 +23,9 @@ AfriPay on AWS uses:
 ### 1. Create S3 Bucket for Terraform State
 
 ```bash
-aws s3 mb s3://afripay-terraform-state --region us-east-1
+aws s3 mb s3://eazepay-terraform-state --region us-east-1
 aws s3api put-bucket-versioning \
-  --bucket afripay-terraform-state \
+  --bucket eazepay-terraform-state \
   --versioning-configuration Status=Enabled
 ```
 
@@ -44,7 +44,7 @@ Create `infrastructure/terraform/aws/terraform.tfvars`:
 ```hcl
 aws_region              = "us-east-1"
 environment             = "production"
-db_master_username      = "afripay_admin"
+db_master_username      = "eazepay_admin"
 db_master_password      = "CHANGE_ME_SECURE_PASSWORD"
 ssl_certificate_arn     = "arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERT_ID"
 cloudfront_certificate_arn = "arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERT_ID"
@@ -100,7 +100,7 @@ ECS services auto-scale based on CPU/memory:
 aws application-autoscaling register-scalable-target \
   --service-namespace ecs \
   --scalable-dimension ecs:service:DesiredCount \
-  --resource-id service/afripay-production/customer-portal \
+  --resource-id service/eazepay-production/customer-portal \
   --min-capacity 2 \
   --max-capacity 10
 ```

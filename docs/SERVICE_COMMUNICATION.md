@@ -2,7 +2,7 @@
 
 ## Overview
 
-AfriPay uses a hybrid communication pattern combining synchronous HTTP calls with asynchronous event-driven messaging for robust inter-service communication.
+Eazepay uses a hybrid communication pattern combining synchronous HTTP calls with asynchronous event-driven messaging for robust inter-service communication.
 
 ## Architecture
 
@@ -56,7 +56,7 @@ npm run build
 ### Usage
 
 ```typescript
-import { ServiceClient, ServiceRegistry } from '@afripay/service-client';
+import { ServiceClient, ServiceRegistry } from '@eazepay/service-client';
 
 // Get service URL from registry
 const registry = ServiceRegistry.getInstance();
@@ -135,7 +135,7 @@ npm run build
 ### Publishing Events
 
 ```typescript
-import { EventBus, EventPublisher, EventType } from '@afripay/event-bus';
+import { EventBus, EventPublisher, EventType } from '@eazepay/event-bus';
 
 // Initialize event bus
 const eventBus = new EventBus({
@@ -167,7 +167,7 @@ await publisher.publish(
 ### Subscribing to Events
 
 ```typescript
-import { EventBus, EventSubscriber, EventType } from '@afripay/event-bus';
+import { EventBus, EventSubscriber, EventType } from '@eazepay/event-bus';
 
 // Initialize event bus
 const eventBus = new EventBus({
@@ -236,7 +236,7 @@ import {
   ServiceCommunicationError, 
   CircuitBreakerOpenError, 
   ServiceTimeoutError 
-} from '@afripay/service-client';
+} from '@eazepay/service-client';
 
 try {
   const result = await client.post('/api/transactions', data);
@@ -303,7 +303,7 @@ TRANSACTION_SERVICE_URL=http://localhost:8002
 # ... other services
 
 # RabbitMQ
-RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@localhost:5672/afripay
+RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@localhost:5672/eazepay
 RABBITMQ_ENABLED=true
 ```
 
@@ -316,9 +316,9 @@ services:
   financial-service:
     environment:
       - DOCKER_ENV=true
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/afripay
+      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
     networks:
-      - afripay-network
+      - eazepay-network
 ```
 
 ## Migration Guide
@@ -327,7 +327,7 @@ services:
 
 1. **Install dependencies:**
 ```bash
-npm install @afripay/service-client @afripay/event-bus
+npm install @eazepay/service-client @eazepay/event-bus
 ```
 
 2. **Replace direct axios calls:**
@@ -336,7 +336,7 @@ npm install @afripay/service-client @afripay/event-bus
 const response = await axios.post('http://localhost:8000/api/users', data);
 
 // After
-import { ServiceClient, ServiceRegistry } from '@afripay/service-client';
+import { ServiceClient, ServiceRegistry } from '@eazepay/service-client';
 
 const registry = ServiceRegistry.getInstance();
 const client = new ServiceClient({

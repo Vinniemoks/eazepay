@@ -1,5 +1,5 @@
 #!/bin/bash
-# AfriPay Universal - Automated Service & Infrastructure Check Script
+# Eazepay Universal - Automated Service & Infrastructure Check Script
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -113,7 +113,7 @@ function check_readmes() {
 }
 
 function main() {
-  echo -e "${BLUE}🔍 AfriPay Universal Automated Check${NC}"
+  echo -e "${BLUE}🔍 Eazepay Universal Automated Check${NC}"
   echo "========================================"
 
   check_compose

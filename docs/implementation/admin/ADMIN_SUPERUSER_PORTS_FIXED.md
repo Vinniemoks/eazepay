@@ -30,13 +30,13 @@
 ### Admin Portal
 - **Port**: 8080
 - **URL**: http://localhost:8080
-- **Container**: afripay-admin-portal
+- **Container**: eazepay-admin-portal
 - **Features**: User management, permissions, access requests, analytics
 
 ### Superuser Portal
 - **Port**: 8090
 - **URL**: http://localhost:8090
-- **Container**: afripay-superuser-portal
+- **Container**: eazepay-superuser-portal
 - **Features**: Full system access, superuser management, system configuration
 
 ### API Endpoints
@@ -47,7 +47,7 @@
 POST http://localhost:8000/api/superuser/create
 Authorization: Bearer <token>
 {
-  "email": "superuser@afripay.com",
+  "email": "superuser@eazepay.com",
   "phone": "+254712345678",
   "password": "SecurePassword123!",
   "fullName": "Super User",
@@ -69,7 +69,7 @@ Authorization: Bearer <token>
 POST http://localhost:8000/api/admin/users
 Authorization: Bearer <token>
 {
-  "email": "admin@afripay.com",
+  "email": "admin@eazepay.com",
   "phone": "+254712345679",
   "password": "SecurePassword123!",
   "fullName": "Admin User",

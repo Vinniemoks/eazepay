@@ -25,17 +25,17 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID'],
+  exposedHeaders: ['X-Correlation-ID', 'RateLimit-Limit', 'RateLimit-Remaining', 'RateLimit-Reset']
 };
 app.use(cors(corsOptions));
+// Handle preflight requests explicitly
+app.options('*', cors(corsOptions));
 const PORT = process.env.PORT || 8000;
+const SKIP_DB_INIT = (process.env.SKIP_DB_INIT || 'false').toLowerCase() === 'true';
 
 // Security middleware
 app.use(helmet());
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
-  credentials: true
-}));
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
@@ -123,15 +123,19 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // Start server
 async function startServer() {
   try {
-    // Initialize database
-    await initializeDatabase();
-    
-    // Start background jobs
-    const { AccessRequestExpiryJob } = await import('./jobs/expireAccessRequests');
-    AccessRequestExpiryJob.startScheduler();
+    // Initialize database unless explicitly skipped
+    if (!SKIP_DB_INIT) {
+      await initializeDatabase();
+      // Start background jobs only when DB is initialized
+      const { AccessRequestExpiryJob } = await import('./jobs/expireAccessRequests');
+      AccessRequestExpiryJob.startScheduler();
+    } else {
+      console.log('⚠️  SKIP_DB_INIT=true — starting without database initialization or background jobs');
+    }
     
     // Start listening
     app.listen(PORT, () => {
+      const dbStatus = SKIP_DB_INIT ? 'Skipped ⚠️' : 'Connected ✅';
       console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
@@ -140,7 +144,7 @@ async function startServer() {
 ║   Version: 2.0.0                                     ║
 ║   Port: ${PORT}                                        ║
 ║   Environment: ${process.env.NODE_ENV || 'development'}                            ║
-║   Database: Connected ✅                              ║
+║   Database: ${dbStatus}                              ║
 ║                                                       ║
 ║   Endpoints:                                         ║
 ║   Auth:                                              ║

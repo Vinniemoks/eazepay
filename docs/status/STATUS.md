@@ -1,8 +1,8 @@
-# AfriPay Cloud Deployment - Status Report
+# Eazepay Cloud Deployment - Status Report
 
 ## ✅ COMPLETED - Ready for Production
 
-Your AfriPay platform is now **fully cloud-ready** with complete customer-facing interfaces.
+Your Eazepay platform is now **fully cloud-ready** with complete customer-facing interfaces.
 
 ---
 
@@ -19,7 +19,7 @@ Your AfriPay platform is now **fully cloud-ready** with complete customer-facing
   - Money transfers
   - Transaction history
   - Profile management
-- **Access**: http://localhost:3001 (local) or app.afripay.com (production)
+- **Access**: http://localhost:3001 (local) or app.eazepay.com (production)
 
 #### Agent Portal (`services/agent-portal/`)
 - **Status**: ✅ Built and tested
@@ -30,7 +30,7 @@ Your AfriPay platform is now **fully cloud-ready** with complete customer-facing
   - Transaction processing
   - Commission tracking
   - Analytics dashboard with charts
-- **Access**: http://localhost:3002 (local) or agent.afripay.com (production)
+- **Access**: http://localhost:3002 (local) or agent.eazepay.com (production)
 
 ### 2. ✅ Cloud Infrastructure as Code
 

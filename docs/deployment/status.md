@@ -100,7 +100,7 @@ docker compose up -d --no-deps robotics-service
 
 **Check logs**:
 ```bash
-docker logs afripay-transaction --tail 50
+docker logs eazepay-transaction --tail 50
 ```
 
 ### 4. Web Portals (All Unhealthy)
@@ -202,7 +202,7 @@ docker compose build robotics-service
 docker compose up -d --no-deps robotics-service
 
 # Check logs
-docker logs afripay-robotics -f
+docker logs eazepay-robotics -f
 ```
 
 ### Fix Blockchain Service

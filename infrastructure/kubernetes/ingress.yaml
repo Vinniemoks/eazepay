@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: afripay-ingress
-  namespace: afripay
+  name: eazepay-ingress
+  namespace: eazepay
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -10,13 +10,13 @@ metadata:
 spec:
   tls:
   - hosts:
-    - afripay.com
-    - app.afripay.com
-    - agent.afripay.com
-    - api.afripay.com
-    secretName: afripay-tls
+    - eazepay.com
+    - app.eazepay.com
+    - agent.eazepay.com
+    - api.eazepay.com
+    secretName: eazepay-tls
   rules:
-  - host: app.afripay.com
+  - host: app.eazepay.com
     http:
       paths:
       - path: /
@@ -26,7 +26,7 @@ spec:
             name: customer-portal
             port:
               number: 80
-  - host: agent.afripay.com
+  - host: agent.eazepay.com
     http:
       paths:
       - path: /
@@ -36,7 +36,7 @@ spec:
             name: agent-portal
             port:
               number: 80
-  - host: api.afripay.com
+  - host: api.eazepay.com
     http:
       paths:
       - path: /auth

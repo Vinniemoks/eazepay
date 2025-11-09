@@ -1,7 +1,7 @@
 {
-  "name": "@afripay/email-service",
+  "name": "@eazepay/email-service",
   "version": "1.0.0",
-  "description": "Shared email service for AfriPay platform",
+  "description": "Shared email service for Eazepay platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

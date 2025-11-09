@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Setting up AfriPay Universal development environment..."
+echo "🚀 Setting up Eazepay Universal development environment..."
 
 # Check if required tools are installed
 check_tool() {

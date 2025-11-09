@@ -57,15 +57,15 @@ for service in "${SERVICES[@]}"; do
     echo "Updating $service..."
     
     # Check if dependencies already exist
-    if ! grep -q "@afripay/service-client" "$SERVICE_PATH/package.json"; then
-      echo -e "${YELLOW}  Adding @afripay/service-client dependency${NC}"
+    if ! grep -q "@eazepay/service-client" "$SERVICE_PATH/package.json"; then
+      echo -e "${YELLOW}  Adding @eazepay/service-client dependency${NC}"
       cd "$SERVICE_PATH"
       npm install --save file:../shared/service-client
       cd ../..
     fi
     
-    if ! grep -q "@afripay/event-bus" "$SERVICE_PATH/package.json"; then
-      echo -e "${YELLOW}  Adding @afripay/event-bus dependency${NC}"
+    if ! grep -q "@eazepay/event-bus" "$SERVICE_PATH/package.json"; then
+      echo -e "${YELLOW}  Adding @eazepay/event-bus dependency${NC}"
       cd "$SERVICE_PATH"
       npm install --save file:../shared/event-bus
       cd ../..

@@ -10,7 +10,7 @@ export class EventBus {
 
   constructor(config: EventBusConfig) {
     this.config = {
-      exchange: 'afripay.events',
+      exchange: 'eazepay.events',
       exchangeType: 'topic',
       reconnectDelay: 5000,
       maxReconnectAttempts: 10,

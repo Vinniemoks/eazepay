@@ -4,7 +4,7 @@
 
 ### ✅ What's Working Well
 
-#### 1. Shared Authentication Middleware (`@afripay/auth-middleware`)
+#### 1. Shared Authentication Middleware (`@eazepay/auth-middleware`)
 - ✅ Centralized JWT service
 - ✅ Token generation and verification
 - ✅ Role-based authorization
@@ -58,8 +58,8 @@ if (!JWT_SECRET || JWT_SECRET.length < 32) {
 const jwtService = new JWTService({
   jwtSecret: JWT_SECRET,
   jwtExpiresIn: '8h',
-  issuer: 'afripay-identity-service', // Service-specific
-  audience: 'afripay-services'
+  issuer: 'eazepay-identity-service', // Service-specific
+  audience: 'eazepay-services'
 });
 ```
 

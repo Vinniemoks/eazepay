@@ -230,7 +230,7 @@ export default function Register() {
         <div style={styles.header}>
           <div style={styles.logoIcon}>🚀</div>
           <h1 style={styles.title}>Create Account</h1>
-          <p style={styles.subtitle}>Join AfriPay for secure digital payments</p>
+          <p style={styles.subtitle}>Join Eazepay for secure digital payments</p>
         </div>
 
         <div style={styles.stepIndicator}>

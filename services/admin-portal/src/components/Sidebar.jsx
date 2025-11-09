@@ -100,7 +100,7 @@ export default function Sidebar({ userRole }) {
     <div style={styles.sidebar}>
       <div style={styles.logo}>
         <div style={styles.logoIcon}>👑</div>
-        <div style={styles.logoText}>AfriPay Admin</div>
+        <div style={styles.logoText}>Eazepay Admin</div>
       </div>
 
       <nav style={styles.nav}>

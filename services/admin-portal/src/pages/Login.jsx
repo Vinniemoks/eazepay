@@ -6,19 +6,19 @@ import '../../../shared/styles/animations.css';
 // Demo credentials for testing
 const DEMO_CREDENTIALS = {
   superadmin: {
-    email: 'superadmin@afripay.com',
+    email: 'superadmin@eazepay.com',
     password: 'SuperAdmin@2024',
     role: 'superadmin',
     name: 'Super Administrator'
   },
   admin: {
-    email: 'admin@afripay.com',
+    email: 'admin@eazepay.com',
     password: 'Admin@2024',
     role: 'admin',
     name: 'System Administrator'
   },
   manager: {
-    email: 'manager@afripay.com',
+    email: 'manager@eazepay.com',
     password: 'Manager@2024',
     role: 'manager',
     name: 'Operations Manager'
@@ -312,7 +312,7 @@ export default function Login({ onLogin }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={styles.input}
-                placeholder="admin@afripay.com"
+                placeholder="admin@eazepay.com"
                 required
               />
             </div>

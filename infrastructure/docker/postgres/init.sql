@@ -1,4 +1,4 @@
--- AfriPay Universal Database Initialization Script
+-- Eazepay Universal Database Initialization Script
 -- This script sets up the initial database schema and data
 
 -- Create extensions
@@ -297,7 +297,7 @@ ON CONFLICT DO NOTHING;
 
 -- Insert system event for database initialization
 INSERT INTO system_events (event_type, severity, message, service_name) VALUES
-('DATABASE_INIT', 'INFO', 'AfriPay Universal database initialized successfully', 'postgres-init')
+('DATABASE_INIT', 'INFO', 'Eazepay Universal database initialized successfully', 'postgres-init')
 ON CONFLICT DO NOTHING;
 
 -- ================================
@@ -363,7 +363,7 @@ GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO developer;
 
 -- Create read-only user for analytics
 CREATE USER analytics_user WITH PASSWORD 'analytics_readonly_2024!';
-GRANT CONNECT ON DATABASE afripay_dev TO analytics_user;
+GRANT CONNECT ON DATABASE eazepay_dev TO analytics_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO analytics_user;
 
 COMMIT;

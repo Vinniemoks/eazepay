@@ -1,7 +1,7 @@
 {
-  "name": "@afripay/migrations",
+  "name": "@eazepay/migrations",
   "version": "1.0.0",
-  "description": "Database migration utilities for AfriPay microservices",
+  "description": "Database migration utilities for Eazepay microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

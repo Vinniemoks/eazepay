@@ -1,6 +1,6 @@
 # Web Portal
 
-The AfriPay Web Portal delivers a static administrative dashboard distributed via Nginx.
+The Eazepay Web Portal delivers a static administrative dashboard distributed via Nginx.
 
 ## Structure
 
@@ -13,8 +13,8 @@ A `.env` file is provided to document the front-end configuration options used d
 
 | Variable | Description | Default |
 | --- | --- | --- |
-| `VITE_APP_NAME` | Portal display name | `AfriPay Web Portal` |
-| `VITE_API_GATEWAY_URL` | Base URL for API gateway calls | `https://api.local.afripay.test` |
+| `VITE_APP_NAME` | Portal display name | `Eazepay Web Portal` |
+| `VITE_API_GATEWAY_URL` | Base URL for API gateway calls | `https://api.local.eazepay.test` |
 | `VITE_IDENTITY_SERVICE_URL` | Identity Service endpoint | `http://localhost:8000` |
 | `VITE_WALLET_SERVICE_URL` | Wallet Service endpoint | `http://localhost:8003` |
 
@@ -23,8 +23,8 @@ These variables are consumed at build time; adjust them before compiling the fro
 ## Running with Docker
 
 ```bash
-docker build -t afripay/web-portal .
-docker run -p 8080:80 afripay/web-portal
+docker build -t eazepay/web-portal .
+docker run -p 8080:80 eazepay/web-portal
 ```
 
 Then open `http://localhost:8080` in your browser.

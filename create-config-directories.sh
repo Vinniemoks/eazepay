@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# AfriPay Universal - Configuration Directory Creation Script
+# Eazepay Universal - Configuration Directory Creation Script
 # This script creates all the necessary directories for configuration files
 
-echo "🏗️  Creating AfriPay Universal configuration directories..."
+echo "🏗️  Creating Eazepay Universal configuration directories..."
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -72,9 +72,9 @@ create_dir "services/biometric-service/app/services"
 create_dir "services/biometric-service/app/models"
 create_dir "services/biometric-service/app/utils"
 
-create_dir "services/transaction-service/src/main/java/com/afripay/transaction"
+create_dir "services/transaction-service/src/main/java/com/eazepay/transaction"
 create_dir "services/transaction-service/src/main/resources"
-create_dir "services/transaction-service/src/test/java/com/afripay/transaction"
+create_dir "services/transaction-service/src/test/java/com/eazepay/transaction"
 
 create_dir "services/wallet-service/cmd"
 create_dir "services/wallet-service/internal"
@@ -85,8 +85,8 @@ create_dir "services/agent-service/src"
 
 # Mobile app directories
 echo -e "${YELLOW}Creating mobile app directories...${NC}"
-create_dir "mobile-app/android/app/src/main/java/com/afripay"
-create_dir "mobile-app/ios/AfriPay"
+create_dir "mobile-app/android/app/src/main/java/com/eazepay"
+create_dir "mobile-app/ios/Eazepay"
 create_dir "mobile-app/src/components"
 create_dir "mobile-app/src/screens"
 create_dir "mobile-app/src/services"

@@ -1,8 +1,8 @@
-# AfriPay Cloud-Ready Summary
+# Eazepay Cloud-Ready Summary
 
 ## ✅ What's Been Added
 
-Your AfriPay platform is now production-ready for AWS and Google Cloud Platform with complete customer interaction capabilities.
+Your Eazepay platform is now production-ready for AWS and Google Cloud Platform with complete customer interaction capabilities.
 
 ### 1. Customer-Facing Frontend Applications
 
@@ -104,9 +104,9 @@ chmod +x scripts/deploy-gcp.sh
 ```
 Internet
    │
-   ├─── app.afripay.com ──────► Customer Portal (React)
-   ├─── agent.afripay.com ────► Agent Portal (React)
-   └─── api.afripay.com ──────► API Gateway
+   ├─── app.eazepay.com ──────► Customer Portal (React)
+   ├─── agent.eazepay.com ────► Agent Portal (React)
+   └─── api.eazepay.com ──────► API Gateway
                                      │
                     ┌────────────────┼────────────────┐
                     │                │                │

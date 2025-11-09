@@ -1,9 +1,9 @@
-# AfriPay Project Structure
+# Eazepay Project Structure
 
 ## Complete Directory Layout
 
 ```
-afripay-universal/
+eazepay-universal/
 ├── services/                          # All microservices
 │   ├── customer-portal/              # ✨ NEW: Customer-facing React app
 │   │   ├── src/

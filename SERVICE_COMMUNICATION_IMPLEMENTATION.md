@@ -6,7 +6,7 @@ Implemented comprehensive inter-service communication infrastructure with circui
 
 ## What Was Implemented
 
-### 1. Service Client Library (`@afripay/service-client`)
+### 1. Service Client Library (`@eazepay/service-client`)
 
 **Location**: `services/shared/service-client/`
 
@@ -23,7 +23,7 @@ Implemented comprehensive inter-service communication infrastructure with circui
 - `ServiceRegistry` - Centralized service discovery
 - Error classes for proper error handling
 
-### 2. Event Bus Library (`@afripay/event-bus`)
+### 2. Event Bus Library (`@eazepay/event-bus`)
 
 **Location**: `services/shared/event-bus/`
 
@@ -133,7 +133,7 @@ Implemented comprehensive inter-service communication infrastructure with circui
 ### HTTP Communication
 
 ```typescript
-import { ServiceClient, ServiceRegistry } from '@afripay/service-client';
+import { ServiceClient, ServiceRegistry } from '@eazepay/service-client';
 
 const registry = ServiceRegistry.getInstance();
 const client = new ServiceClient({
@@ -150,7 +150,7 @@ const user = await client.get('/api/users/123');
 ### Event Publishing
 
 ```typescript
-import { EventBus, EventPublisher, EventType } from '@afripay/event-bus';
+import { EventBus, EventPublisher, EventType } from '@eazepay/event-bus';
 
 const eventBus = new EventBus({ url: process.env.RABBITMQ_URL });
 await eventBus.connect();
@@ -165,7 +165,7 @@ await publisher.publish(EventType.TRANSACTION_COMPLETED, {
 ### Event Subscription
 
 ```typescript
-import { EventBus, EventSubscriber } from '@afripay/event-bus';
+import { EventBus, EventSubscriber } from '@eazepay/event-bus';
 
 const eventBus = new EventBus({ url: process.env.RABBITMQ_URL });
 await eventBus.connect();
@@ -199,8 +199,8 @@ Add to each service's `package.json`:
 ```json
 {
   "dependencies": {
-    "@afripay/service-client": "file:../shared/service-client",
-    "@afripay/event-bus": "file:../shared/event-bus"
+    "@eazepay/service-client": "file:../shared/service-client",
+    "@eazepay/event-bus": "file:../shared/event-bus"
   }
 }
 ```

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "========================================"
-echo "  AfriPay - Starting All Portals"
+echo "  Eazepay - Starting All Portals"
 echo "========================================"
 echo ""
 

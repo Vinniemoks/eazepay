@@ -1,4 +1,4 @@
-// AfriPay Universal - MongoDB Initialization Script
+// Eazepay Universal - MongoDB Initialization Script
 // This script sets up the initial MongoDB database structure and indexes
 
 // Switch to admin database for user creation
@@ -6,25 +6,25 @@ db = db.getSiblingDB('admin');
 
 // Create application users
 db.createUser({
-  user: 'afripay_app',
-  pwd: 'afripay_app_password_2024!',
+  user: 'eazepay_app',
+  pwd: 'eazepay_app_password_2024!',
   roles: [
-    { role: 'readWrite', db: 'afripay_analytics' },
-    { role: 'readWrite', db: 'afripay_logs' }
+    { role: 'readWrite', db: 'eazepay_analytics' },
+    { role: 'readWrite', db: 'eazepay_logs' }
   ]
 });
 
 db.createUser({
-  user: 'afripay_readonly',
-  pwd: 'afripay_readonly_2024!',
+  user: 'eazepay_readonly',
+  pwd: 'eazepay_readonly_2024!',
   roles: [
-    { role: 'read', db: 'afripay_analytics' },
-    { role: 'read', db: 'afripay_logs' }
+    { role: 'read', db: 'eazepay_analytics' },
+    { role: 'read', db: 'eazepay_logs' }
   ]
 });
 
 // Switch to analytics database
-db = db.getSiblingDB('afripay_analytics');
+db = db.getSiblingDB('eazepay_analytics');
 
 // Create collections and indexes for analytics data
 
@@ -93,7 +93,7 @@ db.inclusion_metrics.createIndex({ "gender": 1 });
 db.inclusion_metrics.createIndex({ "account_tier": 1 });
 
 // Switch to logs database
-db = db.getSiblingDB('afripay_logs');
+db = db.getSiblingDB('eazepay_logs');
 
 // Application logs collection
 db.createCollection('application_logs', {
@@ -141,7 +141,7 @@ db.error_logs.createIndex({ "user_id": 1 });
 db.error_logs.createIndex({ "stack_trace": "text" });
 
 // Switch back to analytics database for sample data
-db = db.getSiblingDB('afripay_analytics');
+db = db.getSiblingDB('eazepay_analytics');
 
 // Insert sample data for testing
 var sampleDate = new Date();
@@ -305,7 +305,7 @@ db.inclusion_metrics.insertMany([
 ]);
 
 // Switch to logs database and insert sample logs
-db = db.getSiblingDB('afripay_logs');
+db = db.getSiblingDB('eazepay_logs');
 
 // Sample application logs
 db.application_logs.insertMany([
@@ -344,7 +344,7 @@ db.audit_logs.insertMany([
         resource_type: "USER",
         resource_id: "user_001",
         ip_address: "192.168.1.100",
-        user_agent: "AfriPay Mobile App v1.0.0",
+        user_agent: "Eazepay Mobile App v1.0.0",
         metadata: {
             changes: {
                 created: ["phone_number", "first_name", "last_name"]
@@ -354,6 +354,6 @@ db.audit_logs.insertMany([
 ]);
 
 print("MongoDB initialization completed successfully!");
-print("Created databases: afripay_analytics, afripay_logs");
-print("Created users: afripay_app, afripay_readonly");
+print("Created databases: eazepay_analytics, eazepay_logs");
+print("Created users: eazepay_app, eazepay_readonly");
 print("Created collections with indexes and sample data");

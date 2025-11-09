@@ -129,7 +129,7 @@ cd ../..
 docker-compose up -d blockchain-service
 
 # Check logs
-docker logs afripay-blockchain -f
+docker logs eazepay-blockchain -f
 ```
 
 ## Testing the Integration
@@ -149,7 +149,7 @@ curl -X POST http://localhost:8002/api/transactions \
   }'
 
 # Check blockchain service logs
-docker logs afripay-blockchain
+docker logs eazepay-blockchain
 
 # You should see:
 # ✅ Transaction recorded on blockchain
@@ -233,7 +233,7 @@ curl -X POST http://localhost:8020/api/blockchain/verify/1 \
 **Blockchain Service** (`.env`):
 ```env
 PORT=8020
-RABBITMQ_URL=amqp://admin:password@rabbitmq:5672/afripay
+RABBITMQ_URL=amqp://admin:password@rabbitmq:5672/eazepay
 FABRIC_CHANNEL_NAME=eazepay-channel
 FABRIC_CHAINCODE_NAME=transaction-ledger
 ```
@@ -259,7 +259,7 @@ curl http://localhost:8020/health
 ### View Blockchain Logs
 
 ```bash
-docker logs afripay-blockchain -f
+docker logs eazepay-blockchain -f
 ```
 
 ### Check Fabric Network
@@ -351,7 +351,7 @@ cp fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/
 ## Support
 
 For issues or questions:
-1. Check logs: `docker logs afripay-blockchain`
+1. Check logs: `docker logs eazepay-blockchain`
 2. Review Hyperledger Fabric docs: https://hyperledger-fabric.readthedocs.io/
 3. Check RabbitMQ messages: http://localhost:15673
 

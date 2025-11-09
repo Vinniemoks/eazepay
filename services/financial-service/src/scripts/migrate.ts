@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import { MigrationRunner } from '@afripay/migrations';
+import { MigrationRunner } from '@eazepay/migrations';
 import { AppDataSource } from '../config/database';
 import logger from '../utils/logger';
 

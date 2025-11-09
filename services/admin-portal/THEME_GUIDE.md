@@ -1,4 +1,4 @@
-## 🎨 AfriPay Theme Guide
+## 🎨 Eazepay Theme Guide
 
 ### Royal Yellow & Gold Color System
 

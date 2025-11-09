@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "í·ª Testing AfriPay Universal Services..."
+echo "í·ª Testing Eazepay Universal Services..."
 
 # Colors for output
 RED='\033[0;31m'

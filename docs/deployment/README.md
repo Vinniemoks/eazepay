@@ -1,4 +1,4 @@
-AfriPay Universal - Deployment Guide
+Eazepay Universal - Deployment Guide
 Prerequisites
 
 Docker Desktop installed
@@ -10,8 +10,8 @@ Git installed
 
 Development Setup
 1. Clone Repository
-bashgit clone https://github.com/YOUR_USERNAME/afripay-universal.git
-cd afripay-universal
+bashgit clone https://github.com/YOUR_USERNAME/eazepay-universal.git
+cd eazepay-universal
 2. Run Setup Script
 bash./scripts/setup/dev-setup.sh
 3. Start Services

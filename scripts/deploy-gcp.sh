@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Deploying AfriPay to GCP..."
+echo "🚀 Deploying Eazepay to GCP..."
 
 # Variables
 PROJECT_ID=${GCP_PROJECT_ID}
@@ -30,7 +30,7 @@ terraform apply -auto-approve
 
 # Deploy to GKE
 echo "☸️ Deploying to GKE..."
-gcloud container clusters get-credentials afripay-production --zone $REGION
+gcloud container clusters get-credentials eazepay-production --zone $REGION
 kubectl apply -f ../../kubernetes/
 
 echo "✅ Deployment to GCP complete!"

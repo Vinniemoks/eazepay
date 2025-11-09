@@ -13,7 +13,7 @@
 
 ## Solution Implemented
 
-Created `@afripay/swagger-config` - a centralized Swagger/OpenAPI documentation library.
+Created `@eazepay/swagger-config` - a centralized Swagger/OpenAPI documentation library.
 
 ### What Was Created
 
@@ -88,10 +88,10 @@ services/shared/swagger-config/
 ### Setup in Service
 
 ```typescript
-import { setupSwagger } from '@afripay/swagger-config';
+import { setupSwagger } from '@eazepay/swagger-config';
 
 setupSwagger(app, {
-  serviceName: 'AfriPay Financial Service API',
+  serviceName: 'Eazepay Financial Service API',
   serviceDescription: 'Financial transaction and analytics service',
   version: '1.0.0',
   tags: [
@@ -203,7 +203,7 @@ npm install file:../shared/swagger-config
 ### 3. Setup in Service
 
 ```typescript
-import { setupSwagger } from '@afripay/swagger-config';
+import { setupSwagger } from '@eazepay/swagger-config';
 
 setupSwagger(app, {
   serviceName: 'Your Service Name',
@@ -222,7 +222,7 @@ Add JSDoc comments above route handlers (see examples above).
 
 ```typescript
 setupSwagger(app, {
-  serviceName: 'AfriPay Financial Service',
+  serviceName: 'Eazepay Financial Service',
   serviceDescription: 'Financial transaction service',
   version: '1.0.0'
 });
@@ -232,7 +232,7 @@ setupSwagger(app, {
 
 ```typescript
 setupSwagger(app, {
-  serviceName: 'AfriPay Financial Service',
+  serviceName: 'Eazepay Financial Service',
   serviceDescription: 'Financial transaction service',
   version: '1.0.0',
   basePath: '/api',
@@ -242,7 +242,7 @@ setupSwagger(app, {
       description: 'Development'
     },
     {
-      url: 'https://api.afripay.com',
+      url: 'https://api.eazepay.com',
       description: 'Production'
     }
   ],
@@ -389,7 +389,7 @@ npx openapi-generator-cli generate \
 ### Swagger UI
 ```
 ┌─────────────────────────────────────────┐
-│  AfriPay Financial Service API          │
+│  Eazepay Financial Service API          │
 │  Version 1.0.0                          │
 ├─────────────────────────────────────────┤
 │  [Authorize] 🔒                         │

@@ -1,8 +1,8 @@
-# AfriPay Universal API Documentation
+# Eazepay Universal API Documentation
 
 ## Base URLs
 - **Development**: `http://localhost:8000` (Identity Service), `http://localhost:8001` (Biometric Service)
-- **Production**: `https://api.afripay.com`
+- **Production**: `https://api.eazepay.com`
 
 ## Authentication
 All API requests require authentication using JWT tokens obtained from the authentication endpoints.
@@ -180,7 +180,7 @@ Authenticate user using biometric data.
 {
   "phone_number": "254700000000",
   "amount": 100,
-  "account_reference": "AfriPay001",
+  "account_reference": "Eazepay001",
   "transaction_desc": "Payment for services"
 }
 ```
@@ -293,7 +293,7 @@ Verify a fingerprint against enrolled template.
 ### Payment Notifications
 **POST** `/webhooks/payment-notification`
 
-AfriPay will send POST requests to your configured webhook URL when payment status changes.
+Eazepay will send POST requests to your configured webhook URL when payment status changes.
 
 ```json
 {
@@ -321,9 +321,9 @@ X-RateLimit-Reset: 1640995200
 
 ### JavaScript/Node.js
 ```javascript
-const AfriPaySDK = require('@afripay/sdk');
+const EazepaySDK = require('@eazepay/sdk');
 
-const client = new AfriPaySDK({
+const client = new EazepaySDK({
   apiKey: 'your_api_key',
   environment: 'development' // or 'production'
 });
@@ -332,15 +332,15 @@ const client = new AfriPaySDK({
 const payment = await client.payments.mpesa.stkPush({
   phoneNumber: '254700000000',
   amount: 100,
-  accountReference: 'AfriPay001'
+  accountReference: 'Eazepay001'
 });
 ```
 
 ### Python
 ```python
-from afripay_sdk import AfriPayClient
+from eazepay_sdk import EazepayClient
 
-client = AfriPayClient(
+client = EazepayClient(
     api_key='your_api_key',
     environment='development'
 )
@@ -349,16 +349,16 @@ client = AfriPayClient(
 payment = client.payments.mpesa.stk_push(
     phone_number='254700000000',
     amount=100,
-    account_reference='AfriPay001'
+    account_reference='Eazepay001'
 )
 ```
 
 ### PHP
 ```php
 <?php
-use AfriPay\SDK\AfriPayClient;
+use Eazepay\SDK\EazepayClient;
 
-$client = new AfriPayClient([
+$client = new EazepayClient([
     'api_key' => 'your_api_key',
     'environment' => 'development'
 ]);
@@ -367,7 +367,7 @@ $client = new AfriPayClient([
 $payment = $client->payments->mpesa->stkPush([
     'phone_number' => '254700000000',
     'amount' => 100,
-    'account_reference' => 'AfriPay001'
+    'account_reference' => 'Eazepay001'
 ]);
 ?>
 ```
@@ -379,12 +379,12 @@ $payment = $client->payments->mpesa->stkPush([
 - **Test Amount**: Any amount between 1-1000
 
 ### Postman Collection
-Download our Postman collection: [AfriPay API Collection](https://api.afripay.com/postman/collection.json)
+Download our Postman collection: [Eazepay API Collection](https://api.eazepay.com/postman/collection.json)
 
 ## Support
-- **Email**: developers@afripay.com
-- **Documentation**: https://docs.afripay.com
-- **Status Page**: https://status.afripay.com
+- **Email**: developers@eazepay.com
+- **Documentation**: https://docs.eazepay.com
+- **Status Page**: https://status.eazepay.com
 
 ## Changelog
 ### v1.2.0 (2024-01-15)

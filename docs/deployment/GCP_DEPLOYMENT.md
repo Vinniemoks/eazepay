@@ -9,7 +9,7 @@
 
 ## Architecture
 
-AfriPay on GCP uses:
+Eazepay on GCP uses:
 - **GKE (Google Kubernetes Engine)** for container orchestration
 - **Cloud SQL PostgreSQL** for relational data
 - **Cloud Memorystore Redis** for caching
@@ -22,8 +22,8 @@ AfriPay on GCP uses:
 ### 1. Create GCS Bucket for Terraform State
 
 ```bash
-gsutil mb gs://afripay-terraform-state
-gsutil versioning set on gs://afripay-terraform-state
+gsutil mb gs://eazepay-terraform-state
+gsutil versioning set on gs://eazepay-terraform-state
 ```
 
 ### 2. Enable Required APIs
@@ -70,9 +70,9 @@ done
 ### 6. Deploy to GKE
 
 ```bash
-gcloud container clusters get-credentials afripay-production --zone us-central1
+gcloud container clusters get-credentials eazepay-production --zone us-central1
 
-kubectl create namespace afripay
+kubectl create namespace eazepay
 kubectl apply -f infrastructure/kubernetes/
 ```
 
@@ -87,5 +87,5 @@ kubectl apply -f infrastructure/kubernetes/
 GKE auto-scales based on load:
 
 ```bash
-kubectl autoscale deployment customer-portal --cpu-percent=70 --min=2 --max=10 -n afripay
+kubectl autoscale deployment customer-portal --cpu-percent=70 --min=2 --max=10 -n eazepay
 ```

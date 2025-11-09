@@ -7,7 +7,7 @@ terraform {
     }
   }
   backend "gcs" {
-    bucket = "afripay-terraform-state"
+    bucket = "eazepay-terraform-state"
     prefix = "production"
   }
 }

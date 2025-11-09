@@ -1,4 +1,4 @@
-# AfriPay Universal Theme Colors
+# Eazepay Universal Theme Colors
 
 ## Brand Colors
 

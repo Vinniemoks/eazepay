@@ -13,7 +13,7 @@ variable "environment" {
 variable "project_name" {
   description = "Project name"
   type        = string
-  default     = "afripay"
+  default     = "eazepay"
 }
 
 variable "vpc_cidr" {

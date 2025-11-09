@@ -7,9 +7,9 @@ services:
   
   postgresql:
     image: postgres:15-alpine
-    container_name: afripay-postgres
+    container_name: eazepay-postgres
     environment:
-      POSTGRES_DB: afripay_dev
+      POSTGRES_DB: eazepay_dev
       POSTGRES_USER: developer
       POSTGRES_PASSWORD: dev_password_2024!
     ports:
@@ -18,9 +18,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./infrastructure/docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - afripay-network
+      - eazepay-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U developer -d afripay_dev"]
+      test: ["CMD-SHELL", "pg_isready -U developer -d eazepay_dev"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -28,14 +28,14 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: afripay-redis
+    container_name: eazepay-redis
     command: redis-server --appendonly yes --requirepass "redis_password_2024!"
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
-      - afripay-network
+      - eazepay-network
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 30s
@@ -45,18 +45,18 @@ services:
 
   mongodb:
     image: mongo:6
-    container_name: afripay-mongo
+    container_name: eazepay-mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: mongo_password_2024!
-      MONGO_INITDB_DATABASE: afripay_analytics
+      MONGO_INITDB_DATABASE: eazepay_analytics
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
       - ./infrastructure/docker/mongodb/init.js:/docker-entrypoint-initdb.d/init.js
     networks:
-      - afripay-network
+      - eazepay-network
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 30s
@@ -70,11 +70,11 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: afripay-rabbitmq
+    container_name: eazepay-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: rabbitmq_password_2024!
-      RABBITMQ_DEFAULT_VHOST: afripay
+      RABBITMQ_DEFAULT_VHOST: eazepay
     ports:
       - "5672:5672"   # AMQP port
       - "15672:15672" # Management UI
@@ -83,7 +83,7 @@ services:
       # - ./infrastructure/docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
       # - ./infrastructure/docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     networks:
-      - afripay-network
+      - eazepay-network
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
@@ -99,7 +99,7 @@ services:
     build: 
       context: ./services/identity-service
       dockerfile: Dockerfile
-    container_name: afripay-identity
+    container_name: eazepay-identity
     ports:
       - "8000:8000"
     environment:
@@ -107,7 +107,7 @@ services:
       - PORT=8000
       - DB_HOST=postgresql
       - DB_PORT=5432
-      - DB_NAME=afripay_dev
+      - DB_NAME=eazepay_dev
       - DB_USER=developer
       - DB_PASS=dev_password_2024!
       - REDIS_HOST=redis
@@ -116,7 +116,7 @@ services:
       - JWT_SECRET=your_super_secret_jwt_key_here_change_in_production
       - BIOMETRIC_SERVICE_URL=http://biometric-service:8001
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/afripay
+      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
     depends_on:
       postgresql:
         condition: service_healthy
@@ -125,7 +125,7 @@ services:
       rabbitmq:
         condition: service_healthy
     networks:
-      - afripay-network
+      - eazepay-network
     volumes:
       - ./services/identity-service:/app
       - /app/node_modules
@@ -142,7 +142,7 @@ services:
     build: 
       context: ./services/biometric-service
       dockerfile: Dockerfile
-    container_name: afripay-biometric
+    container_name: eazepay-biometric
     ports:
       - "8001:8001"
     environment:
@@ -150,7 +150,7 @@ services:
       - PORT=8001
       - DB_HOST=postgresql
       - DB_PORT=5432
-      - DB_NAME=afripay_dev
+      - DB_NAME=eazepay_dev
       - DB_USER=developer
       - DB_PASS=dev_password_2024!
       - IDENTITY_SERVICE_URL=http://identity-service:8000
@@ -164,7 +164,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - afripay-network
+      - eazepay-network
     volumes:
       - ./services/biometric-service:/app
       - biometric_templates:/app/templates
@@ -181,13 +181,13 @@ services:
     build: 
       context: ./services/transaction-service
       dockerfile: Dockerfile
-    container_name: afripay-transaction
+    container_name: eazepay-transaction
     ports:
       - "8002:8002"
     environment:
       - SPRING_PROFILES_ACTIVE=development
       - SERVER_PORT=8002
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/afripay_dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/eazepay_dev
       - SPRING_DATASOURCE_USERNAME=developer
       - SPRING_DATASOURCE_PASSWORD=dev_password_2024!
       - SPRING_REDIS_HOST=redis
@@ -209,7 +209,7 @@ services:
       identity-service:
         condition: service_healthy
     networks:
-      - afripay-network
+      - eazepay-network
     volumes:
       - transaction_logs:/app/logs
     healthcheck:
@@ -224,7 +224,7 @@ services:
     build: 
       context: ./services/wallet-service
       dockerfile: Dockerfile
-    container_name: afripay-wallet
+    container_name: eazepay-wallet
     ports:
       - "8003:8003"
     environment:
@@ -232,7 +232,7 @@ services:
       - PORT=8003
       - DB_HOST=postgresql
       - DB_PORT=5432
-      - DB_NAME=afripay_dev
+      - DB_NAME=eazepay_dev
       - DB_USER=developer
       - DB_PASS=dev_password_2024!
       - REDIS_HOST=redis
@@ -240,7 +240,7 @@ services:
       - REDIS_PASSWORD=redis_password_2024!
       - IDENTITY_SERVICE_URL=http://identity-service:8000
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/afripay
+      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
     depends_on:
       postgresql:
         condition: service_healthy
@@ -251,7 +251,7 @@ services:
       identity-service:
         condition: service_healthy
     networks:
-      - afripay-network
+      - eazepay-network
     volumes:
       - wallet_logs:/app/logs
     healthcheck:
@@ -266,7 +266,7 @@ services:
     build: 
       context: ./services/ussd-gateway
       dockerfile: Dockerfile
-    container_name: afripay-ussd
+    container_name: eazepay-ussd
     ports:
       - "8004:8004"
     environment:
@@ -274,7 +274,7 @@ services:
       - PORT=8004
       - DB_HOST=postgresql
       - DB_PORT=5432
-      - DB_NAME=afripay_dev
+      - DB_NAME=eazepay_dev
       - DB_USER=developer
       - DB_PASS=dev_password_2024!
       - REDIS_HOST=redis
@@ -283,7 +283,7 @@ services:
       - IDENTITY_SERVICE_URL=http://identity-service:8000
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
       - BIOMETRIC_SERVICE_URL=http://biometric-service:8001
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/afripay
+      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
       # Telecom operator endpoints
       - SAFARICOM_USSD_ENDPOINT=https://sandbox.safaricom.co.ke/ussd/v1/
       - AIRTEL_USSD_ENDPOINT=https://openapiuat.airtel.africa/ussd/v1/
@@ -300,7 +300,7 @@ services:
       transaction-service:
         condition: service_healthy
     networks:
-      - afripay-network
+      - eazepay-network
     volumes:
       - ./services/ussd-gateway:/app
       - /app/node_modules
@@ -317,7 +317,7 @@ services:
     build: 
       context: ./services/agent-service
       dockerfile: Dockerfile
-    container_name: afripay-agent
+    container_name: eazepay-agent
     ports:
       - "8005:8005"
     environment:
@@ -325,21 +325,21 @@ services:
       - PORT=8005
       - DB_HOST=postgresql
       - DB_PORT=5432
-      - DB_NAME=afripay_dev
+      - DB_NAME=eazepay_dev
       - DB_USER=developer
       - DB_PASS=dev_password_2024!
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
       - MONGODB_USER=admin
       - MONGODB_PASS=mongo_password_2024!
-      - MONGODB_DB=afripay_analytics
+      - MONGODB_DB=eazepay_analytics
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=redis_password_2024!
       - IDENTITY_SERVICE_URL=http://identity-service:8000
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
       - BIOMETRIC_SERVICE_URL=http://biometric-service:8001
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/afripay
+      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
     depends_on:
       postgresql:
         condition: service_healthy
@@ -352,7 +352,7 @@ services:
       identity-service:
         condition: service_healthy
     networks:
-      - afripay-network
+      - eazepay-network
     volumes:
       - ./services/agent-service:/app
       - /app/node_modules
@@ -371,7 +371,7 @@ services:
 
   api-gateway:
     image: nginx:alpine
-    container_name: afripay-gateway
+    container_name: eazepay-gateway
     ports:
       - "80:80"
       - "443:443"
@@ -388,7 +388,7 @@ services:
       - ussd-gateway
       - agent-service
     networks:
-      - afripay-network
+      - eazepay-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
@@ -402,7 +402,7 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: afripay-prometheus
+    container_name: eazepay-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -416,12 +416,12 @@ services:
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     networks:
-      - afripay-network
+      - eazepay-network
     restart: unless-stopped
 
   grafana:
     image: grafana/grafana-enterprise:latest
-    container_name: afripay-grafana
+    container_name: eazepay-grafana
     ports:
       - "3000:3000"
     environment:
@@ -432,14 +432,14 @@ services:
       - ./infrastructure/docker/grafana/provisioning:/etc/grafana/provisioning
       - ./infrastructure/docker/grafana/dashboards:/var/lib/grafana/dashboards
     networks:
-      - afripay-network
+      - eazepay-network
     depends_on:
       - prometheus
     restart: unless-stopped
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: afripay-elasticsearch
+    container_name: eazepay-elasticsearch
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -449,7 +449,7 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
-      - afripay-network
+      - eazepay-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
       interval: 30s
@@ -459,7 +459,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.11.0
-    container_name: afripay-kibana
+    container_name: eazepay-kibana
     ports:
       - "5601:5601"
     environment:
@@ -468,7 +468,7 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      - afripay-network
+      - eazepay-network
     restart: unless-stopped
 
   # ================================
@@ -477,7 +477,7 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: afripay-adminer
+    container_name: eazepay-adminer
     ports:
       - "8080:8080"
     environment:
@@ -486,7 +486,7 @@ services:
     depends_on:
       - postgresql
     networks:
-      - afripay-network
+      - eazepay-network
     restart: unless-stopped
 
 # ================================
@@ -530,9 +530,9 @@ volumes:
 # ================================
 
 networks:
-  afripay-network:
+  eazepay-network:
     driver: bridge
-    name: afripay-network
+    name: eazepay-network
     ipam:
       config:
         - subnet: 172.20.0.0/16

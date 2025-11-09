@@ -7,7 +7,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "afripay-terraform-state"
+    bucket = "eazepay-terraform-state"
     key    = "production/terraform.tfstate"
     region = "us-east-1"
   }
@@ -47,7 +47,7 @@ module "rds" {
   allocated_storage   = 100
   vpc_id              = module.vpc.vpc_id
   subnet_ids          = module.vpc.private_subnet_ids
-  database_name       = "afripay_prod"
+  database_name       = "eazepay_prod"
   master_username     = var.db_master_username
   master_password     = var.db_master_password
 }

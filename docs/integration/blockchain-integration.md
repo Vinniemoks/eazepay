@@ -39,7 +39,7 @@ services/blockchain-service/
 
 ### 3. **Transaction Service Integration**
 ```
-services/transaction-service/src/main/java/com/afripay/transaction/
+services/transaction-service/src/main/java/com/eazepay/transaction/
 ├── blockchain/
 │   ├── BlockchainClient.java           # Blockchain API client
 │   └── TransactionBlockchainDTO.java   # Data transfer object
@@ -194,7 +194,7 @@ cd fabric-samples/test-network
 docker-compose up -d blockchain-service
 
 # Check logs
-docker logs afripay-blockchain -f
+docker logs eazepay-blockchain -f
 ```
 
 ### 3. Test Integration

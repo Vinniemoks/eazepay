@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This specification defines an enterprise-grade administrative system for AfriPay with organizational hierarchy, role-based access control, financial reporting, and approval workflows. The system supports superusers, managers, and employees with specific permissions and approval chains.
+This specification defines an enterprise-grade administrative system for Eazepay with organizational hierarchy, role-based access control, financial reporting, and approval workflows. The system supports superusers, managers, and employees with specific permissions and approval chains.
 
 ## Glossary
 
-- **System**: The AfriPay Admin & Superuser Portal
+- **System**: The Eazepay Admin & Superuser Portal
 - **Superuser**: Top-level administrator with full system access (maximum 2)
 - **Manager**: Department head with approval rights and team management
 - **Employee**: Staff member with limited, role-specific permissions

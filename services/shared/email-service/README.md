@@ -1,6 +1,6 @@
 # Email Service
 
-Shared email service for the AfriPay platform with support for multiple email providers and templating.
+Shared email service for the Eazepay platform with support for multiple email providers and templating.
 
 ## Features
 
@@ -27,12 +27,12 @@ npm run build
 EMAIL_PROVIDER=smtp
 
 # From Address
-EMAIL_FROM=noreply@afripay.com
+EMAIL_FROM=noreply@eazepay.com
 
 # App Configuration
-APP_NAME=AfriPay
-APP_URL=https://app.afripay.com
-SUPPORT_EMAIL=support@afripay.com
+APP_NAME=Eazepay
+APP_URL=https://app.eazepay.com
+SUPPORT_EMAIL=support@eazepay.com
 
 # SMTP Configuration (if using SMTP)
 SMTP_HOST=smtp.gmail.com
@@ -55,15 +55,15 @@ MAILGUN_DOMAIN=your-domain.com
 ### Basic Setup
 
 ```typescript
-import { EmailService } from '@afripay/email-service';
+import { EmailService } from '@eazepay/email-service';
 import path from 'path';
 
 const emailService = new EmailService({
   provider: 'smtp',
-  from: 'noreply@afripay.com',
-  appName: 'AfriPay',
-  appUrl: 'https://app.afripay.com',
-  supportEmail: 'support@afripay.com',
+  from: 'noreply@eazepay.com',
+  appName: 'Eazepay',
+  appUrl: 'https://app.eazepay.com',
+  supportEmail: 'support@eazepay.com',
   templatesDir: path.join(__dirname, 'templates'),
   smtp: {
     host: 'smtp.gmail.com',

@@ -1,7 +1,7 @@
 {
   "name": "ussd-service",
   "version": "1.0.0",
-  "description": "USSD Gateway microservice for AfriPay",
+  "description": "USSD Gateway microservice for Eazepay",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",

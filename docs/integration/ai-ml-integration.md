@@ -24,7 +24,7 @@ services/ai-ml-service/
 
 ### 2. **Transaction Service Integration**
 ```
-services/transaction-service/src/main/java/com/afripay/transaction/ai/
+services/transaction-service/src/main/java/com/eazepay/transaction/ai/
 ├── FraudCheckClient.java      # AI service client
 ├── FraudCheckRequest.java     # Request DTO
 └── FraudCheckResult.java      # Response DTO

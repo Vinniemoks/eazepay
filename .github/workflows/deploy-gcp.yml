@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GKE_CLUSTER: afripay-production
+  GKE_CLUSTER: eazepay-production
   GKE_ZONE: us-central1
   
 jobs:
@@ -53,5 +53,5 @@ jobs:
       run: |
         kubectl set image deployment/${{ matrix.service }} \
           ${{ matrix.service }}=gcr.io/$PROJECT_ID/${{ matrix.service }}:${{ github.sha }} \
-          -n afripay
-        kubectl rollout status deployment/${{ matrix.service }} -n afripay
+          -n eazepay
+        kubectl rollout status deployment/${{ matrix.service }} -n eazepay

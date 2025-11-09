@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../config/database';
 import { User } from '../models/User';
 import { Session } from '../models/Session';
-import { SessionManager, JWTService } from '@afripay/auth-middleware';
+import { SessionManager, JWTService } from '@eazepay/auth-middleware';
 import {
   hashPassword,
   verifyPassword,
@@ -26,8 +26,8 @@ export class AuthEnhancedController {
     this.jwtService = new JWTService({
       jwtSecret: process.env.JWT_SECRET!,
       jwtExpiresIn: '8h',
-      issuer: 'afripay-identity-service',
-      audience: 'afripay-services'
+      issuer: 'eazepay-identity-service',
+      audience: 'eazepay-services'
     });
   }
 
@@ -477,7 +477,7 @@ export class AuthEnhancedController {
       
       // Send OTP via SMS and email
       try {
-        await sendSMS(user.phone, `Your AfriPay verification code is: ${otp}`);
+        await sendSMS(user.phone, `Your Eazepay verification code is: ${otp}`);
       } catch (smsError: any) {
         logger.warn('SMS sending failed, trying email', { error: smsError.message });
       }

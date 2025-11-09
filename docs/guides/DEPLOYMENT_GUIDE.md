@@ -1,6 +1,6 @@
-# AfriPay Cloud Deployment Guide
+# Eazepay Cloud Deployment Guide
 
-Your AfriPay platform is now ready for production deployment with complete customer-facing interfaces.
+Your Eazepay platform is now ready for production deployment with complete customer-facing interfaces.
 
 ## What's New
 

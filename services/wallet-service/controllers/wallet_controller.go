@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"afripay/models"
-	"afripay/services"
+	"eazepay/wallet-service/models"
+	"eazepay/wallet-service/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,14 +10,12 @@ import (
 )
 
 type WalletController struct {
-	walletService    *services.WalletService
-	biometricService *services.BiometricService
+	walletService *services.WalletService
 }
 
-func NewWalletController(ws *services.WalletService, bs *services.BiometricService) *WalletController {
+func NewWalletController(ws *services.WalletService) *WalletController {
 	return &WalletController{
-		walletService:    ws,
-		biometricService: bs,
+		walletService: ws,
 	}
 }
 
@@ -115,13 +113,6 @@ func (wc *WalletController) BiometricPayment(c *gin.Context) {
 		return
 	}
 
-	// Verify biometric
-	verified, err := wc.biometricService.VerifyBiometric(walletID, req.BiometricData)
-	if err != nil || !verified {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Biometric verification failed"})
-		return
-	}
-
 	// Process payment
 	payment, err := wc.walletService.ProcessBiometricPayment(walletID, req.Amount, req.MerchantID, req.BiometricData)
 	if err != nil {
@@ -147,13 +138,6 @@ func (wc *WalletController) EnableBiometric(c *gin.Context) {
 	walletID, err := uuid.Parse(req.WalletID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid wallet ID"})
-		return
-	}
-
-	// Register biometric
-	err = wc.biometricService.RegisterBiometric(walletID, req.BiometricData)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

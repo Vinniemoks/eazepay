@@ -1,6 +1,6 @@
-# @afripay/migrations
+# @eazepay/migrations
 
-Database migration utilities for AfriPay microservices with TypeORM support.
+Database migration utilities for Eazepay microservices with TypeORM support.
 
 ## Features
 
@@ -35,7 +35,7 @@ npm install file:../shared/migrations
 
 ```typescript
 // src/scripts/migrate.ts
-import { MigrationRunner } from '@afripay/migrations';
+import { MigrationRunner } from '@eazepay/migrations';
 import { AppDataSource } from '../config/database';
 import logger from '../utils/logger';
 
@@ -510,4 +510,4 @@ For issues or questions:
 
 **Version**: 1.0.0  
 **License**: MIT  
-**Maintained By**: AfriPay DevOps Team
+**Maintained By**: Eazepay DevOps Team

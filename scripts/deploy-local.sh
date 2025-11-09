@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Starting AfriPay Local Deployment..."
+echo "🚀 Starting Eazepay Local Deployment..."
 
 # Build frontend applications
 echo "📦 Building Customer Portal..."

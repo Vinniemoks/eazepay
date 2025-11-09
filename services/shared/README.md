@@ -1,6 +1,6 @@
 # Shared Components
 
-Shared UI components, styles, utilities, and themes used across AfriPay portal applications.
+Shared UI components, styles, utilities, and themes used across Eazepay portal applications.
 
 ## Structure
 

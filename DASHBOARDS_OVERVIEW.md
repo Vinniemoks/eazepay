@@ -1,4 +1,4 @@
-# AfriPay Dashboards Overview
+# Eazepay Dashboards Overview
 
 All dashboards are now built with the royal gold/purple theme and work with mock data (no backend required).
 
@@ -90,15 +90,15 @@ All dashboards are now built with the royal gold/purple theme and work with mock
 
 ### Demo Credentials:
 1. **Super Admin**
-   - Email: `superadmin@afripay.com`
+   - Email: `superadmin@eazepay.com`
    - Password: `SuperAdmin@2024`
 
 2. **System Admin**
-   - Email: `admin@afripay.com`
+   - Email: `admin@eazepay.com`
    - Password: `Admin@2024`
 
 3. **Operations Manager**
-   - Email: `manager@afripay.com`
+   - Email: `manager@eazepay.com`
    - Password: `Manager@2024`
 
 ### Features:

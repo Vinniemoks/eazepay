@@ -13,7 +13,7 @@ services:
     plan: free
     region: oregon
     databases:
-      - name: afripay_dev
+      - name: eazepay_dev
         user: developer
 
   - type: redis
@@ -49,7 +49,7 @@ services:
           name: eazepay-postgres
           property: port
       - key: DB_NAME
-        value: afripay_dev
+        value: eazepay_dev
       - key: DB_USER
         fromDatabase:
           name: eazepay-postgres
@@ -95,7 +95,7 @@ services:
           name: eazepay-postgres
           property: port
       - key: POSTGRES_DB
-        value: afripay_dev
+        value: eazepay_dev
       - key: POSTGRES_USER
         fromDatabase:
           name: eazepay-postgres

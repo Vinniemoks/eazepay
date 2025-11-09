@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import { createMigration } from '@afripay/migrations';
+import { createMigration } from '@eazepay/migrations';
 import * as path from 'path';
 
 const migrationName = process.argv[2];

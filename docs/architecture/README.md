@@ -1,6 +1,6 @@
-AfriPay Universal - Architecture Overview
+Eazepay Universal - Architecture Overview
 System Architecture
-AfriPay Universal is built using a microservices architecture designed for high availability, scalability, and security.
+Eazepay Universal is built using a microservices architecture designed for high availability, scalability, and security.
 Core Principles
 
 Microservices Architecture: Independent, loosely coupled services
@@ -59,4 +59,4 @@ Experience Visuals
 
 Refer to [Service Experience and System Visuals](service-visuals.md) for user-facing and backend diagrams, including the superuser governance model.
 
-For an interactive POS-terminal rendering of those experiences, open the [AfriPay POS Service Visuals](pos-terminal/index.html) prototype in a browser. The companion [stylesheet](pos-terminal/styles.css) can be reused within POS deployments that require the same look and feel.
+For an interactive POS-terminal rendering of those experiences, open the [Eazepay POS Service Visuals](pos-terminal/index.html) prototype in a browser. The companion [stylesheet](pos-terminal/styles.css) can be reused within POS deployments that require the same look and feel.

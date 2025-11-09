@@ -107,7 +107,7 @@ curl -X POST http://localhost:8000/api/admin/users \
   -H "Authorization: Bearer SUPERUSER_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "manager@afripay.com",
+    "email": "manager@eazepay.com",
     "phone": "+254712345679",
     "password": "SecurePass123!",
     "fullName": "Finance Manager",
@@ -123,7 +123,7 @@ curl -X POST http://localhost:8000/api/admin/users \
   -H "Authorization: Bearer SUPERUSER_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "employee@afripay.com",
+    "email": "employee@eazepay.com",
     "phone": "+254712345680",
     "password": "SecurePass123!",
     "fullName": "Finance Employee",
