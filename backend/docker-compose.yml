@@ -1,0 +1,70 @@
+version: "3.9"
+services:
+  api-gateway:
+    build: ./gateway/api-gateway
+    ports:
+      - "${API_GATEWAY_PORT:-8080}:8080"
+    environment:
+      - IDENTITY_URL=http://identity-service:8000
+      - TRANSACTION_URL=http://transaction-service-java:8002
+      - WALLET_URL=http://wallet-service-go:8003
+      - BIOMETRIC_URL=http://biometric-service-python:8001
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+    depends_on:
+      - identity-service
+      - transaction-service-java
+      - wallet-service-go
+      - biometric-service-python
+
+  identity-service:
+    build: ./services/identity-service
+    ports:
+      - "${IDENTITY_PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - JWT_SECRET=${JWT_SECRET}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - SKIP_DB_INIT=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+
+  transaction-service-java:
+    build: ./services/transaction-service-java
+    ports:
+      - "${TRANSACTION_PORT:-8002}:8002"
+    environment:
+      - SERVER_PORT=8002
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+
+  wallet-service-go:
+    build: ./services/wallet-service-go
+    ports:
+      - "${WALLET_PORT:-8003}:8003"
+
+  biometric-service-python:
+    build: ./services/biometric-service-python
+    ports:
+      - "${BIOMETRIC_PORT:-8001}:8001"
+
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"

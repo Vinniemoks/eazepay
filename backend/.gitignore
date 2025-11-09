@@ -1,0 +1,20 @@
+# Node
+node_modules/
+.env
+dist/
+
+# Java
+target/
+.mvn/
+
+# Python
+__pycache__/
+.pytest_cache/
+
+# Go
+bin/
+
+# IDE
+.DS_Store
+.idea/
+.vscode/
