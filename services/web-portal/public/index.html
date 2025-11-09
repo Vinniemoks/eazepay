@@ -9,6 +9,34 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <style>
+    .portal-card h3 {
+      display: flex;
+      align-items: center;
+    }
+
+    .status-dot {
+      height: 10px;
+      width: 10px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .status-dot.online {
+      background-color: #28a745; /* Green */
+    }
+
+    .status-dot.offline {
+      background-color: #dc3545; /* Red */
+    }
+
+    .portal-link.disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  </style>
 </head>
 
 <body>
@@ -338,23 +366,23 @@
       <p class="section__eyebrow">User Portals</p>
       <h2 class="section__title">Tailored experiences for every user type</h2>
       <div class="portal-grid">
-        <div class="portal-card">
+        <div class="portal-card" data-portal="customer">
           <div class="portal-icon">👤</div>
-          <h3>Customer Portal</h3>
+          <h3>Customer Portal <span class="status-dot"></span></h3>
           <p>Intuitive interface for end-users to manage wallets, make transfers, pay bills, and track transactions.</p>
-          <a href="http://localhost:3001" target="_blank" class="portal-link">Explore Customer Portal →</a>
+          <a href="http://localhost:3003" target="_blank" class="portal-link">Explore Customer Portal →</a>
         </div>
-        <div class="portal-card">
+        <div class="portal-card" data-portal="agent">
           <div class="portal-icon">🎯</div>
-          <h3>Agent Portal</h3>
+          <h3>Agent Portal <span class="status-dot"></span></h3>
           <p>Powerful tools for field agents to onboard customers, process transactions, and track commissions.</p>
           <a href="http://localhost:3002" target="_blank" class="portal-link">Explore Agent Portal →</a>
         </div>
-        <div class="portal-card">
+        <div class="portal-card" data-portal="admin">
           <div class="portal-icon">⚙️</div>
-          <h3>Admin Portal</h3>
+          <h3>Admin Portal <span class="status-dot"></span></h3>
           <p>Comprehensive dashboard for administrators to manage users, monitor systems, and generate reports.</p>
-          <a href="http://localhost:8080" target="_blank" class="portal-link">Explore Admin Portal →</a>
+          <a href="http://localhost:3001" target="_blank" class="portal-link">Explore Admin Portal →</a>
         </div>
       </div>
     </section>
@@ -385,9 +413,9 @@
       </div>
       <div class="footer-section">
         <h4>Portals</h4>
-        <a href="http://localhost:3001" target="_blank">Customer Portal</a>
+        <a href="http://localhost:3003" target="_blank">Customer Portal</a>
         <a href="http://localhost:3002" target="_blank">Agent Portal</a>
-        <a href="http://localhost:8080" target="_blank">Admin Portal</a>
+        <a href="http://localhost:3001" target="_blank">Admin Portal</a>
       </div>
       <div class="footer-section">
         <h4>Resources</h4>
@@ -418,9 +446,9 @@
     // Portal redirect handler
     function redirectToPortal(portalType) {
       const portals = {
-        customer: 'http://localhost:3001',
+        customer: 'http://localhost:3003',
         agent: 'http://localhost:3002',
-        admin: 'http://localhost:8080'
+        admin: 'http://localhost:3001'
       };
 
       const url = portals[portalType];
@@ -432,20 +460,26 @@
     // Check if portals are running and update links
     async function checkPortalStatus() {
       const portals = [
-        { name: 'customer', port: 3001 },
-        { name: 'agent', port: 3002 },
-        { name: 'admin', port: 8080 }
+        { name: 'customer', port: 3003, card: document.querySelector('.portal-card[data-portal="customer"]') },
+        { name: 'agent', port: 3002, card: document.querySelector('.portal-card[data-portal="agent"]') },
+        { name: 'admin', port: 3001, card: document.querySelector('.portal-card[data-portal="admin"]') }
       ];
 
       for (const portal of portals) {
+        const statusDot = portal.card.querySelector('.status-dot');
+        const portalLink = portal.card.querySelector('.portal-link');
+
         try {
-          const response = await fetch(`http://localhost:${portal.port}`, {
-            mode: 'no-cors',
-            timeout: 2000
-          });
-          console.log(`${portal.name} portal is running on port ${portal.port}`);
+          // Use a HEAD request for a lightweight check
+          await fetch(`http://localhost:${portal.port}`, { method: 'HEAD', mode: 'no-cors', timeout: 1500 });
+          statusDot.classList.add('online');
+          statusDot.classList.remove('offline');
         } catch (error) {
-          console.log(`${portal.name} portal is not running on port ${portal.port}`);
+          statusDot.classList.add('offline');
+          statusDot.classList.remove('online');
+          portalLink.classList.add('disabled');
+          portalLink.textContent = 'Portal Offline';
+          portalLink.href = '#';
         }
       }
     }

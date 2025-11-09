@@ -14,7 +14,7 @@ A `.env` file is provided to document the front-end configuration options used d
 | Variable | Description | Default |
 | --- | --- | --- |
 | `VITE_APP_NAME` | Portal display name | `Eazepay Web Portal` |
-| `VITE_API_GATEWAY_URL` | Base URL for API gateway calls | `https://api.local.eazepay.test` |
+| `VITE_API_GATEWAY_URL` | Base URL for API gateway calls | `http://localhost:8080` |
 | `VITE_IDENTITY_SERVICE_URL` | Identity Service endpoint | `http://localhost:8000` |
 | `VITE_WALLET_SERVICE_URL` | Wallet Service endpoint | `http://localhost:8003` |
 

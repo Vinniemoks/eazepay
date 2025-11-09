@@ -30,21 +30,21 @@ export class ServiceRegistry {
     this.register({
       name: 'biometric-service',
       url: process.env.BIOMETRIC_SERVICE_URL || 
-           (isDocker ? `${protocol}://biometric-service:8001` : `${protocol}://localhost:8001`),
+           (isDocker ? `${protocol}://biometric-service-python:8001` : `${protocol}://localhost:8001`),
       healthCheck: '/health'
     });
 
     this.register({
       name: 'transaction-service',
       url: process.env.TRANSACTION_SERVICE_URL || 
-           (isDocker ? `${protocol}://transaction-service:8002` : `${protocol}://localhost:8002`),
+           (isDocker ? `${protocol}://transaction-service-java:8002` : `${protocol}://localhost:8002`),
       healthCheck: '/health'
     });
 
     this.register({
       name: 'wallet-service',
       url: process.env.WALLET_SERVICE_URL || 
-           (isDocker ? `${protocol}://wallet-service:8003` : `${protocol}://localhost:8003`),
+           (isDocker ? `${protocol}://wallet-service-go:8003` : `${protocol}://localhost:8003`),
       healthCheck: '/health'
     });
 
