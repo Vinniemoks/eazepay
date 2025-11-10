@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { getTheme, useSystemTheme } from './shared/theme';
 import Landing from './pages/Landing';
+import Meme from './pages/Meme';
 import Dashboard from './pages/Dashboard';
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing toggleTheme={toggleTheme} />} />
           <Route path="/dashboard" element={<Dashboard toggleTheme={toggleTheme} />} />
+          <Route path="/meme" element={<Meme toggleTheme={toggleTheme} />} />
         </Routes>
       </Router>
     </ThemeProvider>

@@ -7,9 +7,9 @@ services:
     image: postgres:15-alpine
     container_name: eazepay-postgres
     environment:
-      POSTGRES_DB: eazepay_dev
-      POSTGRES_USER: developer
-      POSTGRES_PASSWORD: dev_password_2024!
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
@@ -27,7 +27,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: eazepay-redis
-    command: redis-server --appendonly yes --requirepass "redis_password_2024!"
+    command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
     ports:
       - "6379:6379"
     volumes:
@@ -45,8 +45,8 @@ services:
     image: mongo:6
     container_name: eazepay-mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: mongo_password_2024!
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: eazepay_analytics
     ports:
       - "27017:27017"
@@ -70,8 +70,8 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: eazepay-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: rabbitmq_password_2024!
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       RABBITMQ_DEFAULT_VHOST: eazepay
     ports:
       - "5673:5672"   # AMQP port
@@ -130,7 +130,7 @@ services:
       - JWT_SECRET=your_super_secret_jwt_key_here_change_in_production
       - BIOMETRIC_SERVICE_URL=http://biometric-service:8001
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/eazepay
     depends_on:
       postgresql:
         condition: service_healthy
@@ -167,12 +167,12 @@ services:
       - DB_PORT=5432
       - DB_NAME=eazepay_dev
       - DB_USER=developer
-      - DB_PASS=dev_password_2024!
+      - DB_PASS=${DB_PASS}
       - IDENTITY_SERVICE_URL=http://identity-service:8000
-      - ENCRYPTION_KEY=your_32_character_encryption_key_here
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis_password_2024!
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     depends_on:
       postgresql:
         condition: service_healthy
@@ -181,7 +181,7 @@ services:
     networks:
       - eazepay-network
     volumes:
-      - ./services/biometric-service:/app
+      # - ./services/biometric-service:/app
       - biometric_templates:/app/templates
       - biometric_logs:/app/logs
     healthcheck:
@@ -204,16 +204,16 @@ services:
       - SERVER_PORT=8002
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/eazepay_dev
       - SPRING_DATASOURCE_USERNAME=developer
-      - SPRING_DATASOURCE_PASSWORD=dev_password_2024!
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
-      - SPRING_REDIS_PASSWORD=redis_password_2024!
+      - SPRING_REDIS_PASSWORD=${SPRING_REDIS_PASSWORD}
       - IDENTITY_SERVICE_URL=http://identity-service:8000
       - WALLET_SERVICE_URL=http://wallet-service:8003
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-      - RABBITMQ_USERNAME=admin
-      - RABBITMQ_PASSWORD=rabbitmq_password_2024!
+      - RABBITMQ_USERNAME=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
     depends_on:
       postgresql:
         condition: service_healthy
@@ -249,13 +249,13 @@ services:
       - DB_PORT=5432
       - DB_NAME=eazepay_dev
       - DB_USER=developer
-      - DB_PASS=dev_password_2024!
+      - DB_PASS=${DB_PASS}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis_password_2024!
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - IDENTITY_SERVICE_URL=http://identity-service:8000
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/eazepay
     depends_on:
       postgresql:
         condition: service_healthy
@@ -291,14 +291,14 @@ services:
       - DB_PORT=5432
       - DB_NAME=eazepay_dev
       - DB_USER=developer
-      - DB_PASS=dev_password_2024!
+      - DB_PASS=${DB_PASS}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis_password_2024!
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - IDENTITY_SERVICE_URL=http://identity-service:8000
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
       - BIOMETRIC_SERVICE_URL=http://biometric-service:8001
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/eazepay
       # Telecom operator endpoints
       - SAFARICOM_USSD_ENDPOINT=https://sandbox.safaricom.co.ke/ussd/v1/
       - AIRTEL_USSD_ENDPOINT=https://openapiuat.airtel.africa/ussd/v1/
@@ -317,8 +317,8 @@ services:
     networks:
       - eazepay-network
     volumes:
-      - ./services/ussd-service:/app
-      - /app/node_modules
+      # - ./services/ussd-service:/app
+      # - /app/node_modules
       - ussd_logs:/app/logs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
@@ -342,19 +342,19 @@ services:
       - DB_PORT=5432
       - DB_NAME=eazepay_dev
       - DB_USER=developer
-      - DB_PASS=dev_password_2024!
+      - DB_PASS=${DB_PASS}
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
-      - MONGODB_USER=admin
-      - MONGODB_PASS=mongo_password_2024!
+      - MONGODB_USER=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGODB_PASS=${MONGODB_PASS}
       - MONGODB_DB=eazepay_analytics
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis_password_2024!
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - IDENTITY_SERVICE_URL=http://identity-service:8000
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
       - BIOMETRIC_SERVICE_URL=http://biometric-service:8001
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/eazepay
     depends_on:
       postgresql:
         condition: service_healthy
@@ -369,8 +369,8 @@ services:
     networks:
       - eazepay-network
     volumes:
-      - ./services/agent-service:/app
-      - /app/node_modules
+      # - ./services/agent-service:/app
+      # - /app/node_modules
       - agent_logs:/app/logs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
@@ -425,10 +425,10 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_DB=eazepay_dev
       - POSTGRES_USER=developer
-      - POSTGRES_PASSWORD=dev_password_2024!
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis_password_2024!
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     depends_on:
       postgresql:
         condition: service_healthy
@@ -481,10 +481,10 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_DB=eazepay_dev
       - POSTGRES_USER=developer
-      - POSTGRES_PASSWORD=dev_password_2024!
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis_password_2024!
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - AGENT_SERVICE_URL=http://agent-service:8005
     depends_on:
       mosquitto:
@@ -523,10 +523,10 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_DB=eazepay_dev
       - POSTGRES_USER=developer
-      - POSTGRES_PASSWORD=dev_password_2024!
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=redis_password_2024!
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - RPA_ENABLED=true
       - RPA_MAX_CONCURRENT_JOBS=5
       - RPA_RETRY_ATTEMPTS=3
@@ -765,8 +765,8 @@ services:
       # Anchoring configuration (set values to enable Ethereum anchoring)
       - ANCHOR_PROVIDER=ethereum
       - ETH_NETWORK=sepolia
-      - ETH_RPC_URL=http://replace-with-sepolia-rpc-url
-      - ETH_PRIVATE_KEY=replace-with-testnet-private-key
+      - ETH_RPC_URL=${ETH_RPC_URL}
+      - ETH_PRIVATE_KEY=${ETH_PRIVATE_KEY}
     networks:
       - eazepay-network
     healthcheck:
@@ -806,7 +806,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=grafana_admin_2024!
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - grafana_data:/var/lib/grafana
@@ -824,7 +824,7 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - xpack.security.enabled=false
+      # IMPORTANT: xpack.security.enabled is set to false for development purposes.\n      # In a production environment, this should be set to true and properly configured.
     ports:
       - "9200:9200"
     volumes:

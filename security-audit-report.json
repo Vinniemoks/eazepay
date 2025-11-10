@@ -1,15 +1,100 @@
 {
-  "timestamp": "2025-11-09T12:38:43.355Z",
+  "timestamp": "2025-11-10T17:59:16.987Z",
   "summary": {
-    "totalIssues": 0,
-    "totalWarnings": 1,
+    "totalIssues": 6,
+    "totalWarnings": 7,
     "totalRecommendations": 0,
-    "criticalIssues": 0,
+    "criticalIssues": 6,
     "mediumIssues": 0,
     "lowIssues": 0
   },
-  "issues": [],
+  "issues": [
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\backend\\services\\identity-service\\src\\routes\\auth.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\backend\\services\\identity-service\\src\\routes\\auth.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\ledger-integrity-service\\src\\index.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\message-adapter\\src\\index.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\payment-orchestrator\\src\\index.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    },
+    {
+      "type": "MISSING_AUTHENTICATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\recon-service\\src\\index.ts",
+      "line": 1,
+      "severity": "HIGH",
+      "description": "Route handlers found without authentication"
+    }
+  ],
   "warnings": [
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\backend\\services\\identity-service\\src\\routes\\auth.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\backend\\services\\identity-service\\src\\routes\\auth.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\ledger-integrity-service\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\message-adapter\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\payment-orchestrator\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
+    {
+      "type": "MISSING_VALIDATION",
+      "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\recon-service\\src\\index.ts",
+      "line": 1,
+      "severity": "MEDIUM",
+      "description": "Route handlers found without input validation"
+    },
     {
       "type": "MISSING_VALIDATION",
       "file": "C:\\Users\\Window\\Desktop\\eazepay\\services\\shared\\swagger-config\\src\\swagger.ts",

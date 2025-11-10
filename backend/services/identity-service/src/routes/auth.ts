@@ -1,10 +1,12 @@
 import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { createUser, findUserByEmail } from '../repositories/users';
+import { validateRequest } from '../../../../services/identity-service/src/middleware/validation';
+import { loginSchema, registerSchema } from '../../../../services/identity-service/src/validation/auth.schemas';
 
 const router = Router();
 
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', validateRequest(loginSchema), async (req: Request, res: Response) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'email required' });
   try {
@@ -18,7 +20,7 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/register', async (req: Request, res: Response) => {
+router.post('/register', validateRequest(registerSchema), async (req: Request, res: Response) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'email required' });
   try {

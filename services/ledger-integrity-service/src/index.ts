@@ -9,11 +9,30 @@ import { v4 as uuidv4 } from 'uuid';
 import { ethers } from 'ethers';
 import cron from 'node-cron';
 
+import { authenticate, validateRequest } from 'afripay-shared/auth-middleware';
+import { object, string, array } from 'joi';
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ limit: '1mb' }));
+app.use(authenticate); // Apply authentication to all routes
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8013;
+
+// Validation Schemas
+const verifySchema = object({
+  entries: array().items(object({
+    id: string().required(),
+    prevHash: string().allow('').required(),
+    data: object().required(),
+    hash: string().optional()
+  })).min(1).required()
+});
+
+const anchorSchema = object({
+  rootHash: string().hex().length(64).required()
+});
+
 
 // In-memory state for the latest root and anchoring stats
 let latestMerkleRoot: string | null = null;
@@ -69,7 +88,7 @@ app.get('/health', (_req, res) => {
 });
 
 // Verify a batch of ledger entries are correctly chained and compute Merkle root
-app.post('/integrity/verify', (req, res) => {
+app.post('/integrity/verify', validateRequest(verifySchema), (req, res) => {
   const entries: LedgerEntry[] = req.body?.entries ?? [];
   if (!Array.isArray(entries) || entries.length === 0) {
     return res.status(400).json({ error: 'entries array required' });
@@ -154,7 +173,7 @@ async function performAnchor(rootHash: string) {
 }
 
 // Prepare an anchor record or perform on-chain anchoring when configured
-app.post('/integrity/anchor', async (req, res) => {
+app.post('/integrity/anchor', validateRequest(anchorSchema), async (req, res) => {
   const rootHash: string = req.body?.rootHash;
   if (!rootHash || typeof rootHash !== 'string') {
     return res.status(400).json({ error: 'rootHash (string) required' });

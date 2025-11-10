@@ -92,6 +92,14 @@ export default function LandingPage({ toggleTheme }) {
             variant="outlined"
             color="primary"
             size="large"
+            href="/meme"
+          >
+            Meme Page
+          </AnimatedButton>
+          <AnimatedButton
+            variant="outlined"
+            color="primary"
+            size="large"
             href="/register"
           >
             Create Account
