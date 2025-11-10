@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import Transactions from './pages/Transactions'
 import Customers from './pages/Customers'
 import Login from './pages/Login'
+import GatewayDemo from './pages/GatewayDemo'
 import { useAuthStore } from './store/authStore'
 
 function ProtectedRoute({ children }) {
@@ -21,6 +22,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="customers" element={<Customers />} />
+          <Route path="gateway-demo" element={<GatewayDemo />} />
         </Route>
       </Routes>
     </BrowserRouter>
