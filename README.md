@@ -364,6 +364,30 @@ See [Deployment Guide - Troubleshooting](EAZEPAY_DEPLOYMENT_GUIDE.md#-troublesho
 - Website: https://eazepay.com
 - Documentation: https://docs.eazepay.com
 
+## 🌐 New Services & Gateway Routes
+
+The following services are now wired behind the API Gateway:
+
+- Payment Orchestrator (`:8010`) — `/api/orchestrate/payment`
+- Message Adapter (`:8011`) — `/api/iso/pain001`, `/api/iso/pacs008`
+- Reconciliation Service (`:8012`) — `/api/recon/run`
+
+Quick health checks:
+
+```bash
+curl http://localhost:8010/health
+curl http://localhost:8011/health
+curl http://localhost:8012/health
+```
+
+Gateway tests (via Nginx on `:8080`):
+
+```bash
+curl -X POST http://localhost:8080/api/orchestrate/payment -H "Content-Type: application/json" -d '{"amount":100,"currency":"EUR","sourceAccount":"DE...","destinationAccount":"FR..."}'
+curl -X POST http://localhost:8080/api/iso/pain001 -H "Content-Type: application/json" -d '{"messageId":"msg-1","initiatingParty":"Eazepay","payments":[{"endToEndId":"E2E-1","amount":10.5,"currency":"EUR","debtorName":"Alice","debtorIban":"DE...","creditorName":"Bob","creditorIban":"FR..."}]}'
+curl -X POST http://localhost:8080/api/recon/run -H "Content-Type: application/json" -d '{"statementXml":"<Document>...</Document>","ledger":[{"reference":"SEPA-abc","amount":100.5,"currency":"EUR"}]}'
+```
+
 ## 🗺️ Roadmap
 
 ### Phase 1: Core Services ✅

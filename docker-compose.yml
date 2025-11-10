@@ -650,6 +650,70 @@ services:
     restart: unless-stopped
 
   # ================================
+  # NEW SERVICES: ORCHESTRATION & ADAPTERS
+  # ================================
+
+  payment-orchestrator:
+    build:
+      context: ./services/payment-orchestrator
+      dockerfile: Dockerfile
+    container_name: eazepay-payment-orchestrator
+    ports:
+      - "8010:8010"
+    environment:
+      - NODE_ENV=production
+      - PORT=8010
+    networks:
+      - eazepay-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  message-adapter:
+    build:
+      context: ./services/message-adapter
+      dockerfile: Dockerfile
+    container_name: eazepay-message-adapter
+    ports:
+      - "8011:8011"
+    environment:
+      - NODE_ENV=production
+      - PORT=8011
+    networks:
+      - eazepay-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8011/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  recon-service:
+    build:
+      context: ./services/recon-service
+      dockerfile: Dockerfile
+    container_name: eazepay-recon-service
+    ports:
+      - "8012:8012"
+    environment:
+      - NODE_ENV=production
+      - PORT=8012
+    networks:
+      - eazepay-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8012/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # ================================
   # API GATEWAY & LOAD BALANCER
   # ================================
 
@@ -671,6 +735,9 @@ services:
       - wallet-service
       - ussd-service
       - agent-service
+      - payment-orchestrator
+      - message-adapter
+      - recon-service
       - admin-portal
       - superuser-portal
       - customer-portal

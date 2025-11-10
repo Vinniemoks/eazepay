@@ -4,6 +4,16 @@
 - **Development**: `http://localhost:8000` (Identity Service), `http://localhost:8001` (Biometric Service)
 - **Production**: `https://api.eazepay.com`
 
+## Gateway Paths (New)
+When running via the unified gateway (`api.eazepay.local` / Docker `api-gateway`), these routes are available:
+
+- `POST /api/orchestrate/payment` → Payment Orchestrator (Routes payments across rails)
+- `POST /api/iso/pain001` → ISO 20022 pain.001 XML builder
+- `POST /api/iso/pacs008` → ISO 20022 pacs.008 XML builder
+- `POST /api/recon/run` → Reconciliation (compare ledger vs camt.053 statement)
+
+These proxy to internal services on ports `8010–8012` in local Docker.
+
 ## Authentication
 All API requests require authentication using JWT tokens obtained from the authentication endpoints.
 
@@ -401,3 +411,38 @@ Download our Postman collection: [Eazepay API Collection](https://api.eazepay.co
 - Initial release
 - Basic payment functionality
 - User management
+### Orchestration
+
+#### Initiate Orchestrated Payment
+**POST** `/api/orchestrate/payment`
+
+```json
+{
+  "amount": 100.50,
+  "currency": "EUR",
+  "sourceAccount": "DE89370400440532013000",
+  "destinationAccount": "FR7630006000011234567890189",
+  "beneficiary": { "name": "Alice", "account": "FR763..." },
+  "corridor": "NG->EU"
+}
+```
+
+### ISO 20022 Adapters
+
+#### pain.001
+**POST** `/api/iso/pain001`
+
+#### pacs.008
+**POST** `/api/iso/pacs008`
+
+### Reconciliation
+
+#### Run Reconciliation
+**POST** `/api/recon/run`
+
+```json
+{
+  "statementXml": "<Document>...</Document>",
+  "ledger": [{ "reference": "SEPA-abc", "amount": 100.5, "currency": "EUR" }]
+}
+```
