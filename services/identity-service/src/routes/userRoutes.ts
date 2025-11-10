@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import Joi from 'joi';
-import { validateParams, commonSchemas } from '@eazepay/validation';
+// validateParams middleware removed – module not found
+
+import { commonSchemas } from '../utils/schemas';
 
 const router = Router();
 
