@@ -16,6 +16,9 @@ vendor/
 .env.staging
 *.env
 !services/**/.env
+.env.secure
+.env.render.template
+
 
 # IDE files
 .vscode/settings.json
