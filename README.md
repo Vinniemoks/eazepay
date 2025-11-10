@@ -388,6 +388,14 @@ curl -X POST http://localhost:8080/api/iso/pain001 -H "Content-Type: application
 curl -X POST http://localhost:8080/api/recon/run -H "Content-Type: application/json" -d '{"statementXml":"<Document>...</Document>","ledger":[{"reference":"SEPA-abc","amount":100.5,"currency":"EUR"}]}'
 ```
 
+## 🔐 Ledger Security Architecture
+
+For a defense-in-depth approach to securing internal and customer ledgers—including tamper-evident history, HSM-backed keys, threshold signing, confidential computation (TEEs), privacy-preserving validations (ZKPs), cross-ledger reconciliation (sMPC), and post-quantum readiness—see:
+
+- `docs/security/LEDGER_SECURITY.md`
+
+This guide covers the threat model, control mapping (PCI DSS, ISO 27001, SOC 2, NIST 800-53, GDPR), and a phased implementation roadmap.
+
 ## 🗺️ Roadmap
 
 ### Phase 1: Core Services ✅

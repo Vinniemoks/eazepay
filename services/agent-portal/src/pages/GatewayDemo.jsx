@@ -6,6 +6,8 @@ export default function GatewayDemo() {
   const [pain001Xml, setPain001Xml] = useState('')
   const [pacs008Xml, setPacs008Xml] = useState('')
   const [reconResult, setReconResult] = useState(null)
+  const [verifyResult, setVerifyResult] = useState(null)
+  const [anchorResult, setAnchorResult] = useState(null)
   const [running, setRunning] = useState(false)
   const [error, setError] = useState('')
 
@@ -47,6 +49,11 @@ export default function GatewayDemo() {
     ledger: [{ reference: 'SEPA-abc', amount: 100.5, currency: 'EUR' }]
   }
 
+  const sampleLedgerEntries = [
+    { id: 'tx-1', prevHash: '', data: { amount: 10, currency: 'EUR' } },
+    { id: 'tx-2', prevHash: '', data: { amount: 5, currency: 'EUR' } }
+  ]
+
   const runOrchestrate = async () => {
     setError('');
     try {
@@ -87,6 +94,30 @@ export default function GatewayDemo() {
     }
   }
 
+  const runVerify = async () => {
+    setError('');
+    try {
+      const res = await axios.post('/api/ledger/verify', { entries: sampleLedgerEntries })
+      setVerifyResult(res.data)
+    } catch (err) {
+      setError(err.response?.data?.error || err.message)
+    }
+  }
+
+  const runAnchor = async () => {
+    setError('');
+    try {
+      const root = verifyResult?.merkleRoot
+      if (!root) {
+        throw new Error('Run Verify first to obtain merkleRoot')
+      }
+      const res = await axios.post('/api/ledger/anchor', { rootHash: root })
+      setAnchorResult(res.data)
+    } catch (err) {
+      setError(err.response?.data?.error || err.message)
+    }
+  }
+
   const runEndToEnd = async () => {
     setRunning(true)
     setError('')
@@ -102,6 +133,9 @@ export default function GatewayDemo() {
       await runOrchestrate()
       // 3) Reconciliation (using sample statement and ledger)
       await runRecon()
+      // 4) Verify ledger batch, then anchor
+      await runVerify()
+      await runAnchor()
     } finally {
       setRunning(false)
     }
@@ -138,6 +172,7 @@ export default function GatewayDemo() {
     <div className="container">
       <h1>Gateway Demo</h1>
       <p>Sample client calls to Payment Orchestrator, ISO Message Adapter, and Reconciliation Service via the API Gateway.</p>
+      <p>Includes Ledger Integrity: verify batch and create anchor.</p>
 
       {error && (
         <div style={{ background: 'rgba(239,68,68,0.12)', color: '#DC2626', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>
@@ -207,12 +242,35 @@ export default function GatewayDemo() {
 
       <div style={section.card}>
         <div style={section.header}>
+          <h3>4) Ledger Integrity</h3>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button style={section.button} onClick={runVerify}>Verify</button>
+            <button style={section.button} onClick={runAnchor}>Anchor</button>
+          </div>
+        </div>
+        <pre style={section.pre}>{JSON.stringify({ entries: sampleLedgerEntries }, null, 2)}</pre>
+        {verifyResult && (
+          <div>
+            <h4>Verify Response</h4>
+            <pre style={section.pre}>{JSON.stringify(verifyResult, null, 2)}</pre>
+          </div>
+        )}
+        {anchorResult && (
+          <div>
+            <h4>Anchor Response</h4>
+            <pre style={section.pre}>{JSON.stringify(anchorResult, null, 2)}</pre>
+          </div>
+        )}
+      </div>
+
+      <div style={section.card}>
+        <div style={section.header}>
           <h3>End-to-End Flow</h3>
           <button style={{ ...section.button, opacity: running ? 0.7 : 1 }} disabled={running} onClick={runEndToEnd}>
             {running ? 'Running...' : 'Run Demo'}
           </button>
         </div>
-        <p>This runs: build pain.001 → build pacs.008 → orchestrate payment → reconciliation.</p>
+        <p>This runs: build pain.001 → build pacs.008 → orchestrate payment → reconciliation → verify ledger → anchor.</p>
       </div>
     </div>
   )

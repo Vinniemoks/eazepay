@@ -11,6 +11,9 @@ When running via the unified gateway (`api.eazepay.local` / Docker `api-gateway`
 - `POST /api/iso/pain001` → ISO 20022 pain.001 XML builder
 - `POST /api/iso/pacs008` → ISO 20022 pacs.008 XML builder
 - `POST /api/recon/run` → Reconciliation (compare ledger vs camt.053 statement)
+- `POST /api/ledger/verify` → Verify ledger batch hash-chain and compute Merkle root
+- `POST /api/ledger/anchor` → Create anchor record for a Merkle root
+   - If Ethereum anchoring is configured, returns `{ txId, network, status }` after submitting a Sepolia transaction
 
 These proxy to internal services on ports `8010–8012` in local Docker.
 
@@ -444,5 +447,51 @@ Download our Postman collection: [Eazepay API Collection](https://api.eazepay.co
 {
   "statementXml": "<Document>...</Document>",
   "ledger": [{ "reference": "SEPA-abc", "amount": 100.5, "currency": "EUR" }]
+}
+```
+
+### Ledger Integrity
+
+#### Verify Ledger Batch
+**POST** `/api/ledger/verify`
+
+Request body:
+```json
+{
+  "entries": [
+    { "id": "tx-1", "prevHash": "", "data": { "amount": 10, "currency": "EUR" } },
+    { "id": "tx-2", "prevHash": "<hash-of-tx-1>", "data": { "amount": 5, "currency": "EUR" } }
+  ]
+}
+```
+
+Response body:
+```json
+{
+  "valid": true,
+  "lastHash": "<hash-of-tx-2>",
+  "merkleRoot": "<computed-merkle-root>",
+  "count": 2
+}
+```
+
+#### Anchor Merkle Root
+**POST** `/api/ledger/anchor`
+
+Request body:
+```json
+{ "rootHash": "<computed-merkle-root>" }
+```
+
+Response body:
+```json
+{
+  "anchorId": "<uuid>",
+  "rootHash": "<computed-merkle-root>",
+  "timestamp": "2025-01-01T00:00:00.000Z",
+  "method": "ethereum_tx_data",
+  "network": "sepolia",
+  "txId": "0x...",
+  "status": "anchored"
 }
 ```

@@ -1,5 +1,6 @@
 import { body, param, query } from 'express-validator';
 
+
 export const createTransactionValidator = [
   body('amount').isFloat({ gt: 0 }).withMessage('Amount must be a positive number'),
   body('currency').isString().withMessage('Currency is required'),

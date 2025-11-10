@@ -1,0 +1,30 @@
+{
+  "name": "ledger-integrity-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Service to verify tamper-evident ledger chains and prepare anchors",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node --esm src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "uuid": "^9.0.1",
+    "ethers": "^6.13.1",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/body-parser": "^1.19.5",
+    "@types/uuid": "^10.0.0",
+    "@types/node-cron": "^3.0.11"
+  }
+}

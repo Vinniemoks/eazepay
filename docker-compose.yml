@@ -738,6 +738,7 @@ services:
       - payment-orchestrator
       - message-adapter
       - recon-service
+      - ledger-integrity-service
       - admin-portal
       - superuser-portal
       - customer-portal
@@ -749,6 +750,31 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
+
+  ledger-integrity-service:
+    build:
+      context: ./services/ledger-integrity-service
+      dockerfile: Dockerfile
+    container_name: eazepay-ledger-integrity
+    ports:
+      - "8013:8013"
+    environment:
+      - NODE_ENV=production
+      - PORT=8013
+      # Anchoring configuration (set values to enable Ethereum anchoring)
+      - ANCHOR_PROVIDER=ethereum
+      - ETH_NETWORK=sepolia
+      - ETH_RPC_URL=http://replace-with-sepolia-rpc-url
+      - ETH_PRIVATE_KEY=replace-with-testnet-private-key
+    networks:
+      - eazepay-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8013/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     restart: unless-stopped
 
   # ================================
