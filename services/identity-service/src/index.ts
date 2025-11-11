@@ -5,10 +5,13 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import logger from '@eazepay/logger'; // Assuming logger is already integrated
+import { HybridEncryptor } from '@eazepay/crypto-utils';
 import { initializeDatabase, closeDatabase } from './config/database';
 import authRoutes from './routes/auth.routes';
 import { apiRateLimit } from './middleware/rateLimit';
-import { generateCorrelationId } from './utils/security';
+import { JWTService, MockHSMClient } from '@eazepay/auth-middleware'; // Import JWTService and MockHSMClient
+import { randomUUID } from 'crypto'; // For correlation ID
 
 // Load environment variables
 dotenv.config();
@@ -42,18 +45,33 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Add correlation ID to all requests
+// This should ideally be handled by the API Gateway and propagated.
+// For direct service access, we generate one here.
 app.use((req: Request, res: Response, next: NextFunction) => {
-  req.headers['x-correlation-id'] = req.headers['x-correlation-id'] || generateCorrelationId();
+  req.headers['x-correlation-id'] = req.headers['x-correlation-id'] || randomUUID();
   res.setHeader('X-Correlation-ID', req.headers['x-correlation-id'] as string);
   next();
 });
 
 // Request logging
 app.use((req: Request, res: Response, next: NextFunction) => {
+  const correlationId = req.headers['x-correlation-id'] as string;
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;
-    console.log(`${req.method} ${req.path} ${res.statusCode} ${duration}ms`);
+    logger.info('Request completed', {
+      correlationId,
+      method: req.method,
+      path: req.path,
+      statusCode: res.statusCode,
+      durationMs: duration,
+      ip: req.ip,
+      userAgent: req.get('user-agent'),
+      service: 'identity-service'
+    });
+  });
+  res.on('close', () => {
+    // Handle cases where the connection is closed before response is sent
   });
   next();
 });
@@ -65,6 +83,20 @@ app.use(apiRateLimit);
 import adminRoutes from './routes/admin.routes';
 import superuserRoutes from './routes/superuser.routes';
 import accessRequestRoutes from './routes/accessRequest.routes';
+
+// Initialize JWT Service with (optional) HSM client
+const hsmEnabled = (process.env.HSM_ENABLED || 'false').toLowerCase() === 'true';
+const hsmClient = hsmEnabled ? new MockHSMClient() : undefined; // Replace MockHSMClient with actual HSM client in production
+const hsmKeyId = process.env.HSM_JWT_KEY_ID || 'eazepay-jwt-signing-key';
+
+const jwtService = new JWTService({
+  jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
+  jwtExpiresIn: '8h',
+  issuer: 'eazepay-services',
+  audience: 'eazepay-services',
+  hsmClient: hsmClient,
+  hsmKeyId: hsmKeyId
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
@@ -84,7 +116,8 @@ app.get('/', (req: Request, res: Response) => {
       admin: '/api/admin',
       superuser: '/api/superuser',
       accessRequests: '/api/access-requests',
-      health: '/health'
+      health: '/health',
+      hsmStatus: hsmEnabled ? 'enabled' : 'disabled'
     }
   });
 });
@@ -95,7 +128,8 @@ app.get('/health', (req: Request, res: Response) => {
     status: 'healthy',
     service: 'identity-service',
     version: '2.0.0',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    hsmStatus: hsmEnabled ? 'enabled' : 'disabled'
   });
 });
 
@@ -104,7 +138,7 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({
     error: 'Not found',
     code: 'SYS_404',
-    message: `Route ${req.method} ${req.path} not found`
+    message: `Route ${req.method} ${req.path} not found`,
   });
 });
 
@@ -112,7 +146,13 @@ app.use((req: Request, res: Response) => {
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Error:', err);
   
-  res.status(500).json({
+  const correlationId = req.headers['x-correlation-id'] as string;
+  logger.error('Unhandled error', {
+    correlationId,
+    error: err.message,
+    stack: err.stack,
+  });
+  res.status(500).json({ // Use logger here
     error: 'Internal server error',
     code: 'SYS_002',
     message: process.env.NODE_ENV === 'development' ? err.message : 'An error occurred',
@@ -135,7 +175,7 @@ async function startServer() {
     
     // Start listening
     app.listen(PORT, () => {
-      const dbStatus = SKIP_DB_INIT ? 'Skipped ⚠️' : 'Connected ✅';
+      const dbStatus = SKIP_DB_INIT ? 'Skipped ⚠️' : 'Connected ✅'; // Use logger here
       console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
@@ -145,6 +185,7 @@ async function startServer() {
 ║   Port: ${PORT}                                        ║
 ║   Environment: ${process.env.NODE_ENV || 'development'}                            ║
 ║   Database: ${dbStatus}                              ║
+║   HSM for JWT: ${hsmEnabled ? 'Enabled ✅' : 'Disabled ❌'}                         ║
 ║                                                       ║
 ║   Endpoints:                                         ║
 ║   Auth:                                              ║
@@ -168,20 +209,20 @@ async function startServer() {
       `);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.error('Failed to start server:', { error: error.message, stack: error.stack });
     process.exit(1);
   }
 }
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
-  console.log('SIGTERM received, shutting down gracefully...');
+  logger.info('SIGTERM received, shutting down gracefully...');
   await closeDatabase();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
-  console.log('SIGINT received, shutting down gracefully...');
+  logger.info('SIGINT received, shutting down gracefully...');
   await closeDatabase();
   process.exit(0);
 });

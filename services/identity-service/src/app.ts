@@ -7,7 +7,7 @@ import morgan from "morgan";
 import { AppDataSource } from "./config/database";
 import { errorHandler } from "./middleware/errorHandler";
 import { authRoutes } from "./routes/authRoutes";
-import { authEnhancedRoutes } from "./routes/auth-enhanced.routes";
+import authEnhancedRoutes from "./routes/auth-enhanced.routes";
 import { userRoutes } from "./routes/userRoutes";
 import { logger } from "./utils/logger";
 

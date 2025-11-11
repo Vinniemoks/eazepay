@@ -2,7 +2,7 @@
 // Task: 11.5 - Add rate limiting
 // Requirements: 15.5
 
-import rateLimit from 'express-rate-limit';
+import rateLimit, { Store } from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import Redis from 'ioredis';
 import dotenv from 'dotenv';
@@ -12,7 +12,7 @@ dotenv.config();
 
 const useMemoryStore = (process.env.USE_MEMORY_RATE_LIMIT === 'true') || ((process.env.SKIP_DB_INIT || 'false').toLowerCase() === 'true');
 
-const redis: any = useMemoryStore ? undefined : new Redis({
+const redis: Redis | undefined = useMemoryStore ? undefined : new Redis({
   host: process.env.REDIS_HOST || 'localhost',
   port: parseInt(process.env.REDIS_PORT || '6379'),
   password: process.env.REDIS_PASSWORD,
@@ -22,11 +22,11 @@ const redis: any = useMemoryStore ? undefined : new Redis({
   }
 });
 
-const buildStore = (prefix: string) => {
+const buildStore = (prefix: string): Store | undefined => {
   if (useMemoryStore) return undefined; // default MemoryStore
-  // @ts-ignore
+  if (!redis) return undefined; // Should not happen if useMemoryStore is false, but for type safety
+
   return new RedisStore({
-    // @ts-ignore
     client: redis,
     prefix,
   });
@@ -44,7 +44,7 @@ export const apiRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   // Use Redis store when available; otherwise default MemoryStore
-  store: buildStore('rl:api:' ) as any,
+  store: buildStore('rl:api:'),
   keyGenerator: (req) => {
     // Use user ID if authenticated, otherwise IP address
     return req.user?.userId || req.ip || 'anonymous';
@@ -62,7 +62,7 @@ export const authRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  store: buildStore('rl:auth:' ) as any,
+  store: buildStore('rl:auth:'),
   keyGenerator: (req) => {
     return req.body?.email || req.ip || 'anonymous';
   }
@@ -79,7 +79,7 @@ export const orgRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  store: buildStore('rl:org:' ) as any,
+  store: buildStore('rl:org:'),
   keyGenerator: (req) => {
     // Extract organization from user or use IP
     return req.user?.organizationId || req.ip || 'anonymous';
