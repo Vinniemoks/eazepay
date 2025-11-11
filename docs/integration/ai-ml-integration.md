@@ -189,7 +189,7 @@ curl -X POST http://localhost:8010/api/risk/assess \
 
 ## 💡 How It Works
 
-### Transaction Flow with AI
+### Advanced Transaction Flow with AI
 
 ```
 1. User initiates transaction

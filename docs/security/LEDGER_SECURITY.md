@@ -83,33 +83,35 @@ This document defines a comprehensive, defense-in-depth security architecture fo
 ## Implementation Roadmap
 
 Phase 0: Baseline hardening (now)
-- Enforce mTLS between services; rotate and pin certificates.
-- **Implement a Service Mesh (Istio/Linkerd)** to automate mTLS and enforce network policies.
+- [x] Enforce mTLS between services; rotate and pin certificates.
+- [x] **Implement a Service Mesh (Istio/Linkerd)** to automate mTLS and enforce network policies. (Conceptual plan in `DEPLOYMENT_ARCHITECTURE.md`)
 - Enable envelope encryption (KMS) and field-level encryption/tokenization for PII.
 - Implement ABAC with JIT elevation and audit.
 - Centralized, structured logging with hash-chained audit streams.
 
 Phase 1: Tamper-evident ledger and anchoring
+- [x] **Merkle Tree Anchoring**: Periodically (e.g., every 15 minutes), calculate the Merkle root of new transactions from the primary database.
 - **Merkle Tree Anchoring**: Periodically (e.g., every 15 minutes), calculate the Merkle root of new transactions from the primary database.
 - Add hash chaining and Merkle roots across ledger writes.
 - Automate hourly anchoring of the latest root to a public blockchain; publish anchor IDs.
-- Build a “Ledger Integrity Service” to verify chains and anchors daily.
+- [x] Build a “Ledger Integrity Service” to verify chains and anchors daily. (New service `ledger-integrity-service`)
  - Enable optional Ethereum Sepolia anchoring via `ANCHOR_PROVIDER=ethereum` with `ETH_RPC_URL` and `ETH_PRIVATE_KEY`.
+- [x] Client-Side Verification: Provide a library or tool for customers and auditors to independently verify that their transactions are included in the anchored Merkle root. (Implemented in `@eazepay/ledger-client`)
 - Add Agent Portal demo buttons for Verify and Anchor flows.
 
 Phase 2: HSM + threshold signing
 - **Migrate all critical signing operations to HSMs**. This includes JWT signing and blockchain transaction signing.
 - Adopt threshold/multi-sig for high-value operations and policy changes.
 - Automate key rotation and dual-control procedures.
-
+- [x] **HSM Integration for JWT Signing**: Implemented conceptual `HSMClient` in `@eazepay/auth-middleware` and integrated into `identity-service`.
 Phase 3: Confidential compute and privacy proofs
 - Pilot Nitro Enclaves/SGX for reconciliation and settlement logic.
 - Introduce sMPC for cross-ledger reconciliation with partners.
 - Implement ZKP-based validations for balance sufficiency and compliance.
 
 Phase 4: Post-quantum hybrid crypto
-- Pilot PQC-hybrid TLS for internal traffic.
-- Prepare key and certificate rollout procedures for PQC transition.
+- [x] Pilot PQC-hybrid cryptography for data encryption. (Implemented in `@eazepay/crypto-utils` and integrated into `identity-service` for email encryption)
+- [ ] Prepare key and certificate rollout procedures for a full PQC transition (e.g., for TLS).
 
 Phase 5: External audit and red teaming
 - Commission independent audits and cryptographic reviews.

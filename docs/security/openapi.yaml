@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: Eazepay API
+  description: The official API for the Eazepay platform.
+  version: 1.0.0
+servers:
+  - url: https://api.eazepay.com/v1
+    description: Production Server
+paths:
+  /transactions:
+    post:
+      summary: Create a Transaction
+      description: Initiates a new payment or transfer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  example: 100.50
+                currency:
+                  type: string
+                  example: "KES"
+                recipient:
+                  type: string
+                  example: "user_abc123"
+      responses:
+        '201':
+          description: Transaction Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                    example: "txn_xyz789"
+                  status:
+                    type: string
+                    example: "completed"

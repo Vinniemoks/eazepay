@@ -23,6 +23,10 @@
 - Private blockchain for sensitive transactions
 - Public blockchain (Ethereum/Polygon) for transparency layer
 
+### Enhanced Ledger Integrity
+- **Merkle Tree Anchoring**: Periodically calculate Merkle root of transactions and anchor to a public blockchain.
+- **Client-Side Verification**: Tools for independent verification of transaction inclusion.
+
 ### Implementation Strategy
 
 #### Phase 1: Transaction Immutability
