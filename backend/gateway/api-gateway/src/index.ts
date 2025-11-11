@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { config } from './config';
 import { proxyRoutes } from './routes/proxy';
+import { correlationId } from './middleware/correlationId';
 
 const app = express();
 
@@ -25,12 +26,16 @@ app.options('*', cors(corsOptions));
 app.use(helmet());
 app.use(express.json());
 
-// Request logging
+// Ensure every request has an X-Correlation-ID and attach it
+app.use(correlationId);
+
+// Request logging (includes correlation id)
 app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;
-    console.log(`[gateway] ${req.method} ${req.path} ${res.statusCode} ${duration}ms`);
+    const correlationId = req.headers['x-correlation-id'] || '-';
+    console.log(`[gateway] cid=${correlationId} ${req.method} ${req.path} ${res.statusCode} ${duration}ms`);
   });
   next();
 });

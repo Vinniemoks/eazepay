@@ -114,12 +114,15 @@ services/
 
 **1. Real-time Fraud Detection**
 - Analyze transaction patterns in real-time
+- Use advanced models (Gradient Boosting, LSTMs) to detect complex fraud patterns.
 - Flag suspicious activities (velocity checks, location anomalies)
 - Adaptive learning from new fraud patterns
+- **Feedback Loop**: Confirmed fraudulent transactions are used to automatically retrain and improve models.
 - Integration point: Before transaction approval
 
 **2. Credit Risk Scoring**
 - Assess customer creditworthiness
+- Utilize a wider range of features from a centralized Feature Store.
 - Dynamic credit limits
 - Predict default probability
 - Integration point: During customer onboarding and loan applications

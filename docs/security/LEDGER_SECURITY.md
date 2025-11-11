@@ -28,7 +28,8 @@ This document defines a comprehensive, defense-in-depth security architecture fo
    - Integrates with existing databases via append-only streams and reconciliation jobs.
 
 3. Strong cryptographic key management
-   - Hardware Security Modules (HSMs) or cloud HSM services for generating, storing, and using keys.
+   - **Hardware Security Modules (HSMs)**: Mandate the use of cloud HSMs (AWS CloudHSM, Google Cloud HSM) for generating, storing, and using critical cryptographic keys.
+   - **HSM-Protected Keys**: The private keys for signing JWTs (`identity-service`) and for signing blockchain anchoring transactions (`ledger-integrity-service`) MUST be stored and used only within an HSM. Keys are never exposed in application memory.
    - Threshold/multi-signature signing (e.g., 2-of-3) for high-value operations; no single key can authorize alone.
    - Automated key rotation, dual control for key ceremonies, and strict audit trails.
 
@@ -83,11 +84,13 @@ This document defines a comprehensive, defense-in-depth security architecture fo
 
 Phase 0: Baseline hardening (now)
 - Enforce mTLS between services; rotate and pin certificates.
+- **Implement a Service Mesh (Istio/Linkerd)** to automate mTLS and enforce network policies.
 - Enable envelope encryption (KMS) and field-level encryption/tokenization for PII.
 - Implement ABAC with JIT elevation and audit.
 - Centralized, structured logging with hash-chained audit streams.
 
 Phase 1: Tamper-evident ledger and anchoring
+- **Merkle Tree Anchoring**: Periodically (e.g., every 15 minutes), calculate the Merkle root of new transactions from the primary database.
 - Add hash chaining and Merkle roots across ledger writes.
 - Automate hourly anchoring of the latest root to a public blockchain; publish anchor IDs.
 - Build a “Ledger Integrity Service” to verify chains and anchors daily.
@@ -95,7 +98,7 @@ Phase 1: Tamper-evident ledger and anchoring
 - Add Agent Portal demo buttons for Verify and Anchor flows.
 
 Phase 2: HSM + threshold signing
-- Migrate key generation and signing to HSMs.
+- **Migrate all critical signing operations to HSMs**. This includes JWT signing and blockchain transaction signing.
 - Adopt threshold/multi-sig for high-value operations and policy changes.
 - Automate key rotation and dual-control procedures.
 
@@ -114,7 +117,7 @@ Phase 5: External audit and red teaming
 
 ## Secret Management for Production
 
-**WARNING:** Storing sensitive secrets like `ETH_PRIVATE_KEY` in plaintext environment variables is insecure and not recommended for production environments.
+**WARNING: CRITICAL SECURITY REQUIREMENT** Storing sensitive secrets like `ETH_PRIVATE_KEY` in plaintext environment variables is strictly forbidden in production environments.
 
 For production deployments, you MUST use a dedicated secret management solution, such as:
 - HashiCorp Vault
@@ -122,7 +125,7 @@ For production deployments, you MUST use a dedicated secret management solution,
 - Azure Key Vault
 - Google Cloud Secret Manager
 
-These tools provide secure storage, fine-grained access control, audit trails, and dynamic secret rotation. The `ledger-integrity-service` should be configured to fetch the `ETH_PRIVATE_KEY` from one of these systems at runtime.
+These tools provide secure storage, fine-grained access control, and audit trails. For the highest level of security, the `ledger-integrity-service` **MUST** be configured to perform signing operations within a cloud HSM, where the private key is non-exportable.
 
 ## Day-1 Checklist (Actionable)
 - **Secure Ethereum Private Key**: Ensure `ETH_PRIVATE_KEY` is stored and retrieved from a secure secret management system in production environments.

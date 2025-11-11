@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import { ethers } from 'ethers';
 import cron from 'node-cron';
+import logger from './utils/logger';
 
 import { authenticate, validateRequest } from 'afripay-shared/auth-middleware';
 import { object, string, array } from 'joi';
@@ -16,6 +17,26 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json({ limit: '1mb' }));
 app.use(authenticate); // Apply authentication to all routes
+
+// Correlation ID propagation and request logging
+app.use((req, res, next) => {
+  const cid = (req.headers['x-correlation-id'] as string) || uuidv4();
+  res.setHeader('X-Correlation-ID', cid);
+  (req as any).correlationId = cid;
+  res.locals.correlationId = cid;
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    logger.info('request_completed', {
+      correlationId: cid,
+      method: req.method,
+      path: req.path,
+      statusCode: res.statusCode,
+      durationMs: duration,
+    });
+  });
+  next();
+});
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8013;
 
@@ -118,6 +139,7 @@ app.post('/integrity/verify', validateRequest(verifySchema), (req, res) => {
     const lastHash = computedHashes[computedHashes.length - 1];
     return res.json({ validChain, merkleRoot: root, lastHash });
   } catch (err: any) {
+    logger.error('verification_failed', { correlationId: (req as any).correlationId, error: err?.message });
     return res.status(500).json({ error: 'verification_failed', detail: err?.message });
   }
 });
@@ -125,7 +147,7 @@ app.post('/integrity/verify', validateRequest(verifySchema), (req, res) => {
 async function performAnchor(rootHash: string) {
   const providerType = process.env.ANCHOR_PROVIDER?.toLowerCase();
   if (providerType !== 'ethereum') {
-    console.log(`Skipping anchor: ANCHOR_PROVIDER is not 'ethereum'.`);
+    logger.info(`Skipping anchor: ANCHOR_PROVIDER is not 'ethereum'.`, { providerType });
     return {
       anchorId: uuidv4(),
       rootHash,
@@ -190,9 +212,9 @@ app.post('/integrity/anchor', validateRequest(anchorSchema), async (req, res) =>
 // Cron job to anchor the latest Merkle root; schedule configurable via env
 const CRON_SCHEDULE = process.env.ANCHOR_CRON_SCHEDULE || '0 * * * *';
 cron.schedule(CRON_SCHEDULE, async () => {
-  console.log('Running hourly anchor job...');
+  logger.info('Running hourly anchor job...');
   if (!latestMerkleRoot) {
-    console.log('No Merkle root to anchor. Skipping.');
+    logger.info('No Merkle root to anchor. Skipping.');
     return;
   }
 
@@ -207,14 +229,14 @@ cron.schedule(CRON_SCHEDULE, async () => {
     const result = await performAnchor(rootToAnchor);
     lastAnchorRun.status = 'success';
     lastAnchorRun.txId = result.txId;
-    console.log(`Successfully anchored root ${rootToAnchor}. Tx: ${result.txId}`);
+    logger.info('anchor_success', { rootHash: rootToAnchor, txId: result.txId });
   } catch (error: any) {
     lastAnchorRun.status = 'failed';
-    console.error(`Failed to anchor root ${rootToAnchor}:`, error.message);
+    logger.error('anchor_failed', { rootHash: rootToAnchor, error: error.message });
   }
 });
 
 
 app.listen(PORT, () => {
-  console.log(`ledger-integrity-service listening on :${PORT}`);
+  logger.info('service_start', { port: PORT });
 });
