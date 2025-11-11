@@ -390,7 +390,7 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=8030
-      - RABBITMQ_URL=amqp://admin:rabbitmq_password_2024!@rabbitmq:5672/eazepay
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/eazepay
       - FABRIC_CHANNEL_NAME=eazepay-channel
       - FABRIC_CHAINCODE_NAME=transaction-ledger
       - TRANSACTION_SERVICE_URL=http://transaction-service:8002
