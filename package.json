@@ -28,5 +28,8 @@
     "wallet"
   ],
   "author": "Eazepay Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express-validator": "^7.3.0"
+  }
 }

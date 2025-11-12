@@ -1,7 +1,7 @@
 // Transaction routes
 import { Router } from 'express';
 import { TransactionController } from '../controllers/TransactionController';
-import { authenticate } from '@eazepay/auth-middleware';
+import { authenticate } from '../middleware/auth';
 import { createTransactionValidator, getTransactionValidator } from '../middleware/validators';
 
 const router = Router();

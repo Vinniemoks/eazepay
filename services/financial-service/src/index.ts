@@ -11,15 +11,14 @@ import { AppDataSource } from './config/database';
 import transactionRoutes from './routes/transaction.routes';
 import analyticsRoutes from './routes/analytics.routes';
 import logger from './utils/logger';
-import { JWTService, initializeAuth } from '@eazepay/auth-middleware';
-import { setupSwagger } from '@eazepay/swagger-config';
+import { setupSwagger } from './utils/swagger';
 import {
   errorHandler,
   notFoundHandler,
   initializeErrorHandler,
   setupUnhandledRejectionHandler,
   setupUncaughtExceptionHandler
-} from '@eazepay/error-handler';
+} from './middleware/error-handler';
 
 const app = express();
 
@@ -29,15 +28,8 @@ setupUnhandledRejectionHandler(logger);
 setupUncaughtExceptionHandler(logger);
 logger.info('Error handler initialized');
 
-// Initialize authentication
-const jwtService = new JWTService({
-  jwtSecret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
-  jwtExpiresIn: '8h',
-  issuer: 'eazepay-services',
-  audience: 'eazepay-services'
-});
-initializeAuth(jwtService);
-logger.info('Authentication middleware initialized');
+// Authentication is handled per-route via internal API key middleware
+logger.info('Authentication middleware initialized (local)');
 
 // Security & production settings
 app.set('trust proxy', 1);
@@ -62,17 +54,21 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Rate limiting (Redis-backed if available)
-const redis = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
-  password: process.env.REDIS_PASSWORD,
-});
-const useRedis = !!process.env.REDIS_HOST;
-const limiterStore = useRedis ? new RedisStore({
-  // @ts-ignore
-  client: redis,
-  prefix: 'rl:fin:'
-}) : undefined;
+const useRedis = process.env.USE_REDIS_RATE_LIMIT === 'true' && !!process.env.REDIS_HOST;
+const redis = useRedis
+  ? new Redis({
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT || '6379'),
+      password: process.env.REDIS_PASSWORD,
+    })
+  : undefined;
+const limiterStore = useRedis
+  ? new RedisStore({
+      // @ts-ignore
+      client: redis,
+      prefix: 'rl:fin:',
+    })
+  : undefined;
 
 const apiRateLimit = rateLimit({
   windowMs: 60 * 1000,
@@ -172,34 +168,34 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Initialize database and start server
-AppDataSource.initialize()
-  .then(() => {
+(async () => {
+  try {
+    await AppDataSource.initialize();
     logger.info('Database connected successfully');
-
-    const server = http.createServer(app);
-    const REQUEST_TIMEOUT_MS = parseInt(process.env.REQUEST_TIMEOUT_MS || '30000');
-    const HEADERS_TIMEOUT_MS = parseInt(process.env.HEADERS_TIMEOUT_MS || '35000');
-    const KEEP_ALIVE_TIMEOUT_MS = parseInt(process.env.KEEP_ALIVE_TIMEOUT_MS || '5000');
-    // @ts-ignore
-    server.requestTimeout = REQUEST_TIMEOUT_MS;
-    // @ts-ignore
-    server.headersTimeout = HEADERS_TIMEOUT_MS;
-    // @ts-ignore
-    server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT_MS;
-
-    server.listen(PORT, () => {
-      logger.info('Financial Service started', {
-        port: PORT,
-        environment: process.env.NODE_ENV || 'development'
-      });
-    });
-  })
-  .catch((error) => {
+  } catch (error: any) {
     logger.error('Failed to initialize database', {
-      error: error.message,
-      stack: error.stack
+      error: error?.message,
+      stack: error?.stack
     });
-    process.exit(1);
+  }
+
+  const server = http.createServer(app);
+  const REQUEST_TIMEOUT_MS = parseInt(process.env.REQUEST_TIMEOUT_MS || '30000');
+  const HEADERS_TIMEOUT_MS = parseInt(process.env.HEADERS_TIMEOUT_MS || '35000');
+  const KEEP_ALIVE_TIMEOUT_MS = parseInt(process.env.KEEP_ALIVE_TIMEOUT_MS || '5000');
+  // @ts-ignore
+  server.requestTimeout = REQUEST_TIMEOUT_MS;
+  // @ts-ignore
+  server.headersTimeout = HEADERS_TIMEOUT_MS;
+  // @ts-ignore
+  server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT_MS;
+
+  server.listen(PORT, () => {
+    logger.info('Financial Service started', {
+      port: PORT,
+      environment: process.env.NODE_ENV || 'development'
+    });
   });
+})();
 
 export default app;

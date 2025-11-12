@@ -1,7 +1,7 @@
 // Robotics Service - Main Entry Point
 import express, { Request, Response } from 'express';
-import { JWTService, initializeAuth, authenticate } from '@eazepay/auth-middleware';
-import { validateRequest, joi } from '@eazepay/validation';
+import { authenticate } from './middleware/authenticate';
+import { validateRequest, joi } from './middleware/validation';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
@@ -16,14 +16,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// Initialize authentication
-const jwtService = new JWTService({
-  jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
-  jwtExpiresIn: '8h',
-  issuer: 'eazepay-services',
-  audience: 'eazepay-services'
-});
-initializeAuth(jwtService);
+// Authentication is handled via internal API key middleware
 
 // Protect API routes (keep /health public)
 app.use('/api', authenticate);

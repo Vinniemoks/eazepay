@@ -239,7 +239,7 @@ export class TransactionController {
   // Helper: Convert timestamp to timezone
   private convertToTimezone(date: Date, timezone: string): string {
     try {
-      return date.toLocaleString('en-US', { 
+      return date.toLocaleString('en-US', ({ 
         timeZone: timezone,
         year: 'numeric',
         month: '2-digit',
@@ -249,7 +249,7 @@ export class TransactionController {
         second: '2-digit',
         fractionalSecondDigits: 3,
         hour12: false
-      });
+      } as any));
     } catch (error) {
       // Invalid timezone, return UTC
       return date.toISOString();

@@ -8,10 +8,11 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import { ethers } from 'ethers';
 import cron from 'node-cron';
-import logger from './utils/logger';
+import logger from './utils/logger.js';
 
-import { authenticate, validateRequest } from 'afripay-shared/auth-middleware';
-import { object, string, array } from 'joi';
+import { authenticate } from './middleware/authenticate.js';
+import { validateRequest } from './middleware/validation.js';
+import Joi from 'joi';
 
 const app = express();
 app.use(cors());
@@ -41,17 +42,17 @@ app.use((req, res, next) => {
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8013;
 
 // Validation Schemas
-const verifySchema = object({
-  entries: array().items(object({
-    id: string().required(),
-    prevHash: string().allow('').required(),
-    data: object().required(),
-    hash: string().optional()
+const verifySchema = Joi.object({
+  entries: Joi.array().items(Joi.object({
+    id: Joi.string().required(),
+    prevHash: Joi.string().allow('').required(),
+    data: Joi.object().required(),
+    hash: Joi.string().optional()
   })).min(1).required()
 });
 
-const anchorSchema = object({
-  rootHash: string().hex().length(64).required()
+const anchorSchema = Joi.object({
+  rootHash: Joi.string().hex().length(64).required()
 });
 
 

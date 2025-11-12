@@ -1,8 +1,16 @@
 import winston from 'winston';
 import path from 'path';
+import fs from 'fs';
 
 // Create logs directory path
 const logsDir = path.join(__dirname, '../../logs');
+try {
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+  }
+} catch {
+  // If we can't create the directory, fallback to console-only logging
+}
 
 // Define log format
 const logFormat = winston.format.combine(
