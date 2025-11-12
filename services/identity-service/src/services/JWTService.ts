@@ -1,16 +1,53 @@
-import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+
+interface JWTOptions {
+  jwtSecret: string;
+  jwtExpiresIn: string;
+  issuer?: string;
+  audience?: string;
+}
 
 export class JWTService {
-    private static readonly JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-    private static readonly JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || '1h';
+  private readonly secret: string;
+  private readonly expiresIn: string;
+  private readonly issuer?: string;
+  private readonly audience?: string;
 
-    static generateToken(payload: object): string {
-        return jwt.sign(payload, this.JWT_SECRET, {
-            expiresIn: this.JWT_EXPIRES_IN as any
-        });
-    }
+  constructor(opts: JWTOptions) {
+    this.secret = opts.jwtSecret;
+    this.expiresIn = opts.jwtExpiresIn;
+    this.issuer = opts.issuer;
+    this.audience = opts.audience;
+  }
 
-    static verifyToken(token: string): string | JwtPayload {
-        return jwt.verify(token, this.JWT_SECRET);
+  generateToken(payload: Record<string, any>): string {
+    return jwt.sign(payload, this.secret, {
+      expiresIn: this.expiresIn as any,
+      issuer: this.issuer,
+      audience: this.audience
+    });
+  }
+
+  generateRefreshToken(userId: string, sessionId: string): string {
+    return jwt.sign({ type: 'refresh', userId, sessionId }, this.secret, {
+      expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as any,
+      issuer: this.issuer,
+      audience: this.audience
+    });
+  }
+
+  verifyToken(token: string): JwtPayload {
+    return jwt.verify(token, this.secret, {
+      issuer: this.issuer,
+      audience: this.audience
+    }) as JwtPayload;
+  }
+
+  decodeToken(token: string): JwtPayload | null {
+    try {
+      return jwt.decode(token) as JwtPayload | null;
+    } catch {
+      return null;
     }
+  }
 }

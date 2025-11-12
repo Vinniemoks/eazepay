@@ -2,12 +2,7 @@ import { Router } from 'express';
 import { AuthEnhancedController } from '../controllers/AuthEnhancedController';
 import { authenticate } from '../middleware/auth';
 import { validateRequest } from '../middleware/validation';
-import { 
-  createAuthRateLimiter, 
-  createPasswordResetLimiter, 
-  create2FALimiter 
-} from '@eazepay/auth-middleware';
-import redisClient from '../config/redis';
+import { authRateLimit, passwordResetRateLimit, twoFARateLimit } from '../middleware/rateLimit';
 import {
   refreshTokenSchema,
   forgotPasswordSchema,
@@ -20,16 +15,16 @@ import {
 const router = Router();
 const controller = new AuthEnhancedController();
 
-// Create rate limiters
-const authLimiter = createAuthRateLimiter(redisClient);
-const passwordResetLimiter = createPasswordResetLimiter(redisClient);
-const twoFALimiter = create2FALimiter(redisClient);
+// Local rate limiters
+const authLimiter = authRateLimit;
+const passwordResetLimiter = passwordResetRateLimit;
+const twoFALimiter = twoFARateLimit;
 
 /**
  * Token refresh endpoint (rate limited)
  */
 router.post('/refresh',
-  authLimiter.middleware(),
+  authLimiter,
   validateRequest(refreshTokenSchema),
   controller.refreshToken.bind(controller)
 );
@@ -81,7 +76,7 @@ router.delete('/sessions/:sessionId',
  * Password reset request (rate limited)
  */
 router.post('/forgot-password',
-  passwordResetLimiter.middleware(),
+  passwordResetLimiter,
   validateRequest(forgotPasswordSchema),
   controller.forgotPassword.bind(controller)
 );
@@ -90,7 +85,7 @@ router.post('/forgot-password',
  * Password reset confirmation (rate limited)
  */
 router.post('/reset-password',
-  passwordResetLimiter.middleware(),
+  passwordResetLimiter,
   validateRequest(resetPasswordSchema),
   controller.resetPassword.bind(controller)
 );
@@ -99,7 +94,7 @@ router.post('/reset-password',
  * Verify 2FA with OTP (rate limited)
  */
 router.post('/verify-2fa',
-  twoFALimiter.middleware(),
+  twoFALimiter,
   validateRequest(verify2FASchema),
   controller.verify2FA.bind(controller)
 );
@@ -108,7 +103,7 @@ router.post('/verify-2fa',
  * Resend OTP (rate limited)
  */
 router.post('/resend-otp',
-  twoFALimiter.middleware(),
+  twoFALimiter,
   validateRequest(resendOTPSchema),
   controller.resendOTP.bind(controller)
 );

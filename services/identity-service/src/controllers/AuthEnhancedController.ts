@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../config/database';
 import { User } from '../models/User';
 import { Session } from '../models/Session';
-import { SessionManager, JWTService } from '@eazepay/auth-middleware';
+import SessionManager from '../services/SessionManager';
+import { JWTService } from '../services/JWTService';
 import {
   hashPassword,
   verifyPassword,
@@ -411,7 +412,7 @@ export class AuthEnhancedController {
 
       const refreshToken = this.jwtService.generateRefreshToken(user.id, sessionId);
 
-      // Create session
+      // Create session with tokens
       await this.sessionManager.createSession(
         sessionId,
         user.id,
@@ -421,7 +422,9 @@ export class AuthEnhancedController {
           userAgent: req.get('user-agent') || 'unknown',
           ip: req.ip || 'unknown',
           deviceType: 'unknown'
-        }
+        },
+        accessToken,
+        refreshToken
       );
 
       // Update last login

@@ -1,9 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import Joi from 'joi';
-// validateParams middleware removed – module not found
-
-import { commonSchemas } from '../utils/schemas';
 
 const router = Router();
 
@@ -11,8 +8,14 @@ const router = Router();
 router.use(authenticate);
 
 // Validate :userId param and return placeholder
-const userIdParamSchema = Joi.object({ userId: commonSchemas.uuid });
-router.get('/profile/:userId', validateParams(userIdParamSchema), (req, res) => {
+const userIdParamSchema = Joi.object({ userId: Joi.string().uuid().required() });
+router.get('/profile/:userId', (req, res, next) => {
+  const { error } = userIdParamSchema.validate({ userId: req.params.userId });
+  if (error) {
+    return res.status(400).json({ success: false, error: 'Invalid userId', code: 'INVALID_USER_ID' });
+  }
+  next();
+}, (req, res) => {
   res.json({ success: true, message: 'User profile endpoint - coming soon', userId: req.params.userId });
 });
 

@@ -27,8 +27,8 @@ const buildStore = (prefix: string): Store | undefined => {
   if (!redis) return undefined; // Should not happen if useMemoryStore is false, but for type safety
 
   return new RedisStore({
-    client: redis,
     prefix,
+    sendCommand: (...args: string[]) => (redis as any).call(...args)
   });
 };
 
@@ -63,6 +63,40 @@ export const authRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   store: buildStore('rl:auth:'),
+  keyGenerator: (req) => {
+    return req.body?.email || req.ip || 'anonymous';
+  }
+});
+
+// 2FA rate limit: 5 attempts per 10 minutes
+export const twoFARateLimit = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 5,
+  message: {
+    error: 'Rate limit exceeded',
+    code: 'SYS_001',
+    message: 'Too many 2FA attempts, please try again later'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  store: buildStore('rl:2fa:'),
+  keyGenerator: (req) => {
+    return req.body?.email || req.ip || 'anonymous';
+  }
+});
+
+// Password reset rate limit: 5 requests per 15 minutes
+export const passwordResetRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: {
+    error: 'Rate limit exceeded',
+    code: 'SYS_001',
+    message: 'Too many password reset requests, try again later'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  store: buildStore('rl:reset:'),
   keyGenerator: (req) => {
     return req.body?.email || req.ip || 'anonymous';
   }

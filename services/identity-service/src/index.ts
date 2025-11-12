@@ -5,12 +5,10 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
-import logger from '@eazepay/logger'; // Assuming logger is already integrated
-import { HybridEncryptor } from '@eazepay/crypto-utils';
+import { logger } from './utils/logger';
 import { initializeDatabase, closeDatabase } from './config/database';
 import authRoutes from './routes/auth.routes';
 import { apiRateLimit } from './middleware/rateLimit';
-import { JWTService, MockHSMClient } from '@eazepay/auth-middleware'; // Import JWTService and MockHSMClient
 import { randomUUID } from 'crypto'; // For correlation ID
 
 // Load environment variables
@@ -84,19 +82,8 @@ import adminRoutes from './routes/admin.routes';
 import superuserRoutes from './routes/superuser.routes';
 import accessRequestRoutes from './routes/accessRequest.routes';
 
-// Initialize JWT Service with (optional) HSM client
+// HSM status (for informational purposes)
 const hsmEnabled = (process.env.HSM_ENABLED || 'false').toLowerCase() === 'true';
-const hsmClient = hsmEnabled ? new MockHSMClient() : undefined; // Replace MockHSMClient with actual HSM client in production
-const hsmKeyId = process.env.HSM_JWT_KEY_ID || 'eazepay-jwt-signing-key';
-
-const jwtService = new JWTService({
-  jwtSecret: process.env.JWT_SECRET || 'change-me-in-production',
-  jwtExpiresIn: '8h',
-  issuer: 'eazepay-services',
-  audience: 'eazepay-services',
-  hsmClient: hsmClient,
-  hsmKeyId: hsmKeyId
-});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);

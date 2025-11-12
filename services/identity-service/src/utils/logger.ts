@@ -1,8 +1,18 @@
 import winston from 'winston';
 import path from 'path';
+import fs from 'fs';
 
 // Create logs directory path
 const logsDir = path.join(__dirname, '../../logs');
+// Ensure logs directory exists to avoid transport errors
+try {
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+  }
+} catch (err) {
+  // Fallback to current directory if creation fails
+  // Do not throw – logger should still work with console transport
+}
 
 // Define log format
 const logFormat = winston.format.combine(

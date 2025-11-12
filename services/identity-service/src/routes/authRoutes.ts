@@ -1,11 +1,7 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
 import { validateRequest } from '../middleware/validation';
-import { 
-  createAuthRateLimiter, 
-  create2FALimiter 
-} from '@eazepay/auth-middleware';
-import redisClient from '../config/redis';
+import { authRateLimit, twoFARateLimit } from '../middleware/rateLimit';
 import {
   registerSchema,
   loginSchema,
@@ -15,16 +11,16 @@ import {
 const router = Router();
 const authController = new AuthController();
 
-// Create rate limiters
-const authLimiter = createAuthRateLimiter(redisClient);
-const twoFALimiter = create2FALimiter(redisClient);
+// Local rate limiters
+const authLimiter = authRateLimit;
+const twoFALimiter = twoFARateLimit;
 
 /**
  * Register new user
  * Rate limited to prevent spam registrations
  */
 router.post('/register',
-  authLimiter.middleware(),
+  authLimiter,
   validateRequest(registerSchema),
   (req, res) => authController.register(req, res)
 );
@@ -34,7 +30,7 @@ router.post('/register',
  * Rate limited to prevent brute force attacks
  */
 router.post('/login',
-  authLimiter.middleware(),
+  authLimiter,
   validateRequest(loginSchema),
   (req, res) => authController.login(req, res)
 );
@@ -44,7 +40,7 @@ router.post('/login',
  * Rate limited to prevent OTP guessing
  */
 router.post('/verify-2fa',
-  twoFALimiter.middleware(),
+  twoFALimiter,
   validateRequest(verify2FASchema),
   (req, res) => authController.verify2FA(req, res)
 );

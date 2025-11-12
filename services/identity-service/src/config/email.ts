@@ -1,4 +1,4 @@
-import { EmailService } from '@eazepay/email-service';
+import EmailService from '../services/EmailService';
 import path from 'path';
 import { logger } from '../utils/logger';
 
