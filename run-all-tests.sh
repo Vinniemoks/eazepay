@@ -44,7 +44,21 @@ function run_java_tests() {
   echo -e "${YELLOW}Running Java tests in $dir...${NC}"
   cd "$dir"
   if [ -f "pom.xml" ]; then
-    if mvn test; then
+    # Ensure Maven is available
+    if ! command -v mvn >/dev/null 2>&1; then
+      echo -e "${BLUE}Maven not installed or not in PATH; skipping Java tests in $dir.${NC}"
+      cd - > /dev/null
+      return
+    fi
+
+    # Validate JAVA_HOME points to a real JDK directory to avoid mvn failing
+    if [ -z "$JAVA_HOME" ] || [ ! -d "$JAVA_HOME" ]; then
+      echo -e "${YELLOW}JAVA_HOME not set or invalid; skipping Java tests in $dir.${NC}"
+      cd - > /dev/null
+      return
+    fi
+
+    if mvn -q -version >/dev/null 2>&1 && mvn test; then
       echo -e "${GREEN}✅ Java tests passed in $dir${NC}"
     else
       echo -e "${RED}❌ Java tests failed in $dir${NC}"
