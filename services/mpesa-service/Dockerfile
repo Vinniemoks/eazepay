@@ -16,7 +16,7 @@ COPY src ./src
 RUN npm run build
 
 # Expose port
-EXPOSE 8003
+EXPOSE 8004
 
 # Start service
 CMD ["node", "dist/index.js"]
