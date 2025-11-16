@@ -1,0 +1,196 @@
+# ================================
+# Eazepay Secure Docker Compose Configuration
+# ================================
+# This configuration includes security hardening for production
+
+version: '3.8'
+
+networks:
+  # Separate networks for isolation
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+  backend:
+    driver: bridge
+    internal: true  # No external access
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+  database:
+    driver: bridge
+    internal: true  # No external access
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
+
+services:
+  # ================================
+  # DATABASE SERVICES (Isolated Network)
+  # ================================
+  
+  postgresql:
+    image: postgres:15-alpine
+    container_name: eazepay-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    secrets:
+      - db_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/ssl/ca-cert.pem:/etc/ssl/certs/ca-cert.pem:ro
+      - ./infrastructure/postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    networks:
+      - database
+    command: >
+      postgres
+      -c ssl=on
+      -c ssl_cert_file=/etc/ssl/certs/server-cert.pem
+      -c ssl_key_file=/etc/ssl/private/server-key.pem
+      -c ssl_ca_file=/etc/ssl/certs/ca-cert.pem
+      -c ssl_min_protocol_version=TLSv1.3
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+
+  redis:
+    image: redis:7-alpine
+    container_name: eazepay-redis
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --appendonly yes
+      --tls-port 6380
+      --port 0
+      --tls-cert-file /etc/ssl/certs/server-cert.pem
+      --tls-key-file /etc/ssl/private/server-key.pem
+      --tls-ca-cert-file /etc/ssl/certs/ca-cert.pem
+      --tls-auth-clients no
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+      - ./infrastructure/ssl:/etc/ssl:ro
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD", "redis-cli", "--tls", "--cert", "/etc/ssl/certs/server-cert.pem", "--key", "/etc/ssl/private/server-key.pem", "--cacert", "/etc/ssl/certs/ca-cert.pem", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+
+  # ================================
+  # BACKEND SERVICES (Backend Network)
+  # ================================
+  
+  identity-service:
+    build:
+      context: ./services/identity-service
+      dockerfile: Dockerfile
+    container_name: eazepay-identity-service
+    environment:
+      NODE_ENV: production
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      INTERNAL_API_KEY_FILE: /run/secrets/internal_api_key
+      DB_SSL: "true"
+      REDIS_TLS: "true"
+    secrets:
+      - jwt_secret
+      - internal_api_key
+      - db_password
+    volumes:
+      - ./infrastructure/ssl:/etc/ssl:ro
+    networks:
+      - backend
+      - database
+    depends_on:
+      - postgresql
+      - redis
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    user: "node"
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+
+  # ================================
+  # API GATEWAY (Frontend Network)
+  # ================================
+  
+  nginx:
+    image: nginx:alpine
+    container_name: eazepay-nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./infrastructure/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - identity-service
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+
+# ================================
+# SECRETS MANAGEMENT
+# ================================
+secrets:
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  internal_api_key:
+    file: ./secrets/internal_api_key.txt
+  db_password:
+    file: ./secrets/db_password.txt
+
+# ================================
+# VOLUMES
+# ================================
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/eazepay/postgres
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/eazepay/redis
+  nginx_logs:
+    driver: local

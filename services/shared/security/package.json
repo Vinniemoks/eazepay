@@ -1,0 +1,29 @@
+{
+  "name": "@eazepay/security",
+  "version": "1.0.0",
+  "description": "Centralized security utilities for Eazepay microservices",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "aws-sdk": "^2.1490.0",
+    "@azure/keyvault-secrets": "^4.7.0",
+    "@google-cloud/secret-manager": "^5.0.1",
+    "winston": "^3.11.0",
+    "ioredis": "^5.3.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  }
+}
