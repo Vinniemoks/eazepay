@@ -1,33 +1,35 @@
 import { create } from 'zustand';
-import { walletAPI } from '../api/wallet';
+import api, { endpoints } from '../config/api';
 
 interface Transaction {
   id: string;
-  type: 'SEND' | 'RECEIVE' | 'REQUEST';
+  type: 'credit' | 'debit';
+  category: string;
   amount: number;
-  description: string;
-  status: string;
+  currency: string;
+  balanceBefore: number;
+  balanceAfter: number;
+  description?: string;
   createdAt: string;
-  recipientPhone?: string;
-  senderPhone?: string;
 }
 
 interface WalletState {
   balance: number;
+  currency: string;
   transactions: Transaction[];
   isLoading: boolean;
   error: string | null;
-
+  
   // Actions
   fetchBalance: () => Promise<void>;
-  fetchTransactions: (page?: number) => Promise<void>;
-  sendMoney: (recipientPhone: string, amount: number, description: string, pin: string) => Promise<void>;
-  requestMoney: (fromPhone: string, amount: number, description?: string) => Promise<void>;
+  fetchTransactions: () => Promise<void>;
+  topUpWithMpesa: (phoneNumber: string, amount: number) => Promise<void>;
   clearError: () => void;
 }
 
 export const useWalletStore = create<WalletState>((set, get) => ({
   balance: 0,
+  currency: 'KES',
   transactions: [],
   isLoading: false,
   error: null,
@@ -35,57 +37,63 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   fetchBalance: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await walletAPI.getBalance();
-      set({ balance: response.balance, isLoading: false });
+      const response = await api.get(endpoints.getBalance);
+      const { balance, currency } = response.data.data;
+
+      set({
+        balance,
+        currency,
+        isLoading: false,
+      });
     } catch (error: any) {
       set({
-        error: error.response?.data?.message || 'Failed to fetch balance',
+        error: error.response?.data?.error || 'Failed to fetch balance',
         isLoading: false,
       });
     }
   },
 
-  fetchTransactions: async (page = 1) => {
+  fetchTransactions: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await walletAPI.getTransactions(page);
+      const response = await api.get(endpoints.getTransactions);
+      const { transactions } = response.data.data;
+
       set({
-        transactions: page === 1 ? response.transactions : [...get().transactions, ...response.transactions],
+        transactions,
         isLoading: false,
       });
     } catch (error: any) {
       set({
-        error: error.response?.data?.message || 'Failed to fetch transactions',
+        error: error.response?.data?.error || 'Failed to fetch transactions',
         isLoading: false,
       });
     }
   },
 
-  sendMoney: async (recipientPhone: string, amount: number, description: string, pin: string) => {
+  topUpWithMpesa: async (phoneNumber: string, amount: number) => {
     set({ isLoading: true, error: null });
     try {
-      await walletAPI.sendMoney({ recipientPhone, amount, description, pin });
+      const response = await api.post(endpoints.initiateMpesa, {
+        phoneNumber,
+        amount,
+        accountReference: 'WALLET_TOPUP',
+        transactionDesc: 'Wallet Top-up',
+      });
+
+      // Poll for transaction status
+      const { checkoutRequestId } = response.data.data;
+      
+      // Wait a bit for user to complete M-Pesa
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      // Refresh balance
       await get().fetchBalance();
-      await get().fetchTransactions();
+      
       set({ isLoading: false });
     } catch (error: any) {
       set({
-        error: error.response?.data?.message || 'Failed to send money',
-        isLoading: false,
-      });
-      throw error;
-    }
-  },
-
-  requestMoney: async (fromPhone: string, amount: number, description?: string) => {
-    set({ isLoading: true, error: null });
-    try {
-      await walletAPI.requestMoney(fromPhone, amount, description);
-      await get().fetchTransactions();
-      set({ isLoading: false });
-    } catch (error: any) {
-      set({
-        error: error.response?.data?.message || 'Failed to request money',
+        error: error.response?.data?.error || 'M-Pesa top-up failed',
         isLoading: false,
       });
       throw error;

@@ -1,0 +1,215 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: eazepay-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_secure_2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-databases-phase2.sh:/docker-entrypoint-initdb.d/init-databases.sh
+    networks:
+      - eazepay-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: eazepay-redis
+    command: redis-server --requirepass redis_secure_2024
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - eazepay-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # User Service
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: eazepay-user-service
+    environment:
+      PORT: 8000
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: eazepay_users
+      DB_USER: postgres
+      DB_PASSWORD: postgres_secure_2024
+      JWT_SECRET: ${JWT_SECRET}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: redis_secure_2024
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eazepay-network
+    restart: unless-stopped
+
+  # Wallet Service
+  wallet-service:
+    build:
+      context: ./services/wallet-service
+      dockerfile: Dockerfile
+    container_name: eazepay-wallet-service
+    environment:
+      PORT: 8003
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: eazepay_wallets
+      DB_USER: postgres
+      DB_PASSWORD: postgres_secure_2024
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8003:8003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - eazepay-network
+    restart: unless-stopped
+
+  # M-Pesa Service
+  mpesa-service:
+    build:
+      context: ./services/mpesa-service
+      dockerfile: Dockerfile
+    container_name: eazepay-mpesa-service
+    environment:
+      PORT: 8004
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      MPESA_ENVIRONMENT: ${MPESA_ENVIRONMENT:-sandbox}
+      MPESA_CONSUMER_KEY: ${MPESA_CONSUMER_KEY}
+      MPESA_CONSUMER_SECRET: ${MPESA_CONSUMER_SECRET}
+      MPESA_SHORTCODE: ${MPESA_SHORTCODE:-174379}
+      MPESA_PASSKEY: ${MPESA_PASSKEY}
+      MPESA_CALLBACK_URL: ${MPESA_CALLBACK_URL}
+    ports:
+      - "8004:8004"
+    networks:
+      - eazepay-network
+    restart: unless-stopped
+
+  # Biometric Service (NEW)
+  biometric-service:
+    build:
+      context: ./services/biometric-service-v2
+      dockerfile: Dockerfile
+    container_name: eazepay-biometric-service
+    environment:
+      PORT: 8001
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: eazepay_biometrics
+      DB_USER: postgres
+      DB_PASSWORD: postgres_secure_2024
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - eazepay-network
+    restart: unless-stopped
+
+  # Agent Service (NEW)
+  agent-service:
+    build:
+      context: ./services/agent-service-v2
+      dockerfile: Dockerfile
+    container_name: eazepay-agent-service
+    environment:
+      PORT: 8005
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: eazepay_agents
+      DB_USER: postgres
+      DB_PASSWORD: postgres_secure_2024
+      JWT_SECRET: ${JWT_SECRET}
+      USER_SERVICE_URL: http://user-service:8000
+      WALLET_SERVICE_URL: http://wallet-service:8003
+      BIOMETRIC_SERVICE_URL: http://biometric-service:8001
+    ports:
+      - "8005:8005"
+    depends_on:
+      - postgres
+      - user-service
+      - wallet-service
+      - biometric-service
+    networks:
+      - eazepay-network
+    restart: unless-stopped
+
+  # Payment Authorization Service (NEW)
+  payment-auth-service:
+    build:
+      context: ./services/payment-auth-service
+      dockerfile: Dockerfile
+    container_name: eazepay-payment-auth-service
+    environment:
+      PORT: 8006
+      NODE_ENV: production
+      BIOMETRIC_SERVICE_URL: http://biometric-service:8001
+      WALLET_SERVICE_URL: http://wallet-service:8003
+    ports:
+      - "8006:8006"
+    depends_on:
+      - biometric-service
+      - wallet-service
+    networks:
+      - eazepay-network
+    restart: unless-stopped
+
+  # Nginx API Gateway
+  nginx:
+    image: nginx:alpine
+    container_name: eazepay-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/nginx/nginx.phase2.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - user-service
+      - wallet-service
+      - mpesa-service
+      - biometric-service
+      - agent-service
+      - payment-auth-service
+    networks:
+      - eazepay-network
+    restart: unless-stopped
+
+networks:
+  eazepay-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

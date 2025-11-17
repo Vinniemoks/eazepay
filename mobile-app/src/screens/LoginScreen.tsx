@@ -36,16 +36,11 @@ export const LoginScreen = ({ navigation }: any) => {
   };
 
   const handleBiometricLogin = async () => {
-    const { available } = await biometricService.isAvailable();
-    if (!available) {
-      Alert.alert('Biometric Not Available', 'Please use email and password');
-      return;
-    }
-
-    const success = await biometricService.authenticate('Login to Eazepay');
-    if (success) {
-      // Load saved credentials and login
-      // Implementation depends on your security requirements
+    try {
+      await useAuthStore.getState().loginWithBiometric();
+      // Navigation handled by auth state change
+    } catch (error: any) {
+      Alert.alert('Biometric Login Failed', error.message || 'Please try again');
     }
   };
 
